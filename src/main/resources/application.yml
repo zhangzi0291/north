@@ -1,0 +1,27 @@
+server:
+  port: 8000
+  ssl:
+    key-store: classpath:keystore.p12
+    key-password: northzx
+    key-store-password: northzx
+    keyStoreType: PKCS12
+  servlet:
+#    context-path: /springboot
+  http2:
+    enable: true
+
+
+spring:
+  application:
+    name:
+  datasource:
+    druid:
+      url: jdbc:postgresql:/127.0.0.1:5432/springboot
+      username: postgres
+      password: 123456
+  redis:
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      password:
+      timeout: 5000
