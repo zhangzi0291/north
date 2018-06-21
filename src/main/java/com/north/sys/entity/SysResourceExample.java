@@ -1,11 +1,10 @@
 package com.north.sys.entity;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.north.base.Example;
+import com.north.base.Page;
 
-import com.demo.base.Example;
-import com.demo.base.Page;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SysResourceExample implements Example {
     protected String orderByClause;

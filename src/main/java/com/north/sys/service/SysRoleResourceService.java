@@ -1,9 +1,8 @@
 package com.north.sys.service;
 
-import com.demo.base.exception.DaoException;
-import com.demo.base.service.BaseService;
-import com.demo.sys.entity.SysRoleResource;
-import com.demo.sys.entity.SysRoleResourceExample;
+import com.north.base.service.BaseService;
+import com.north.sys.entity.SysRoleResource;
+import com.north.sys.entity.SysRoleResourceExample;
 
 import java.util.List;
 

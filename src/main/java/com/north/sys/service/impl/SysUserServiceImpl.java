@@ -1,25 +1,22 @@
 package com.north.sys.service.impl;
 
 
-import javax.annotation.Resource;
-
-import com.demo.sys.dao.SysRoleDao;
-import com.demo.sys.dao.SysUserRoleDao;
-import com.demo.sys.entity.*;
+import com.north.base.dao.BaseDao;
+import com.north.base.service.impl.BaseServiceImpl;
+import com.north.sys.dao.SysRoleDao;
+import com.north.sys.dao.SysUserDao;
+import com.north.sys.dao.SysUserRoleDao;
+import com.north.sys.entity.*;
+import com.north.sys.service.SysUserService;
 import org.springframework.stereotype.Service;
-
-import com.demo.base.dao.BaseDao;
-import com.demo.base.service.impl.BaseServiceImpl;
-import com.demo.base.exception.DaoException;
-import com.demo.sys.dao.SysUserDao;
-import com.demo.sys.service.SysUserService;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service("SysUserService")
-public class SysUserServiceImpl extends BaseServiceImpl<SysUser, SysUserExample> implements SysUserService{
+public class SysUserServiceImpl extends BaseServiceImpl<SysUser, SysUserExample> implements SysUserService {
 
     @Resource
     private SysUserDao dao;
@@ -29,7 +26,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser, SysUserExample>
     private SysRoleDao roleDao;
 
     @Override
-    public BaseDao<SysUser, SysUserExample> getDao() throws DaoException {
+    public BaseDao<SysUser, SysUserExample> getDao()  {
         return dao;
     }
 

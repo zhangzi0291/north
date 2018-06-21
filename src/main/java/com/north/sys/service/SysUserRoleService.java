@@ -1,8 +1,8 @@
 package com.north.sys.service;
 
-import com.demo.base.service.BaseService;
-import com.demo.sys.entity.SysUserRole;
-import com.demo.sys.entity.SysUserRoleExample;
+import com.north.base.service.BaseService;
+import com.north.sys.entity.SysUserRole;
+import com.north.sys.entity.SysUserRoleExample;
 
 public interface SysUserRoleService extends BaseService<SysUserRole, SysUserRoleExample> {
 

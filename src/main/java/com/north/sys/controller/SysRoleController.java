@@ -1,33 +1,29 @@
 package com.north.sys.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.north.base.Page;
+import com.north.base.R;
+import com.north.sys.entity.*;
+import com.north.sys.service.SysResourceService;
+import com.north.sys.service.SysRoleResourceService;
+import com.north.sys.service.SysRoleService;
+import com.north.utils.CamelToUnderlineUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.alibaba.fastjson.JSONArray;
-import com.demo.base.R;
-import com.demo.sys.entity.*;
-import com.demo.sys.service.SysResourceService;
-import com.demo.sys.service.SysRoleResourceService;
-import org.hibernate.validator.internal.util.privilegedactions.GetResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import com.demo.utils.CamelToUnderlineUtil;
-
-import com.demo.base.Page;
-import com.demo.base.exception.DaoException;
-import com.demo.sys.service.SysRoleService;
 
 @RestController
 @RequestMapping("sys/role")
@@ -59,7 +55,7 @@ public class SysRoleController {
             List< SysRole> list = sysRoleService.selectByExample(example);
             Integer count = sysRoleService.countByExample(example);
             return R.ok().putObject("rows",list).putObject("total", count);
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
         }
         return R.error("无数据");
@@ -82,7 +78,7 @@ public class SysRoleController {
                 options.add(map);
             });
             return R.ok().putObject("data",options);
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
         }
         return R.error("无数据");
@@ -99,7 +95,7 @@ public class SysRoleController {
             if(num==0){
                 return R.error("保存失败,无数据");
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
@@ -113,7 +109,7 @@ public class SysRoleController {
             List<SysResource> list = sysResourceService.getResourceMenus(null);
             List<SysResourceDto> options = setChildNood(list,rrlist);
             return R.ok("data",sysRoleService.selectByPrimaryKey(id)).putObject("options",options);
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
         }
         return R.error("无数据");
@@ -157,7 +153,7 @@ public class SysRoleController {
             if(num==0){
                 return R.error("保存失败,无数据");
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
@@ -173,7 +169,7 @@ public class SysRoleController {
                 num+=sysRoleService.deleteByPrimaryKey(ids.get(i));
                 sysRoleResourceService.deleteRoleResource(ids.get(i));
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }

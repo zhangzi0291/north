@@ -1,8 +1,5 @@
 package com.north.utils;
 
-import com.demo.base.security.user.WebSecurityCustomUserDetal;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 /**
  * 类的描述
  *
@@ -11,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class SessionUtil {
 
-    public static WebSecurityCustomUserDetal getCurrentUserDetal(){
-        return (WebSecurityCustomUserDetal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
+//    public static WebSecurityCustomUserDetal getCurrentUserDetal(){
+//        return (WebSecurityCustomUserDetal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//    }
 }

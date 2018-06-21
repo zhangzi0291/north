@@ -1,30 +1,31 @@
 package com.north.sys.service.impl;
 
 
-import javax.annotation.Resource;
-
-import com.demo.sys.entity.*;
-import com.demo.sys.service.SysResourceService;
+import com.north.base.dao.BaseDao;
+import com.north.base.service.impl.BaseServiceImpl;
+import com.north.sys.dao.SysResourceDao;
+import com.north.sys.entity.SysResource;
+import com.north.sys.entity.SysResourceExample;
+import com.north.sys.service.SysResourceService;
 import org.springframework.stereotype.Service;
-
-import com.demo.base.dao.BaseDao;
-import com.demo.base.service.impl.BaseServiceImpl;
-import com.demo.base.exception.DaoException;
-import com.demo.sys.dao.SysResourceDao;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import javax.annotation.Resource;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service("SysResourceervice")
-public class SysResourceServiceImpl extends BaseServiceImpl<SysResource, SysResourceExample> implements SysResourceService{
+public class SysResourceServiceImpl extends BaseServiceImpl<SysResource, SysResourceExample> implements SysResourceService {
 
     @Resource
     private SysResourceDao dao;
 
 
     @Override
-    public BaseDao<SysResource, SysResourceExample> getDao() throws DaoException {
+    public BaseDao<SysResource, SysResourceExample> getDao()  {
         return dao;
     }
 

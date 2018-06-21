@@ -43,7 +43,7 @@ public class SysUserRoleController {
             List< SysUserRole> list = sysUserRoleService.selectByExample(example);
             Integer count = sysUserRoleService.countByExample(example);
             return R.ok().putObject("rows",list).putObject("total", count);
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
         }
         return R.error("无数据");
@@ -58,7 +58,7 @@ public class SysUserRoleController {
             if(num==0){
                 return R.error("保存失败,无数据");
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
@@ -69,7 +69,7 @@ public class SysUserRoleController {
     public R get(Integer id){
         try {
             return R.ok("data",sysUserRoleService.selectByPrimaryKey(id));
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
         }
         return R.error("无数据");
@@ -83,7 +83,7 @@ public class SysUserRoleController {
             if(num==0){
                 return R.error("保存失败,无数据");
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
@@ -98,7 +98,7 @@ public class SysUserRoleController {
             for(int i=0;i<ids.size();i++){
                 num+=sysUserRoleService.deleteByPrimaryKey(ids.get(i));
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }

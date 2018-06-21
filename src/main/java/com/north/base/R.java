@@ -21,18 +21,31 @@ public class R extends HashMap implements Serializable{
 	 */
 //	private Map<String, Object> msgInfo = new HashMap<String, Object>();
 
+	public enum ReturnCodeEnum{
+		SUCCESS(200),ERROR(500),UNAUTHORIZED(401),FORBIDDEN(403);
+		private int code;
+
+		ReturnCodeEnum(int code){
+			this.code = code;
+		}
+
+		public int getCode() {
+			return code;
+		}
+	}
+
 	public R() {
 
 	}
 
 	public static R error (){
 		R r = new R();
-		r.putObject("code",500);
+		r.putObject("code",ReturnCodeEnum.ERROR.getCode());
 		return r;
 	}
 	public static R error (String errorMsg){
 		R r = new R();
-		r.putObject("code",500);
+		r.putObject("code",ReturnCodeEnum.ERROR.getCode());
 		r.putObject("msg",errorMsg);
 		return r;
 	}
@@ -54,21 +67,21 @@ public class R extends HashMap implements Serializable{
 
 	public static R ok(){
 		R r = new R();
-		r.putObject("code",200);
+		r.putObject("code", ReturnCodeEnum.SUCCESS.getCode());
 		r.putObject("msg","");
 		return r;
 	}
 
 	public static R ok(String msg){
 		R r = new R();
-		r.putObject("code",200);
+		r.putObject("code",ReturnCodeEnum.SUCCESS.getCode());
 		r.putObject("msg",msg);
 		return r;
 	}
 
 	public static R ok(String key, Object value){
 		R r = new R();
-		r.putObject("code",200);
+		r.putObject("code",ReturnCodeEnum.SUCCESS.getCode());
 		r.putObject("msg","");
 		r.put(key, value);
 		return r;
@@ -76,7 +89,7 @@ public class R extends HashMap implements Serializable{
 
 	public static R ok(Map<String,Object> map){
 		R r = new R();
-		r.putObject("code",200);
+		r.putObject("code",ReturnCodeEnum.SUCCESS.getCode());
 		r.putObject("msg","");
 		r.putAll(map);
 		return r;

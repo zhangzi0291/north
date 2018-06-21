@@ -1,8 +1,8 @@
 package com.north.sys.dao;
 
-import com.demo.base.dao.BaseDao;
-import com.demo.sys.entity.SysResource;
-import com.demo.sys.entity.SysResourceExample;
+import com.north.base.dao.BaseDao;
+import com.north.sys.entity.SysResource;
+import com.north.sys.entity.SysResourceExample;
 
 import java.util.List;
 import java.util.Map;

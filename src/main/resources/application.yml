@@ -16,7 +16,7 @@ spring:
     name:
   datasource:
     druid:
-      url: jdbc:postgresql:/127.0.0.1:5432/springboot
+      url: jdbc:postgresql://127.0.0.1:5432/springboot
       username: postgres
       password: 123456
   redis:
@@ -25,3 +25,8 @@ spring:
       port: 6379
       password:
       timeout: 5000
+
+
+mybatis:
+  config: classpath:mybatis-config.xml
+  mapperLocations: classpath*:mybatis/**/*Mapper.xml

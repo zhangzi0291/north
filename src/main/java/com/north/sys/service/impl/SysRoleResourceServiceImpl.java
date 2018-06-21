@@ -1,25 +1,22 @@
 package com.north.sys.service.impl;
 
 
-import javax.annotation.Resource;
-
-import com.demo.sys.dao.SysResourceDao;
-import com.demo.sys.entity.SysResource;
-import com.demo.sys.entity.SysResourceExample;
+import com.north.base.dao.BaseDao;
+import com.north.base.service.impl.BaseServiceImpl;
+import com.north.sys.dao.SysResourceDao;
+import com.north.sys.dao.SysRoleResourceDao;
+import com.north.sys.entity.SysResource;
+import com.north.sys.entity.SysResourceExample;
+import com.north.sys.entity.SysRoleResource;
+import com.north.sys.entity.SysRoleResourceExample;
+import com.north.sys.service.SysRoleResourceService;
 import org.springframework.stereotype.Service;
 
-import com.demo.base.dao.BaseDao;
-import com.demo.base.service.impl.BaseServiceImpl;
-import com.demo.base.exception.DaoException;
-import com.demo.sys.dao.SysRoleResourceDao;
-import com.demo.sys.entity.SysRoleResource;
-import com.demo.sys.entity.SysRoleResourceExample;
-import com.demo.sys.service.SysRoleResourceService;
-
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service("SysRoleResourceService")
-public class SysRoleResourceServiceImpl extends BaseServiceImpl<SysRoleResource, SysRoleResourceExample> implements SysRoleResourceService{
+public class SysRoleResourceServiceImpl extends BaseServiceImpl<SysRoleResource, SysRoleResourceExample> implements SysRoleResourceService {
 
     @Resource
     private SysRoleResourceDao dao;
@@ -27,7 +24,7 @@ public class SysRoleResourceServiceImpl extends BaseServiceImpl<SysRoleResource,
     private SysResourceDao resourceDao;
 
     @Override
-    public BaseDao<SysRoleResource, SysRoleResourceExample> getDao() throws DaoException {
+    public BaseDao<SysRoleResource, SysRoleResourceExample> getDao() {
         return dao;
     }
 

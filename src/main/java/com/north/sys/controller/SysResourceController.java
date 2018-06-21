@@ -1,27 +1,27 @@
 package com.north.sys.controller;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
-import com.demo.base.R;
-import com.demo.sys.entity.*;
-import com.demo.utils.CamelToUnderlineUtil;
+import com.north.base.Page;
+import com.north.base.R;
+import com.north.sys.entity.SysResource;
+import com.north.sys.entity.SysResourceDto;
+import com.north.sys.entity.SysResourceExample;
+import com.north.sys.service.SysResourceService;
+import com.north.utils.CamelToUnderlineUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.base.Page;
-import com.demo.base.exception.DaoException;
-import com.demo.sys.service.SysResourceService;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("sys/menu")
@@ -54,7 +54,7 @@ public class SysResourceController {
             List<SysResource> list = sysResourceService.selectByExample(example);
             Integer count = sysResourceService.countByExample(example);
             return R.ok().putObject("rows", list).putObject("total", count);
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
         }
         return R.error("无数据");
@@ -100,7 +100,7 @@ public class SysResourceController {
             if (num == 0) {
                 return R.error("保存失败,无数据");
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
@@ -111,7 +111,7 @@ public class SysResourceController {
     public R get(Integer id) {
         try {
             return R.ok("data", sysResourceService.selectByPrimaryKey(id));
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
         }
         return R.error("无数据");
@@ -125,7 +125,7 @@ public class SysResourceController {
             if (num == 0) {
                 return R.error("保存失败,无数据");
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
@@ -140,7 +140,7 @@ public class SysResourceController {
             for (int i = 0; i < ids.size(); i++) {
                 num += sysResourceService.deleteByPrimaryKey(ids.get(i));
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }

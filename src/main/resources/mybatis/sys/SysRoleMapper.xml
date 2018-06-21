@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.north.sys.dao.SysRoleDao" >
+	<resultMap id="BaseResultMap" type="com.north.sys.entity.SysRole" >
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="example" >
+              <choose >
+                <when test="example.noValue" >
+                  and ${example.condition}
+                </when>
+                <when test="example.singleValue" >
+                  and ${example.condition} #{example.value}
+                </when>
+                <when test="example.betweenValue" >
+                  and ${example.condition} #{example.value} and #{example.secondValue}
+                </when>
+                <when test="example.listValue" >
+                  and ${example.condition}
+                  <foreach collection="example.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="example" >
+              <choose >
+                <when test="example.noValue" >
+                  and ${example.condition}
+                </when>
+                <when test="example.singleValue" >
+                  and ${example.condition} #{example.value}
+                </when>
+                <when test="example.betweenValue" >
+                  and ${example.condition} #{example.value} and #{example.secondValue}
+                </when>
+                <when test="example.listValue" >
+                  and ${example.condition}
+                  <foreach collection="example.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    	id,
+    	role_name,
+    	role_desc,
+    	status
+  </sql>
+  
+ <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.north.sys.entity.SysRoleExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_role
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="page != null" >
+      limit #{page.limit} offset #{page.offset}*#{page.limit}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.north.sys.entity.SysRoleExample" >
+    delete from sys_role
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.north.sys.entity.SysRole" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into sys_role (
+    	id,
+    	role_name,
+    	role_desc,
+    	status
+    )
+    values (
+    	#{id,jdbcType=INTEGER},
+    	#{roleName,jdbcType=VARCHAR},
+    	#{roleDesc,jdbcType=VARCHAR},
+    	status
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="com.north.sys.entity.SysRole" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="roleDesc != null" >
+        role_desc,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+   	  <if test="id != null" >
+        #{ id,jdbcType=INTEGER},
+      </if>
+   	  <if test="roleName != null" >
+        #{ roleName,jdbcType=VARCHAR},
+      </if>
+   	  <if test="roleDesc != null" >
+        #{ roleDesc,jdbcType=VARCHAR},
+      </if>
+   	  <if test="status != null" >
+        #{ status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.north.sys.entity.SysRoleExample" resultType="java.lang.Integer" >
+    select count(*) from sys_role
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_role
+    <set>
+	   	  <if test="record.id != null" >
+	        id = #{record.id,jdbcType=INTEGER},
+	      </if>
+	   	  <if test="record.roleName != null" >
+	        role_name = #{record.roleName,jdbcType=VARCHAR},
+	      </if>
+	   	  <if test="record.roleDesc != null" >
+	        role_desc = #{record.roleDesc,jdbcType=VARCHAR},
+	      </if>
+	   	  <if test="record.status != null" >
+	        status = #{record.status,jdbcType=VARCHAR},
+	      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_role
+    set 
+	        id = #{record.id,jdbcType=INTEGER},
+	        role_name = #{record.roleName,jdbcType=VARCHAR},
+	        role_desc = #{record.roleDesc,jdbcType=VARCHAR},
+	        status = #{record.status,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.north.sys.entity.SysRole" >
+    update sys_role
+    <set>
+   	  <if test="roleName != null" >
+        role_name = #{ roleName,jdbcType=VARCHAR},
+      </if>
+   	  <if test="roleDesc != null" >
+        role_desc = #{ roleDesc,jdbcType=VARCHAR},
+      </if>
+   	  <if test="status != null" >
+        status = #{ status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.north.sys.entity.SysRole" >
+    update sys_role
+    set 
+        role_name = #{ roleName,jdbcType=VARCHAR},
+        role_desc = #{ roleDesc,jdbcType=VARCHAR},
+        status = #{ status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

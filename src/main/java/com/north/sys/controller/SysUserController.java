@@ -1,35 +1,32 @@
 package com.north.sys.controller;
 
+import com.north.base.Page;
+import com.north.base.R;
+import com.north.sys.entity.SysUser;
+import com.north.sys.entity.SysUserDto;
+import com.north.sys.entity.SysUserExample;
+import com.north.sys.service.SysUserRoleService;
+import com.north.sys.service.SysUserService;
+import com.north.utils.CamelToUnderlineUtil;
+import com.north.utils.EncryptionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
-import com.demo.base.R;
-import com.demo.sys.entity.SysUserDto;
-import com.demo.sys.service.SysUserRoleService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import com.demo.utils.CamelToUnderlineUtil;
-
-import com.demo.base.Page;
-import com.demo.base.exception.DaoException;
-import com.demo.sys.entity.SysUser;
-import com.demo.sys.entity.SysUserExample;
-import com.demo.sys.service.SysUserService;
-
 @RestController
 @RequestMapping("sys/user")
 public class SysUserController {
-    
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource
     private SysUserService sysUserService;
@@ -50,7 +47,7 @@ public class SysUserController {
             List< SysUser> list = sysUserService.selectByExample(example);
             Integer count = sysUserService.countByExample(example);
             return R.ok().putObject("rows",list).putObject("total", count);
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
         }
         return R.error("无数据");
@@ -61,7 +58,7 @@ public class SysUserController {
     public R addJson(SysUser sysUser ,Integer roleId){
     	Integer num = 0;
     	if(!StringUtils.isEmpty(sysUser.getPassword())){
-            sysUser.setPassword(new ShaPasswordEncoder().encodePassword(sysUser.getPassword(),null));
+            sysUser.setPassword(EncryptionUtil.getPasswordEncoder(sysUser.getUsername(),sysUser.getPassword()));
         }
     	if(roleId == null){
             return R.error("保存失败,必须选择角色");
@@ -73,7 +70,7 @@ public class SysUserController {
             if(num==0){
                 return R.error("保存失败,无数据");
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
@@ -96,7 +93,7 @@ public class SysUserController {
     public R editJson(Map<String, Object> map, SysUser sysUser, Integer roleId){
    		Integer num = 0;
         if(!StringUtils.isEmpty(sysUser.getPassword())){
-            sysUser.setPassword(new ShaPasswordEncoder().encodePassword(sysUser.getPassword(),null));
+            sysUser.setPassword(EncryptionUtil.getPasswordEncoder(sysUser.getUsername(),sysUser.getPassword()));
         }
         try {
             num = sysUserService.updateByPrimaryKeySelective(sysUser);
@@ -104,7 +101,7 @@ public class SysUserController {
             if(num==0){
                 return R.error("保存失败,无数据");
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
@@ -120,7 +117,7 @@ public class SysUserController {
                 num+=sysUserService.deleteByPrimaryKey(ids.get(i));
                 sysUserRoleService.deleteUserRole(ids.get(i));
             }
-        } catch (DaoException e) {
+        } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
