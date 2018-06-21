@@ -46,7 +46,7 @@ public class ShiroRealm extends AuthorizingRealm {
                 throw new LockedAccountException("帐号已经禁止登录！");
             }
             AuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-                    username,   //认证通过后，存放在session,一般存放user对象
+                    user,   //认证通过后，存放在session,一般存放user对象
                     user.getPassword(),   //用户数据库中的密码
                     getName());    //返回Realm名
             return authenticationInfo;
