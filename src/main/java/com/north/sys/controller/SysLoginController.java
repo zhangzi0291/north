@@ -2,6 +2,8 @@ package com.north.sys.controller;
 
 
 import com.north.base.R;
+import com.north.base.service.RedisService;
+import com.north.sys.entity.SysResource;
 import com.north.sys.entity.SysUser;
 import com.north.sys.service.SysResourceService;
 import com.north.utils.EncryptionUtil;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -31,14 +34,21 @@ public class SysLoginController {
 
     @Resource
     private SysResourceService resourceService;
+    @Resource
+    private RedisService redisService;
 
     @RequestMapping("/getMenu")
     public R getMenu(Integer id) {
         return R.ok("menu",resourceService.getMenus(id));
     }
+
     @RequestMapping("/get")
     public R get(String username) {
-        return R.ok("menu");
+        redisService.set("a",resourceService.getMenus(null));
+
+        List<SysResource> s = redisService.get("a",List.class);
+        System.out.println(s);
+        return R.ok("menu").putObject("key",s);
     }
 
     @RequestMapping("/unlogin")

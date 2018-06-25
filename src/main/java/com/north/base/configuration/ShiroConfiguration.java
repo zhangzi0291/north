@@ -1,5 +1,6 @@
 package com.north.base.configuration;
 
+import com.north.base.session.RedisSessionDao;
 import com.north.base.shiro.ShiroPermissionsFilter;
 import com.north.base.shiro.ShiroRealm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -7,9 +8,11 @@ import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,15 +35,30 @@ public class ShiroConfiguration {
         return myShiroRealm;
     }
 
+    @Bean
+    public DefaultWebSessionManager configWebSessionManager(RedisSessionDao redisSessionDao){
+        DefaultWebSessionManager manager = new DefaultWebSessionManager();
+//        manager.setCacheManager(cacheManager);// 加入缓存管理器
+        manager.setSessionDAO(redisSessionDao);// 设置SessionDao
+        manager.setDeleteInvalidSessions(true);// 删除过期的session
+        manager.setGlobalSessionTimeout(redisSessionDao.getExpireTime());// 设置全局session超时时间
+        manager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session
+
+        return manager;
+    }
+
     /**
      * 安全管理器DefaultWebSecurityManager是Shiro的核心模块
      * @return
      */
     @Bean
-    public DefaultWebSecurityManager securityManager(){
+    public DefaultWebSecurityManager securityManager(RedisSessionDao redisSessionDao){
         DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
-        //设置realm.
+        //设置realm
         securityManager.setRealm(shiroRealm());
+
+        securityManager.setSessionManager(configWebSessionManager(redisSessionDao));
+
         return securityManager;
     }
 
