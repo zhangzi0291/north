@@ -12,5 +12,7 @@ public interface RedisService {
 
     void set(Serializable key, Object value);
 
+    void set(Serializable key, Object value, Long expireTime);
+
     <T> T get(Serializable key,Class<T> clazz);
 }

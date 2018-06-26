@@ -1,8 +1,10 @@
 package com.north.base.configuration;
 
 import com.north.base.converter.StringToDateConverter;
+import com.north.base.filter.CorsFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
@@ -95,6 +97,17 @@ public class WebConfiguration extends WebMvcConfigurationSupport implements Appl
             genericConversionService.addConverter(new StringToDateConverter());
         }
         return null;
+    }
+
+    @Bean
+    public FilterRegistrationBean testFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new CorsFilter());
+        registration.addUrlPatterns("/*");
+        registration.addInitParameter("paramName", "paramValue");
+        registration.setName("corsFilter");
+        registration.setOrder(1);
+        return registration;
     }
 
 }

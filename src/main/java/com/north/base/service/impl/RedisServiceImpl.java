@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 类的描述
@@ -19,10 +20,17 @@ public class RedisServiceImpl implements RedisService{
 
     @Resource
     private RedisTemplate<Serializable,Object> redisTemplate;
+
     @Override
     public void set(Serializable key, Object value) {
         ValueOperations<Serializable,Object> vo = redisTemplate.opsForValue();
         vo.set(key, value);
+    }
+
+    @Override
+    public void set(Serializable key, Object value, Long expireTime) {
+        ValueOperations<Serializable,Object> vo = redisTemplate.opsForValue();
+        vo.set(key, value, expireTime, TimeUnit.MILLISECONDS);
     }
 
     @Override

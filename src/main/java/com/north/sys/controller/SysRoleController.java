@@ -16,7 +16,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -30,6 +29,7 @@ import java.util.Map;
 public class SysRoleController {
     
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Resource
     private SysRoleService sysRoleService;
     @Resource
@@ -38,7 +38,7 @@ public class SysRoleController {
     private SysResourceService sysResourceService;
     
     @RequestMapping("list")
-    @ResponseBody
+    
     public R listJson(SysRole sysRole, Page page){
         SysRoleExample example = new SysRoleExample();
         SysRoleExample.Criteria criteria = example.createCriteria();
@@ -62,7 +62,7 @@ public class SysRoleController {
     }
 
     @RequestMapping("selectOptions")
-    @ResponseBody
+    
     public R selectOptions(SysRole sysRole){
         SysRoleExample example = new SysRoleExample();
         SysRoleExample.Criteria criteria = example.createCriteria();
@@ -161,7 +161,7 @@ public class SysRoleController {
     }
     
     @RequestMapping("del")
-    @ResponseBody
+    
     public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids ){
         Integer num = 0;
         try {

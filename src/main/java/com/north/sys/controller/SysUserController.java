@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -28,13 +27,14 @@ import java.util.Map;
 public class SysUserController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Resource
     private SysUserService sysUserService;
     @Resource
     private SysUserRoleService sysUserRoleService;
 
     @RequestMapping("list")
-    @ResponseBody
+    
     public R listJson(SysUser sysUser, Page page){
         SysUserExample example = new SysUserExample();
         SysUserExample.Criteria criteria = example.createCriteria();
@@ -109,7 +109,7 @@ public class SysUserController {
     }
     
     @RequestMapping("del")
-    @ResponseBody
+    
     public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids ){
         Integer num = 0;
         try {

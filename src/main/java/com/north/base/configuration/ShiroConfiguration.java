@@ -4,17 +4,14 @@ import com.north.base.session.RedisSessionDao;
 import com.north.base.session.SimpleSessionFactory;
 import com.north.base.shiro.ShiroPermissionsFilter;
 import com.north.base.shiro.ShiroRealm;
-import org.apache.shiro.session.mgt.SessionFactory;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
-import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -99,19 +96,6 @@ public class ShiroConfiguration {
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
-//        chainDefinition.addPathDefinition("/login.html", "authc"); // need to accept POSTs from the login form
-//        chainDefinition.addPathDefinition("/logout", "logout");
-
-
-//        chainDefinition.addPathDefinition("/sys/login", "anon");
-//        chainDefinition.addPathDefinition("/logo.png", "anon");
-//        chainDefinition.addPathDefinition("/shiro.css", "anon");
-//        chainDefinition.addPathDefinition("/s/login", "anon");
-//        chainDefinition.addPathDefinition("/*.jar", "anon"); //allow WebStart to pull the jars for the swing app
-//        chainDefinition.addPathDefinition("/remoting/**", "anon"); // protected using SecureRemoteInvocationExecutor
-//        chainDefinition.addPathDefinition("/**", "authc");
-        chainDefinition.addPathDefinition("/**", "authc");
-
 
         return chainDefinition;
     }

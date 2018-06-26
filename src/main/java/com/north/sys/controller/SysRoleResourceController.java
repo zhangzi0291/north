@@ -1,10 +1,5 @@
 package com.north.sys.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
 import com.north.base.Page;
 import com.north.base.R;
 import com.north.sys.entity.SysRoleResource;
@@ -13,12 +8,15 @@ import com.north.sys.service.SysRoleResourceService;
 import com.north.utils.CamelToUnderlineUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -26,11 +24,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SysRoleResourceController {
     
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Resource
     private SysRoleResourceService sysRoleResourceService;
     
     @RequestMapping("list")
-    @ResponseBody
+    
     public R listJson(SysRoleResource sysRoleResource, Page page){
         SysRoleResourceExample example = new SysRoleResourceExample();
         SysRoleResourceExample.Criteria criteria = example.createCriteria();
@@ -91,7 +90,7 @@ public class SysRoleResourceController {
     }
     
     @RequestMapping("del")
-    @ResponseBody
+    
     public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids ){
         Integer num = 0;
         try {

@@ -1,5 +1,6 @@
 package com.north.sys.controller;
 
+
 import com.north.base.Page;
 import com.north.base.R;
 import com.north.sys.entity.SysResource;
@@ -15,7 +16,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -23,16 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 @RestController
 @RequestMapping("sys/menu")
 public class SysResourceController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Resource
     private SysResourceService sysResourceService;
 
     @RequestMapping("list")
-    @ResponseBody
     public R listJson(SysResource sysResource, Page page) {
         SysResourceExample example = new SysResourceExample();
         SysResourceExample.Criteria criteria = example.createCriteria();
@@ -61,7 +62,6 @@ public class SysResourceController {
     }
 
     @RequestMapping("getAllMenu")
-    @ResponseBody
     public R getAllMenu(SysResource sysResource) {
         SysResourceExample example = new SysResourceExample();
         SysResourceExample.Criteria criteria = example.createCriteria();
@@ -133,7 +133,6 @@ public class SysResourceController {
     }
 
     @RequestMapping("del")
-    @ResponseBody
     public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids) {
         Integer num = 0;
         try {
