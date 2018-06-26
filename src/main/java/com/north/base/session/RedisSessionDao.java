@@ -38,16 +38,6 @@ public class RedisSessionDao extends AbstractSessionDAO {
         this.redisTemplate = redisTemplate;
     }
 
-    @Override // 更新session
-    public void update(Session session) throws UnknownSessionException {
-        if (session == null || session.getId() == null) {
-            return;
-        }
-        session = convertSimpleSession(session);
-        session.setTimeout(expireTime);
-        ValueOperations<Serializable,Object> vo = redisTemplate.opsForValue();
-        vo.set(session.getId(), session, expireTime, TimeUnit.MILLISECONDS);
-    }
 
     @Override // 删除session
     public void delete(Session session) {
@@ -69,12 +59,22 @@ public class RedisSessionDao extends AbstractSessionDAO {
 
     @Override// 加入session
     protected Serializable doCreate(Session session) {
-        session = convertSimpleSession(session);
         Serializable sessionId = this.generateSessionId(session);
         this.assignSessionId(session, sessionId);
         ValueOperations<Serializable,Object> vo = redisTemplate.opsForValue();
         vo.set(session.getId(), session, expireTime, TimeUnit.MILLISECONDS);
         return sessionId;
+    }
+
+    @Override // 更新session
+    public void update(Session session) throws UnknownSessionException {
+        if (session == null || session.getId() == null) {
+            return;
+        }
+
+        session.setTimeout(expireTime);
+        ValueOperations<Serializable,Object> vo = redisTemplate.opsForValue();
+        vo.set(session.getId(), session, expireTime, TimeUnit.MILLISECONDS);
     }
 
     @Override// 读取session
@@ -102,9 +102,4 @@ public class RedisSessionDao extends AbstractSessionDAO {
         this.redisTemplate = redisTemplate;
     }
 
-    private Session convertSimpleSession(Session session){
-        SimpleSession simpleSession = new SimpleSession();
-        BeanUtils.copyProperties(session,simpleSession);
-        return  simpleSession;
-    }
 }

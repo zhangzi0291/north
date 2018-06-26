@@ -1,8 +1,10 @@
 package com.north.base.configuration;
 
 import com.north.base.session.RedisSessionDao;
+import com.north.base.session.SimpleSessionFactory;
 import com.north.base.shiro.ShiroPermissionsFilter;
 import com.north.base.shiro.ShiroRealm;
+import org.apache.shiro.session.mgt.SessionFactory;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
@@ -40,6 +42,7 @@ public class ShiroConfiguration {
         DefaultWebSessionManager manager = new DefaultWebSessionManager();
 //        manager.setCacheManager(cacheManager);// 加入缓存管理器
         manager.setSessionDAO(redisSessionDao);// 设置SessionDao
+        manager.setSessionFactory(new SimpleSessionFactory());
         manager.setDeleteInvalidSessions(true);// 删除过期的session
         manager.setGlobalSessionTimeout(redisSessionDao.getExpireTime());// 设置全局session超时时间
         manager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session
