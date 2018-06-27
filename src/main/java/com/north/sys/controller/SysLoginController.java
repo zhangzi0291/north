@@ -10,7 +10,9 @@ import com.north.utils.EncryptionUtil;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,12 +59,13 @@ public class SysLoginController {
     }
 
     @RequestMapping("login")
-    public R login(SysUser user) {
+    public R login(HttpServletRequest request, SysUser user) {
         String username = user.getUsername();
 
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), EncryptionUtil.getPasswordEncoder(user.getUsername(),user.getPassword()));
         //获取当前的Subject
         Subject currentUser = SecurityUtils.getSubject();
+        Session session = SecurityUtils.getSubject().getSession();
         try {
             //在调用了login方法后,SecurityManager会收到AuthenticationToken,并将其发送给已配置的Realm执行必须的认证检查
             //每个Realm都能在必要时对提交的AuthenticationTokens作出反应
@@ -90,6 +93,7 @@ public class SysLoginController {
         //验证是否登录成功
         if(currentUser.isAuthenticated()){
             logger.debug("用户[" + username + "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
+            session = SecurityUtils.getSubject().getSession(true);
             return R.ok("登陆成功").putObject("user",SecurityUtils.getSubject().getPrincipal());
         }else{
             token.clear();

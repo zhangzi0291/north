@@ -3,6 +3,7 @@ package com.north.base.session;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.SessionContext;
 import org.apache.shiro.session.mgt.SessionFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * 类的描述
@@ -10,6 +11,7 @@ import org.apache.shiro.session.mgt.SessionFactory;
  * @Author zhengxiangnan
  * @Date 2018/6/26 11:07
  */
+@Component
 public class SimpleSessionFactory implements SessionFactory{
 
     @Override

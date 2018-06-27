@@ -35,11 +35,11 @@ public class ShiroConfiguration {
     }
 
     @Bean
-    public DefaultWebSessionManager configWebSessionManager(RedisSessionDao redisSessionDao){
+    public DefaultWebSessionManager configWebSessionManager(RedisSessionDao redisSessionDao,SimpleSessionFactory simpleSessionFactory){
         DefaultWebSessionManager manager = new DefaultWebSessionManager();
 //        manager.setCacheManager(cacheManager);// 加入缓存管理器
         manager.setSessionDAO(redisSessionDao);// 设置SessionDao
-        manager.setSessionFactory(new SimpleSessionFactory());
+        manager.setSessionFactory(simpleSessionFactory);
         manager.setDeleteInvalidSessions(true);// 删除过期的session
         manager.setGlobalSessionTimeout(redisSessionDao.getExpireTime());// 设置全局session超时时间
         manager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session
@@ -52,12 +52,12 @@ public class ShiroConfiguration {
      * @return
      */
     @Bean
-    public DefaultWebSecurityManager securityManager(RedisSessionDao redisSessionDao){
+    public DefaultWebSecurityManager securityManager(RedisSessionDao redisSessionDao,SimpleSessionFactory simpleSessionFactory){
         DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
         //设置realm
         securityManager.setRealm(shiroRealm());
 
-        securityManager.setSessionManager(configWebSessionManager(redisSessionDao));
+        securityManager.setSessionManager(configWebSessionManager(redisSessionDao,simpleSessionFactory));
 
         return securityManager;
     }
@@ -72,22 +72,23 @@ public class ShiroConfiguration {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
-        Map<String, Filter> filters = new LinkedHashMap<>();
-        ShiroPermissionsFilter permissionsFilter = new ShiroPermissionsFilter();
-        filters.put("permissionsFilter",permissionsFilter);
-        shiroFilterFactoryBean.setFilters(filters);
+//        Map<String, Filter> filters = new LinkedHashMap<>();
+//        ShiroPermissionsFilter permissionsFilter = new ShiroPermissionsFilter();
+//        filters.put("permissionsFilter",permissionsFilter);
+//        shiroFilterFactoryBean.setFilters(filters);
 
         //权限过滤
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap <>();
         filterChainDefinitionMap.put("/sys/login", "anon");
         filterChainDefinitionMap.put("/sys/logout", "anon");
+        filterChainDefinitionMap.put("/sys/unlogin", "anon");
         filterChainDefinitionMap.put("/favicon.ico", "anon");
         filterChainDefinitionMap.put("/druid/*", "anon");
         filterChainDefinitionMap.put("/**","authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         //未登录跳转
-        shiroFilterFactoryBean.setLoginUrl("/sys/unlogin");
+        shiroFilterFactoryBean.setLoginUrl("/sys/login");
         //未认证跳转
         shiroFilterFactoryBean.setUnauthorizedUrl("/sys/403");
 
