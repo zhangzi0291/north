@@ -12,7 +12,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * 类的描述
+ * redis相关注入
  *
  * @Author zhengxiangnan
  * @Date 2018/6/25 14:11

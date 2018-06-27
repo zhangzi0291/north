@@ -22,14 +22,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("sysUserRole")
 public class SysUserRoleController {
-    
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     private SysUserRoleService sysUserRoleService;
-    
+
     @RequestMapping("list")
-    
     public R listJson(SysUserRole sysUserRole, Page page){
         SysUserRoleExample example = new SysUserRoleExample();
         SysUserRoleExample.Criteria criteria = example.createCriteria();
@@ -47,9 +46,8 @@ public class SysUserRoleController {
         }
         return R.error("无数据");
     }
-    
+
     @RequestMapping("add")
-    @Transactional
     public R addJson(SysUserRole sysUserRole ){
     	Integer num = 0;
         try {
@@ -63,7 +61,7 @@ public class SysUserRoleController {
         }
         return R.ok("data",num);
     }
-    
+
    	@RequestMapping("get")
     public R get(Integer id){
         try {
@@ -73,7 +71,7 @@ public class SysUserRoleController {
         }
         return R.error("无数据");
     }
-   
+
     @RequestMapping("edit")
     public R editJson(Map<String, Object> map, SysUserRole sysUserRole){
    		Integer num = 0;

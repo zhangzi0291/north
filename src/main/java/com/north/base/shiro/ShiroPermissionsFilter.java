@@ -37,7 +37,7 @@ public class ShiroPermissionsFilter extends PermissionsAuthorizationFilter {
             httpServletResponse.getWriter().write(JSON.toJSONString(R.error(R.ReturnCodeEnum.UNAUTHORIZED.getCode(),"hh")));
         } else {//如果是普通请求进行重定向
             logger.info("----------普通请求拒绝-------------");
-            httpServletResponse.sendRedirect("/403");
+            httpServletResponse.sendRedirect("/sys/403");
         }
         return false;
     }

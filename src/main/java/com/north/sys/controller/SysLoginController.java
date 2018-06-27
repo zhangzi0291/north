@@ -53,7 +53,7 @@ public class SysLoginController {
 
     @RequestMapping("/unlogin")
     public R get() {
-        return R.error("未登录");
+        return R.error(R.ReturnCodeEnum.UNAUTHORIZED.getCode(),"未登录");
     }
 
     @RequestMapping("login")

@@ -34,7 +34,6 @@ public class SysUserController {
     private SysUserRoleService sysUserRoleService;
 
     @RequestMapping("list")
-    
     public R listJson(SysUser sysUser, Page page){
         SysUserExample example = new SysUserExample();
         SysUserExample.Criteria criteria = example.createCriteria();
@@ -54,7 +53,6 @@ public class SysUserController {
     }
     
     @RequestMapping("add")
-    @Transactional
     public R addJson(SysUser sysUser ,Integer roleId){
     	Integer num = 0;
     	if(!StringUtils.isEmpty(sysUser.getPassword())){

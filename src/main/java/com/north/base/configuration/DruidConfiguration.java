@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 类的描述
+ * durid数据库监控界面配置
  *
  * @Author zhengxiangnan
  * @Date 2018/6/20 11:08
@@ -36,19 +36,5 @@ public class DruidConfiguration {
         return servletRegistrationBean;
     }
 
-    /**
-     * 配置服务过滤器
-     *
-     * @return 返回过滤器配置对象
-     */
-    @Bean
-    public FilterRegistrationBean statFilter() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new WebStatFilter());
-        // 添加过滤规则
-        filterRegistrationBean.addUrlPatterns("/*");
-        // 忽略过滤格式
-        filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,");
-        return filterRegistrationBean;
-    }
 
 }

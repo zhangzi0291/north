@@ -38,7 +38,6 @@ public class SysRoleController {
     private SysResourceService sysResourceService;
     
     @RequestMapping("list")
-    
     public R listJson(SysRole sysRole, Page page){
         SysRoleExample example = new SysRoleExample();
         SysRoleExample.Criteria criteria = example.createCriteria();
@@ -62,7 +61,6 @@ public class SysRoleController {
     }
 
     @RequestMapping("selectOptions")
-    
     public R selectOptions(SysRole sysRole){
         SysRoleExample example = new SysRoleExample();
         SysRoleExample.Criteria criteria = example.createCriteria();
@@ -85,7 +83,6 @@ public class SysRoleController {
     }
 
     @RequestMapping("add")
-    @Transactional
     public R addJson(SysRole sysRole ,String resources){
     	Integer num = 0;
         try {
@@ -161,7 +158,6 @@ public class SysRoleController {
     }
     
     @RequestMapping("del")
-    
     public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids ){
         Integer num = 0;
         try {

@@ -92,7 +92,6 @@ public class SysResourceController {
     }
 
     @RequestMapping("add")
-    @Transactional
     public R addJson(SysResource sysResource) {
         Integer num = 0;
         try {

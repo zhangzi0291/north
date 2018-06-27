@@ -29,7 +29,6 @@ public class SysRoleResourceController {
     private SysRoleResourceService sysRoleResourceService;
     
     @RequestMapping("list")
-    
     public R listJson(SysRoleResource sysRoleResource, Page page){
         SysRoleResourceExample example = new SysRoleResourceExample();
         SysRoleResourceExample.Criteria criteria = example.createCriteria();
@@ -49,7 +48,6 @@ public class SysRoleResourceController {
     }
     
     @RequestMapping("add")
-    @Transactional
     public R addJson(SysRoleResource sysRoleResource ){
     	Integer num = 0;
         try {

@@ -103,7 +103,10 @@ public class WebConfiguration extends WebMvcConfigurationSupport implements Appl
     public FilterRegistrationBean testFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new CorsFilter());
+        // 添加过滤规则
         registration.addUrlPatterns("/*");
+        // 忽略过滤格式
+        registration.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,");
         registration.addInitParameter("paramName", "paramValue");
         registration.setName("corsFilter");
         registration.setOrder(1);

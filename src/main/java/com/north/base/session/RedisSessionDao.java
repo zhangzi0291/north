@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @Author zhengxiangnan
  * @Date 2018/6/25 17:19
  */
-@Component
+@Repository
 public class RedisSessionDao extends AbstractSessionDAO {
 
     // Session超时时间，单位为毫秒
