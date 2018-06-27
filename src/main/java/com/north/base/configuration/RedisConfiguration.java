@@ -1,6 +1,7 @@
 package com.north.base.configuration;
 
 import com.alibaba.fastjson.parser.ParserConfig;
+import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
 import com.north.base.redis.FastJson2JsonRedisSerializer;
 import org.apache.shiro.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +39,7 @@ public class RedisConfiguration {
         ParserConfig.getGlobalInstance().addAccept("org.apache.shiro.");
         RedisTemplate redisTemplate = new RedisTemplate();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
-        redisTemplate.setValueSerializer(fastJson2JsonRedisSerializer);
+        redisTemplate.setValueSerializer(new GenericFastJsonRedisSerializer());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
