@@ -43,4 +43,15 @@ public class SavedRequest {
         return requestUrl.toString();
     }
 
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public void setQueryString(String queryString) {
+        this.queryString = queryString;
+    }
+
+    public void setRequestURI(String requestURI) {
+        this.requestURI = requestURI;
+    }
 }

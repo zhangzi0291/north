@@ -27,9 +27,9 @@ import java.io.IOException;
  */
 public class ShiroPermissionsFilter extends FormAuthenticationFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(ShiroPermissionsFilter.class);
+    private final Logger logger = LoggerFactory.getLogger(ShiroPermissionsFilter.class);
 
-    public static final String SAVED_REQUEST_KEY = "shiroSavedRequest";
+    public final String SAVED_REQUEST_KEY = "shiroSavedRequest";
 
     @Override
     protected void saveRequestAndRedirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
