@@ -39,7 +39,7 @@ public class RedisConfiguration {
         ParserConfig.getGlobalInstance().addAccept("org.apache.shiro.");
         RedisTemplate redisTemplate = new RedisTemplate();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
-        redisTemplate.setValueSerializer(new GenericFastJsonRedisSerializer());
+        redisTemplate.setValueSerializer(fastJson2JsonRedisSerializer());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.afterPropertiesSet();
         return redisTemplate;

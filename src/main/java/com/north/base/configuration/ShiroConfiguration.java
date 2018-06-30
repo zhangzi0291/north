@@ -72,10 +72,9 @@ public class ShiroConfiguration {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
-//        Map<String, Filter> filters = new LinkedHashMap<>();
-//        ShiroPermissionsFilter permissionsFilter = new ShiroPermissionsFilter();
-//        filters.put("permissionsFilter",permissionsFilter);
-//        shiroFilterFactoryBean.setFilters(filters);
+        Map<String, Filter> filters = new LinkedHashMap<>();
+        filters.put("authc", new ShiroPermissionsFilter());
+        shiroFilterFactoryBean.setFilters(filters);
 
         //权限过滤
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap <>();
@@ -88,7 +87,7 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         //未登录跳转
-        shiroFilterFactoryBean.setLoginUrl("/sys/login");
+        shiroFilterFactoryBean.setLoginUrl("/sys/unlogin");
         //未认证跳转
         shiroFilterFactoryBean.setUnauthorizedUrl("/sys/403");
 

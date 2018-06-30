@@ -15,6 +15,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,6 +62,10 @@ public class SysLoginController {
     @RequestMapping("login")
     public R login(HttpServletRequest request, SysUser user) {
         String username = user.getUsername();
+        String password = user.getPassword();
+        if(StringUtils.isEmpty(username) && StringUtils.isEmpty(password)){
+            return R.error(R.ReturnCodeEnum.UNAUTHORIZED.getCode(),"用户名和密码没有填写");
+        }
 
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), EncryptionUtil.getPasswordEncoder(user.getUsername(),user.getPassword()));
         //获取当前的Subject
