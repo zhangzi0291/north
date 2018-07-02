@@ -26,6 +26,15 @@ spring:
       password: 123456
       timeout: 5000
 
+north:
+  shiro-filter:
+    filter-chain-definition-map:
+        /sys/login: anon
+        /sys/logout: anon
+        /sys/unlogin: anon
+        /favicon.ico: anon
+        /druid/*: anon
+        /**: authc
 
 mybatis:
   config: classpath:mybatis-config.xml

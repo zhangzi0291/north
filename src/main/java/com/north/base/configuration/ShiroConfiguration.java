@@ -9,6 +9,7 @@ import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +24,18 @@ import java.util.Map;
  * @Date 2018/6/21 10:46
  */
 @Configuration
+@ConfigurationProperties(prefix="north.shiro-filter")
 public class ShiroConfiguration {
+
+    private Map<String, String> filterChainDefinitionMap;
+
+    public Map<String, String> getFilterChainDefinitionMap() {
+        return filterChainDefinitionMap;
+    }
+
+    public void setFilterChainDefinitionMap(Map<String, String> filterChainDefinitionMap) {
+        this.filterChainDefinitionMap = filterChainDefinitionMap;
+    }
 
     /**
      * 自定义的Realm
@@ -75,15 +87,14 @@ public class ShiroConfiguration {
         Map<String, Filter> filters = new LinkedHashMap<>();
         filters.put("authc", new ShiroPermissionsFilter());
         shiroFilterFactoryBean.setFilters(filters);
-
         //权限过滤
-        Map<String, String> filterChainDefinitionMap = new LinkedHashMap <>();
-        filterChainDefinitionMap.put("/sys/login", "anon");
-        filterChainDefinitionMap.put("/sys/logout", "anon");
-        filterChainDefinitionMap.put("/sys/unlogin", "anon");
-        filterChainDefinitionMap.put("/favicon.ico", "anon");
-        filterChainDefinitionMap.put("/druid/*", "anon");
-        filterChainDefinitionMap.put("/**","authc");
+        Map<String, String> filterChainDefinitionMap = getFilterChainDefinitionMap();
+//        filterChainDefinitionMap.put("/sys/login", "anon");
+//        filterChainDefinitionMap.put("/sys/logout", "anon");
+//        filterChainDefinitionMap.put("/sys/unlogin", "anon");
+//        filterChainDefinitionMap.put("/favicon.ico", "anon");
+//        filterChainDefinitionMap.put("/druid/*", "anon");
+//        filterChainDefinitionMap.put("/**","authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         //未登录跳转
