@@ -12,9 +12,11 @@ import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,13 +29,13 @@ import java.util.Map;
 @ConfigurationProperties(prefix="north.shiro-filter")
 public class ShiroConfiguration {
 
-    private Map<String, String> filterChainDefinitionMap;
+    private List<String> filterChainDefinitionMap;
 
-    public Map<String, String> getFilterChainDefinitionMap() {
+    public List<String> getFilterChainDefinitionMap() {
         return filterChainDefinitionMap;
     }
 
-    public void setFilterChainDefinitionMap(Map<String, String> filterChainDefinitionMap) {
+    public void setFilterChainDefinitionMap(List<String> filterChainDefinitionMap) {
         this.filterChainDefinitionMap = filterChainDefinitionMap;
     }
 
@@ -88,7 +90,13 @@ public class ShiroConfiguration {
         filters.put("authc", new ShiroPermissionsFilter());
         shiroFilterFactoryBean.setFilters(filters);
         //权限过滤
-        Map<String, String> filterChainDefinitionMap = getFilterChainDefinitionMap();
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        for(String filterStr : getFilterChainDefinitionMap()){
+            if(!StringUtils.isEmpty(filterStr)){
+                String[] filter = filterStr.split(":");
+                filterChainDefinitionMap.put(filter[0].trim(),filter[1].trim());
+            }
+        }
 //        filterChainDefinitionMap.put("/sys/login", "anon");
 //        filterChainDefinitionMap.put("/sys/logout", "anon");
 //        filterChainDefinitionMap.put("/sys/unlogin", "anon");

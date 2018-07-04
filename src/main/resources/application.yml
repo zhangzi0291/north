@@ -28,13 +28,13 @@ spring:
 
 north:
   shiro-filter:
-    filter-chain-definition-map:
-        /sys/login: anon
-        /sys/logout: anon
-        /sys/unlogin: anon
-        /favicon.ico: anon
-        /druid/*: anon
-        /**: authc
+    filter-chain-definition-map: |
+        /sys/login:anon,
+        /sys/logout:anon,
+        /sys/unlogin:anon,
+        /favicon.ico:anon,
+        /druid/*:anon,
+        /**:authc,
 
 mybatis:
   config: classpath:mybatis-config.xml
