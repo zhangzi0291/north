@@ -97,12 +97,6 @@ public class ShiroConfiguration {
                 filterChainDefinitionMap.put(filter[0].trim(),filter[1].trim());
             }
         }
-//        filterChainDefinitionMap.put("/sys/login", "anon");
-//        filterChainDefinitionMap.put("/sys/logout", "anon");
-//        filterChainDefinitionMap.put("/sys/unlogin", "anon");
-//        filterChainDefinitionMap.put("/favicon.ico", "anon");
-//        filterChainDefinitionMap.put("/druid/*", "anon");
-//        filterChainDefinitionMap.put("/**","authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         //未登录跳转

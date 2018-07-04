@@ -34,6 +34,7 @@ north:
         /sys/unlogin:anon,
         /favicon.ico:anon,
         /druid/*:anon,
+        /admin/*:authc,
         /**:authc,
 
 mybatis:
