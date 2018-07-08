@@ -3,7 +3,7 @@
     <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto'}">
       <m-menu :shrink='shrink' :menu-list="menuList">
         <div slot="top" class="logo-con">
-          <img src="../images/logo.jpg" key="max-logo" :style="shrink" />
+          <img src="/static/images/logo.jpg" key="max-logo" :style="shrink" />
         </div>
       </m-menu>
     </div>

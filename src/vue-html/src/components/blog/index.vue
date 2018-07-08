@@ -10,7 +10,7 @@
     width: 200px;
     height: 50px;
     background: #5b6270;
-    background-image: url("../../images/logo.jpg");
+    background-image: url("/static/images/logo.jpg");
     background-size: 100% 100%;
     border-radius: 3px;
     float: left;

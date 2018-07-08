@@ -1,14 +1,24 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import login from '@/components/login'
-import chat from '@/components/chat/chat'
-import index from '@/components/index'
-import sysmenu from '@/components/sys/menu/sysmenu'
-import sysrole from '@/components/sys/role/sysrole'
-import sysuser from '@/components/sys/user/sysuser'
-import blogindex from '@/components/blog/index'
-import bloghome from '@/components/blog/home'
+// import HelloWorld from '@/components/HelloWorld'
+// import login from '@/components/login'
+// import chat from '@/components/chat/chat'
+// import index from '@/components/index'
+// import sysmenu from '@/components/sys/menu/sysmenu'
+// import sysrole from '@/components/sys/role/sysrole'
+// import sysuser from '@/components/sys/user/sysuser'
+// import blogindex from '@/components/blog/index'
+// import bloghome from '@/components/blog/home'
+
+const HelloWorld = resolve => require.ensure([], () => resolve(require('@/components/HelloWorld.vue')),"HelloWorld");
+const login = resolve => require.ensure([], () => resolve(require('@/components/login.vue')),"login");
+const chat = resolve => require.ensure([], () => resolve(require('@/components/chat/chat.vue')),"chat");
+const index = resolve => require.ensure([], () => resolve(require('@/components/index.vue')),"index");
+const sysmenu = resolve => require.ensure([], () => resolve(require('@/components/sys/menu/sysmenu.vue')),"sysmenu");
+const sysrole = resolve => require.ensure([], () => resolve(require('@/components/sys/role/sysrole.vue')),"sysrole");
+const sysuser = resolve => require.ensure([], () => resolve(require('@/components/sys/user/sysuser.vue')),"sysuser");
+const blogindex = resolve => require.ensure([], () => resolve(require('@/components/blog/index.vue')),"blogindex");
+const bloghome = resolve => require.ensure([], () => resolve(require('@/components/blog/home.vue')),"bloghome");
 
 Vue.use(Router)
 
@@ -23,7 +33,7 @@ export default new Router({
     {
       path: '/',
       name: 'first',
-      component: login
+      component: chat
     },
     {
       path: '/home',

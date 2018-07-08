@@ -7,6 +7,7 @@ import com.north.sys.entity.SysResource;
 import com.north.sys.entity.SysUser;
 import com.north.sys.service.SysResourceService;
 import com.north.utils.EncryptionUtil;
+import com.north.utils.IpUtil;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -97,7 +98,7 @@ public class SysLoginController {
         }
         //验证是否登录成功
         if(currentUser.isAuthenticated()){
-            logger.debug("用户[" + username + "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
+            logger.debug("用户[" + username + "]登录认证通过");
             session.setAttribute("user",SecurityUtils.getSubject().getPrincipal());
             session = SecurityUtils.getSubject().getSession(true);
             return R.ok("登陆成功").putObject("user",SecurityUtils.getSubject().getPrincipal());

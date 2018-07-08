@@ -21,7 +21,7 @@
     <div>
         <Carousel v-model="carouselValue" :arrow="'hover'" loop class='carousel'>
             <CarouselItem class="carousel-item">
-                <img class="carousel-img" src="@/images/logo.jpg" key="max-logo" />
+                <img class="carousel-img" src="/static/images/logo.jpg" key="max-logo" />
             </CarouselItem>
             <CarouselItem>
                 <div class="arousel-img">2</div>

@@ -14,7 +14,7 @@ const loading = {
       return param
     }
 
-    axios.defaults.baseURL = 'https://127.0.0.1:8000/';
+    axios.defaults.baseURL = 'http://www.northzx.net:60001/';
     //使用cookie
     axios.defaults.withCredentials = true
     //请求前置

@@ -3,9 +3,14 @@ import mModal from '@/components/base/modal'
 import menu from '@/components/base/menu/menu'
 import header from '@/components/base/header/header'
 import axios from 'axios'
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+
 const loading = {
     install: function (Vue) {
 
+        Vue.prototype.SockJS = SockJS
+        Vue.prototype.Stomp = Stomp
         Vue.component('tTable', table)
         Vue.component('mMenu', menu)
         Vue.component('mHeader', header)
@@ -19,7 +24,7 @@ const loading = {
                 "m+": this.getMinutes(),                 //分    
                 "s+": this.getSeconds(),                 //秒    
                 "q+": Math.floor((this.getMonth() + 3) / 3), //季度    
-                "S": this.getMilliseconds()             //毫秒    
+                "S+": this.getMilliseconds()             //毫秒    
             };
             if (/(y+)/.test(fmt))
                 fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));

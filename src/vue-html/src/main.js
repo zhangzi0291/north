@@ -11,13 +11,14 @@ import axiosconfig from '@/plugin/axiosconfig'
 import axios from 'axios'
 import {globalMethods} from '@/plugin/mixin.js'
 
+
+
 Vue.config.debug = true;
 Vue.config.productionTip = false
 Vue.use(commons)
 Vue.use(iView)
 Vue.use(axiosconfig)
 Vue.mixin(globalMethods)
-
 router.beforeEach((to, from, next) => {
   let username = sessionStorage.getItem('username');
   let password = sessionStorage.getItem('password');
