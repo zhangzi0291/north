@@ -1,42 +1,44 @@
 <template>
-    <div>
-        <Scroll ref="talkbox" class="talk-box" :height="msgBoxHeight" loading-text="加载中" :on-reach-top="topLoad">
-            <template v-for="item in content">
-                <Row type="flex" align="top"  >
-                    <template v-if="item.isMe">
-                        <Row class-name="talk-content right">
-                            <div class="talk-title right">{{item.auth}}  {{item.date}}</div>
-                            <span class="talk-message my-talk-color right">{{item.msg}}</span>
-                        </Row>
-                        <Row class-name="talk-head" >
-                            <img :src='item.imgSrc?item.imgSrc:"/static/images/unknow.jpg"'>
-                        </Row>
-                    </template>
-                    <template v-else>
-                        <Row class-name="talk-head" >
-                            <img :src='item.imgSrc?item.imgSrc:"/static/images/unknow.jpg"'>
-                        </Row>
-                        <Row class-name="talk-content">
-                            <div class="talk-title">{{item.auth}}  {{item.date}}</div>
-                            <span class="talk-message talk-color" >{{item.msg}}</span>
-                        </Row>
-                    </template>
-                </Row>
-            </template>
-        </Scroll>
-        <Row type="flex" justify="space-around" align="top">
-            <Input ref="sendInput" v-model="msg" class="sendInput sendBox" size="large"></Input><Button @click='send()'  class="sendButton sendBox" type="primary" size="large">发送</Button>
+  <div>
+    <Scroll ref="talkbox" class="talk-box" :height="msgBoxHeight" loading-text="加载中" :on-reach-top="topLoad">
+      <template v-for="item in content">
+        <Row type="flex" align="top">
+          <template v-if="item.isMe">
+            <Row class-name="talk-content right">
+              <div class="talk-title right">{{item.auth}} {{item.date}}</div>
+              <span class="talk-message my-talk-color right">{{item.msg}}</span>
+            </Row>
+            <Row class-name="talk-head">
+              <img :src='item.imgSrc?item.imgSrc:"/static/images/unknow.jpg"'>
+            </Row>
+          </template>
+          <template v-else>
+            <Row class-name="talk-head">
+              <img :src='item.imgSrc?item.imgSrc:"/static/images/unknow.jpg"'>
+            </Row>
+            <Row class-name="talk-content">
+              <div class="talk-title">{{item.auth}} {{item.date}}</div>
+              <span class="talk-message talk-color">{{item.msg}}</span>
+            </Row>
+          </template>
         </Row>
-        <Modal
-            v-model="nameWindow"
-            title="初始化名称"
-            @on-ok="ok"
-            @on-cancel="cancel">
-         <Input v-model="username" placeholder="输入名称" style="width: 90%">
-             <span slot="prepend">名称</span>
-         </Input>
+      </template>
+    </Scroll>
+    <Row type="flex" justify="space-around" align="top">
+      <Input ref="sendInput" v-model="msg" class="sendInput sendBox" size="large"></Input>
+      <Button @click='send()' class="sendButton sendBox" type="primary" size="large">发送</Button>
+    </Row>
+    <Modal v-model="nameWindow" title="登陆" @on-ok="ok" @on-cancel="cancel" :mask-closable="false">
+      <Form :label-width="80">
+        <FormItem label="用户名："> 
+          <Input v-model="username" placeholder="输入用户名" clearable style="width: 90%"></Input>
+        </FormItem>
+        <FormItem label="密码：">
+          <Input v-model="password" type="password" placeholder="输入密码" clearable style="width: 90%"></Input>
+        </FormItem>
+      </Form>
     </Modal>
-    </div>
+  </div>
 </template>
 <script>
 // let ws = new WebSocket("ws://localhost:8000/springboot/wchat");
@@ -45,11 +47,16 @@ export default {
   name: "chat",
   data() {
     return {
-      ws: {},
-      nameWindow: !!!window.localStorage.username,
+      ws: undefined,
+      nameWindow: true,//!!!window.localStorage.username,
       msg: "",
       msgBoxHeight: "600",
-      username: window.localStorage.username,
+      username: "",
+      password: "",    
+      user:{
+        name:"",
+        uid:"",
+      },
       content: []
     };
   },
@@ -65,8 +72,6 @@ export default {
   },
   mounted() {
     const $this = this;
-
-    this.connect();
 
     setTimeout(function() {
       //   $this.sendMessage(ws, "sssssssss");
@@ -84,42 +89,58 @@ export default {
     //   url: "/public/getIp"
     // }).then(function(res) {
     //   console.log(res);
-    //   $this.username = res.data.ip;
+    //   $this.user.name = res.data.ip;
     // });
   },
   methods: {
     //连接服务器
     connect: function() {
       const $this = this;
-      this.ws = this.Stomp.over(
-        new this.SockJS("http://www.northzx.net:60001/websocket")
-        // new this.SockJS("http://127.0.0.1:8000/websocket")
-      );
+      if(!!!this.username&&!!!this.password){
+         this.$Message.error("没有用户名密码登陆");
+         return
+      }
+      const sock = new this.SockJS("http://127.0.0.1:8000/websocket");
+      // const sock =new this.SockJS("http://www.northzx.net:60001/websocket");
+      this.ws = this.Stomp.over(sock);
       let ws = this.ws;
       ws.debug = null;
+
       ws.connect(
         {
-          username: "admin",
-          password: "admin"
+          username: $this.username,
+          password: $this.password
         },
         function connectCallback(frame) {
-          // setConnected(true);
+          //获取登陆后的用户信息
           ws.subscribe(
             "/app/subscribe",
-            function(greeting) {
-              //   console.log("订阅成功");
+            function(msg) {
+              let body = eval("("+msg.body+")")
+              $this.user.name = body.name
+              $this.user.uid = body.uid
             },
             {}
           );
+          //获取系统推送信息
           ws.subscribe(
-            "/chat/hello",
+            "/sys/msg",
             function(msg) {
-              var body = msg.body;
+               let body = msg.body;
+               if(body) {
+                 $this.$Message.error(body);
+               }
+            },
+            {}
+          );
+          //获取聊天信息
+          ws.subscribe(
+            "/chat/msg",
+            function(msg) {
+              let body = msg.body;
               if (body) {
                 body = eval("(" + body + ")");
-                console.log(body.content.auth)
-                console.log($this.username)
-                if (body.content.auth != $this.username) {
+                if (body.content.auth != $this.user.name) {
                   $this.netSend(body.content);
                 }
               }
@@ -127,24 +148,29 @@ export default {
             },
             {}
           );
-          function errorCallBack(error) {
-            // 连接失败时（服务器响应 ERROR 帧）的回调方法
-            console.log("连接失败");
-            setTimeout(function() {
-              $this.content();
-            }, 3000);
-          }
+
+        },
+        function errorCallBack(error) {
+          console.log("连接失败");
+          //3秒后重连
+          setTimeout(function() {
+            $this.connect();
+          }, 3000);
         }
       );
+
     },
     //发送消息
     send: function() {
       if (!this.msg) {
         return;
       }
+      if(this.checkWS()){
+        return
+      }
       let $this = this;
       let message = {
-        auth: this.username,
+        auth: this.user.name,
         date: new Date().Format("yyyy-MM-dd hh:mm:ss"),
         msg: this.msg,
         imgSrc: "",
@@ -160,14 +186,14 @@ export default {
       $this.$refs.sendInput.focus();
       this.scrollToBottom();
     },
-    netSend(content) {
+    //发送网络消息
+    netSend: function(content) {
       if (content) {
-        content.isMe = content.auth == this.username;
+        content.isMe = content.auth == this.user.name;
         this.content.push(content);
       } else {
         return;
       }
-
       this.scrollToBottom();
     },
     //上拉加载
@@ -180,7 +206,7 @@ export default {
     },
     //发送消息
     sendMessage: function(msg) {
-      this.ws.send("/app/hello", {}, JSON.stringify(msg));
+      this.ws.send("/app/msg", {}, JSON.stringify(msg));
     },
     //翻页到最后
     scrollToBottom: function() {
@@ -192,14 +218,21 @@ export default {
         )[0].scrollHeight;
       }, 50);
     },
-    ok:function () {
-        window.localStorage.username = this.username
+    //检查websocket连接
+    checkWS: function() {
+      if(!!!this.ws){
+        this.$Message.error("未连接服务器");
+      }
+      return !!!this.ws
     },
-    cancel:function () {
-        
+    ok: function() {
+      this.connect();
+    },
+    cancel: function() {
+      this.checkWS()
     }
 
-  }
+  },
 };
 </script>
 
@@ -207,15 +240,19 @@ export default {
 .sendBox {
   margin: 0.5rem;
 }
+
 .sendInput {
   width: calc(100% - 7rem);
 }
+
 .sendButton {
   width: 5rem;
 }
+
 .right {
   text-align: right;
 }
+
 .talk-box {
   margin: 5px 10px 10px;
   li {

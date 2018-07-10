@@ -1,10 +1,10 @@
 server:
   port: 8000
-  ssl:
-    key-store: classpath:keystore.p12
-    key-password: northzx
-    key-store-password: northzx
-    keyStoreType: PKCS12
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-password: northzx
+#    key-store-password: northzx
+#    keyStoreType: PKCS12
   servlet:
 #    context-path: /springboot
   http2:
@@ -35,7 +35,7 @@ north:
         /favicon.ico:anon,
         /druid/*:anon,
         /admin/*:authc,
-        /**:authc,
+        /sys/*:authc,
 
 mybatis:
   config: classpath:mybatis-config.xml

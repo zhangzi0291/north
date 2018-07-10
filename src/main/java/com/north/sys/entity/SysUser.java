@@ -1,9 +1,11 @@
 package com.north.sys.entity;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
-public class SysUser {
+public class SysUser implements Principal {
     private Integer id;
     private String username;
     private String password;
@@ -103,6 +105,13 @@ public class SysUser {
 
     public void setRoleList(List<SysRole> roleList) {
         this.roleList = roleList;
+    }
+
+    public boolean isEmpty(){
+        if(this.id != null || this.username != null || this.name != null){
+            return false;
+        }
+        return true;
     }
 
     @Override
