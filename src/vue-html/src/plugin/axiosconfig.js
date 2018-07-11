@@ -13,9 +13,10 @@ const loading = {
       }
       return param
     }
-
+    let baseURL = 'http://127.0.0.1:8000/'
+    Vue.prototype.baseURL = baseURL
     // axios.defaults.baseURL = 'http://www.northzx.net:60001/';
-    axios.defaults.baseURL = 'http://192.168.10.248:8000/';
+    axios.defaults.baseURL =  baseURL;
     //使用cookie
     axios.defaults.withCredentials = true
     //请求前置

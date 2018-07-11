@@ -118,10 +118,10 @@ export default {
       this.msgBoxHeight =
         window.document.documentElement.clientHeight - inputHeight;
     };
+    
   },
   mounted() {
     const $this = this;
-
     document.addEventListener("visibilitychange",function(){
       $this.isNowWindow = document.hidden
       if(!!!document.hidden){
@@ -156,7 +156,7 @@ export default {
          this.$Message.error("没有用户名密码登陆");
          return
       }
-      const sock = new this.SockJS("http://192.168.10.248:8000/websocket");
+      const sock = new this.SockJS(this.baseURL);
       // const sock =new this.SockJS("http://www.northzx.net:60001/websocket");
       this.ws = this.Stomp.over(sock);
       let ws = this.ws;
