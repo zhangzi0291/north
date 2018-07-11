@@ -1,5 +1,6 @@
 package com.north.base.interceptor;
 
+import com.north.chat.entity.ChatUser;
 import com.north.sys.entity.SysUser;
 import com.north.sys.service.SysUserService;
 import com.north.utils.EncryptionUtil;
@@ -24,10 +25,12 @@ import java.security.Principal;
  * @Date 2018/7/10 14:02
  */
 public class WebSocketHandleInterceptor implements ChannelInterceptor {
-    
+
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-
+        ChatUser unknowUser = new ChatUser();
+        unknowUser.setId(-1);
+        unknowUser.setName("未知用户");
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             String username = accessor.getFirstNativeHeader("username");
@@ -37,9 +40,20 @@ public class WebSocketHandleInterceptor implements ChannelInterceptor {
             if (StringUtils.isEmpty(user) || !user.getPassword().equals(password)) {
                 return null;
             }
+
+            if(user.getRoleList() == null || user.getRoleList().isEmpty() || user.getRoleList().stream().filter(u ->{
+                if(u.getRoleName().equals("聊天") && !"0".equals(u.getStatus())){
+                    return true;
+                }
+                return false;
+            }).findFirst().orElse(null) == null){
+                accessor.setUser(unknowUser);
+                return message;
+            }
             // 绑定user
-            Principal principal = user;
-            accessor.setUser(principal);
+            ChatUser chatUser = new ChatUser();
+            BeanUtils.copyProperties(user,chatUser);
+            accessor.setUser(chatUser);
         }
         return message;
     }

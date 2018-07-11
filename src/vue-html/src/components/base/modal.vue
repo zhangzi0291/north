@@ -2,23 +2,23 @@
     <Modal v-model="isshow" :title="title" width="380" @on-ok='ok' @on-cancel='cancel' transfer	>
         <Form ref="form" :model="data" :inline='inline' :rules='rule'>
             <template v-for="item in columns">
-                <FormItem  :label="item.value+'：'" :key="item.id" :v-model="data[item.key]" :prop="item.key">
-                    <Select v-model="data[item.key]" :readonly='item.readonly' v-if="item.type=='select'">
+                <FormItem  :label="item.value+'：'" :key="item.id" :v-model="data[item.key]" :prop="item.key" v-show="!!!item.hidden">
+                    <Select v-model="data[item.key]" :readonly='item.readonly' v-if="item.type=='select'" >
                         <Option v-for="op in item.child" :value="op.value" :key="op.value">{{ op.name }}</Option>
                     </Select>
-                    <RadioGroup v-model="data[item.key]" v-else-if="item.type=='radio'">
+                    <RadioGroup v-model="data[item.key]" v-else-if="item.type=='radio'" >
                         <Radio v-for="op in item.child" :value="op.value" :key="op.value" :label="op.name"></Radio>
                     </RadioGroup>
-                    <template v-else-if="item.type=='date'">
+                    <template v-else-if="item.type=='date'" >
                         <br>
                         <DatePicker v-model="data[item.key]" :readonly='item.readonly' type="datetime" style="width: 100%"></DatePicker>
                     </template>
-                    <template v-else-if="item.type=='daterange'">
+                    <template v-else-if="item.type=='daterange'" >
                         <br>
                         <DatePicker v-model="data[item.key]" :readonly='item.readonly' type="datetimerange" style="width: 100%" split-panels></DatePicker>
                     </template>
-                    <Input v-model="data[item.key]" :readonly='item.readonly' type="password" v-else-if="item.type=='password'"></Input>
-                    <Input v-model="data[item.key]" :readonly='item.readonly' v-else></Input>
+                    <Input v-model="data[item.key]" :readonly='item.readonly' type="password" v-else-if="item.type=='password'" ></Input>
+                    <Input v-model="data[item.key]" :readonly='item.readonly' v-else ></Input>
                 </FormItem>
             </template>
         </Form>
@@ -111,16 +111,19 @@ export default {
     },
     methods: {
         getParams: function() {
+            const param = {};
             for (var i = 0; i < this.columns.length; i++) {
                 var element = this.columns[i];
                 let key = element.key;
                 let type = element.type;
+                param[key] = this.data[key];
                 if ((type == 'date' || type == 'daterange')&&this.data[key]) {
-                    this.data[key] = (this.data[key].getTime())
+                    console.log(this.data[key])
+                    param[key] = (this.data[key].getTime())
+
                 }
             }
-            console.log(this.data)
-            return this.data
+            return param
         },
         validateForm: function(){
             let flag = false

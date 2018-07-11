@@ -1,11 +1,11 @@
 package com.north.sys.entity;
 
-import com.north.base.Example;
-import com.north.base.Page;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.north.base.Example;
+import com.north.base.Page;
 
 public class SysUserExample implements Example {
     protected String orderByClause;
@@ -786,6 +786,73 @@ public class SysUserExample implements Example {
 
         public Criteria andCreateTimeNotLike(String value) {
             addCriterion("create_time not like", value, "createTime");
+            return (Criteria) this;
+        }
+        public Criteria andImgSrcIsNull() {
+            addCriterion("img_src is null");
+            return (Criteria) this;
+        }
+        public Criteria andImgSrcIsNotNull() {
+            addCriterion("img_src is not null");
+            return (Criteria) this;
+        }
+        public Criteria andImgSrcEqualTo(String value) {
+            addCriterion("img_src =", value, "imgSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgSrcNotEqualTo(String value) {
+            addCriterion("img_src <>", value, "imgSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgSrcGreaterThan(String value) {
+            addCriterion("img_src >", value, "imgSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgSrcGreaterThanOrEqualTo(String value) {
+            addCriterion("img_src >=", value, "imgSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgSrcLessThan(String value) {
+            addCriterion("img_src <", value, "imgSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgSrcLessThanOrEqualTo(String value) {
+            addCriterion("img_src <=", value, "imgSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgSrcIn(List<String> values) {
+            addCriterion("img_src in", values, "imgSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgSrcNotIn(List<String> values) {
+            addCriterion("img_src not in", values, "imgSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgSrcBetween(String value1, String value2) {
+            addCriterion("img_src between", value1, value2, "imgSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgSrcNotBetween(String value1, String value2) {
+            addCriterion("img_src not between", value1, value2, "imgSrc");
+            return (Criteria) this;
+        }
+        
+        public Criteria andImgSrcLike(String value) {
+            addCriterion("img_src like", value, "imgSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgSrcNotLike(String value) {
+            addCriterion("img_src not like", value, "imgSrc");
             return (Criteria) this;
         }
 	}

@@ -35,6 +35,11 @@ public class StringToDateConverter implements Converter<String, Date> {
         if ("".equals(value)) {
             return null;
         }
+        try {
+            long datelong = Long.valueOf(source);
+            return new Date(datelong);
+        } catch (NumberFormatException e) {
+        }
         if(source.matches("^\\d{4}-\\d{1,2}$")){
             return parseDate(source, formarts.get(0));
         }else if(source.matches("^\\d{4}-\\d{1,2}-\\d{1,2}$")){

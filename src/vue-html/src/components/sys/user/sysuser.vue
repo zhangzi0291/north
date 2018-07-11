@@ -69,6 +69,7 @@ export default {
             detail: {
                 data: {},
                 columns: [
+                    { key: "id", value:"id", hidden:true},
                     { key: "name", value: "名称", rule: [{ required: true, message: "名称必填", trigger: 'blur' }], },
                     { key: "username", value: "用户名" },
                     { key: "password", value: "密码", type: 'password' },
@@ -86,6 +87,7 @@ export default {
             add: {
                 data: {},
                 columns: [
+                    { key: "id", value:"id", hidden:true},
                     { key: "name", value: "名称" },
                     { key: "username", value: "用户名" },
                     { key: "password", value: "密码", type: 'password' },

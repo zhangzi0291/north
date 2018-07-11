@@ -55,22 +55,25 @@ public class SysUserController {
     @RequestMapping("add")
     public R addJson(SysUser sysUser ,Integer roleId){
     	Integer num = 0;
+        if(StringUtils.isEmpty(sysUser.getUsername()) || sysUserService.findByName(sysUser.getUsername()) != null){
+            return R.error("添加失败,用户已存在");
+        }
     	if(!StringUtils.isEmpty(sysUser.getPassword())){
             sysUser.setPassword(EncryptionUtil.getPasswordEncoder(sysUser.getUsername(),sysUser.getPassword()));
         }
     	if(roleId == null){
-            return R.error("保存失败,必须选择角色");
+            return R.error("添加失败,必须选择角色");
         }
         try {
     	    sysUser.setCreateTime(new Date());
             num = sysUserService.insertSelective(sysUser);
             sysUserRoleService.insertUserRole(sysUser.getId(),roleId);
             if(num==0){
-                return R.error("保存失败,无数据");
+                return R.error("添加失败,无数据");
             }
         } catch (Exception e) {
             logger.error("Exception ", e);
-            return R.error("保存失败,出现异常");
+            return R.error("添加失败,出现异常");
         }
         return R.ok("data",num);
     }

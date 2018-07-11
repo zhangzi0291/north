@@ -1,11 +1,9 @@
 package com.north.sys.entity;
 
-import java.security.Principal;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
-public class SysUser implements Principal {
+public class SysUser {
     private Integer id;
     private String username;
     private String password;
@@ -16,7 +14,7 @@ public class SysUser implements Principal {
     private String salt;
     private Date expiredTime;
     private Date createTime;
-
+    private String imgSrc;
 	private List<SysRole> roleList;
 	
     public SysUser setId(Integer id){
@@ -107,6 +105,14 @@ public class SysUser implements Principal {
         this.roleList = roleList;
     }
 
+    public String getImgSrc() {
+        return imgSrc;
+    }
+
+    public void setImgSrc(String imgSrc) {
+        this.imgSrc = imgSrc;
+    }
+
     public boolean isEmpty(){
         if(this.id != null || this.username != null || this.name != null){
             return false;
@@ -126,6 +132,7 @@ public class SysUser implements Principal {
         sb.append("email=" + email + ", ");
         sb.append("status=" + status + ", ");
         sb.append("salt=" + salt + ", ");
+        sb.append("imgSrc=" + imgSrc + ", ");
         sb.append("expiredTime=" + expiredTime + ", ");
         sb.append("createTime=" + createTime + ", ");
     	sb.append("]");

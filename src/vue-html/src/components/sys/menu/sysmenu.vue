@@ -69,6 +69,7 @@ export default {
       detail: {
         data: {},
         columns: [
+          { key: "id", value:"id", hidden:true},
           { "key": "resourceName", "value": "名称" },
           { "key": "resourceUrl", "value": "URL" },
           { "key": "parentId", "value": "父元素id" },
@@ -84,6 +85,7 @@ export default {
       add: {
         data: {},
         columns: [
+          { key: "id", value:"id", hidden:true},
           { "key": "resourceName", "value": "名称" },
           { "key": "resourceUrl", "value": "URL" },
           { "key": "parentId", "value": "父元素id" },

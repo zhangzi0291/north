@@ -61,7 +61,7 @@ public class SysLoginController {
     }
 
     @RequestMapping("login")
-    public R login(HttpServletRequest request, SysUser user) {
+    public R login(SysUser user) {
         String username = user.getUsername();
         String password = user.getPassword();
         if(StringUtils.isEmpty(username) && StringUtils.isEmpty(password)){

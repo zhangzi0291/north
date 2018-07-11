@@ -45,10 +45,10 @@
       <t-table ref='table' :url='url.list' :param='data.param' :columns='data.columns'></t-table>
     </div>
     <!--<m-modal ref='editModal' :title="'编辑'" :show='editshow' :data='detail.data' :columns='detail.columns' :ok='editok'></m-modal>-->
-    <Modal ref='editModal' v-model="editshow" :title="'编辑'" width="380" @on-ok='editok'>
-      <Form :model="detail.data">
+    <Modal  v-model="editshow" :title="'编辑'" width="380" @on-ok='editok' >
+      <Form ref='editModal' :model="detail.data" :rules='rule'>
         <template v-for="item in detail.columns">
-          <FormItem :label="item.value+'：'" :key="item.id" :v-model="detail.data[item.key]">
+          <FormItem :label="item.value+'：'" :key="item.id" :v-model="detail.data[item.key]" v-show="!!!item.hidden">
             <Select v-model="detail.data[item.key]" :readonly='item.readonly' v-if="item.type=='select'">
               <Option v-for="op in item.child" :value="op.value" :key="op.value">{{ op.name }}</Option>
             </Select>
@@ -66,10 +66,10 @@
     </Modal>
 
     <!--<m-modal ref='addModal' :title="'新增'" :show='addshow' :data='detail.data' :columns='add.columns' :ok='addok'></m-modal>-->
-    <Modal ref='addModal' v-model="addshow" :title="'新增'" width="380" @on-ok='addok'>
-      <Form :model="add.data">
+    <Modal  v-model="addshow" :title="'新增'" width="380" @on-ok='addok'  >
+      <Form ref='addModal' :model="add.data" :rules='rule'>
         <template v-for="item in add.columns">
-          <FormItem :label="item.value+'：'" :key="item.id" :v-model="add.data[item.key]">
+          <FormItem :label="item.value+'：'" :key="item.id" :v-model="add.data[item.key]" v-show="!!!item.hidden">
             <Select v-model="add.data[item.key]" :readonly='item.readonly' v-if="item.type=='select'">
               <Option v-for="op in item.child" :value="op.value" :key="op.value">{{ op.name }}</Option>
             </Select>
@@ -103,6 +103,7 @@ export default {
       detail: {
         data: {},
         columns: [
+          { key: "id", value:"id", hidden:true},
           { key: "roleName", value: "名称" },
           { key: "status", value: "状态", type: 'select', child: [{ name: '可用', value: '1' }, { name: '禁用', value: '2' }] },
         ],
@@ -111,12 +112,15 @@ export default {
       add: {
         data: {},
         columns: [
+          { key: "id", value:"id", hidden:true},
           { key: "roleName", value: "名称" },
           { key: "status", value: "状态", type: 'select', child: [{ name: '可用', value: '1' }, { name: '禁用', value: '2' }] },
         ],
         menuItems: [],
       },
-
+      rule: {
+          "roleName": [{ required: true, message: "名称必填", trigger: 'blur' }],
+      },
       searchData: {
         roleName: '',
       },
@@ -207,7 +211,7 @@ export default {
     },
     editok: function() {
       let $this = this;
-      if (this.$refs.editModal.validateForm()) {
+      if (this.validateForm("editModal")) {
         $this.addshow = false
         setTimeout(function() {
           $this.addshow = true;
@@ -231,7 +235,8 @@ export default {
     },
     addok: function() {
       let $this = this;
-      if (this.$refs.addModal.validateForm()) {
+      console.log(this)
+      if (this.validateForm("addModal")) {
         $this.addshow = false
         setTimeout(function() {
           $this.addshow = true;
@@ -250,6 +255,17 @@ export default {
         $this.successModal("新增成功")
       })
       this.addshow = false;
+    },
+    validateForm: function(from){
+        let flag = false
+        console.log(this.$refs[from])
+        console.log(from)
+        this.$refs[from].validate((valid) => {
+            if (!valid) {
+                flag = true;
+            }
+        })
+        return flag
     }
 
   },
@@ -262,7 +278,8 @@ export default {
     }).then(function(res) {
       $this.add.menuItems = res.data.data
     })
-  }
+  },
+  
 
 }
 </script>

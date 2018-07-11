@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.north.base.R;
 import com.north.base.exception.UserNotExitException;
 import com.north.chat.entity.ChatMessage;
+import com.north.chat.entity.ChatUser;
 import com.north.sys.entity.SysUser;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -28,11 +29,11 @@ public class ChatController {
 
     @SubscribeMapping("/subscribe")
     public R subscribe(@Headers Map<String, Object> headers, Principal principal) throws UserNotExitException{
-        SysUser user = (SysUser) principal;
+        ChatUser user = (ChatUser) principal;
         if(user.isEmpty()) {
            throw new UserNotExitException("用户不存在");
         }
-        return R.ok("userinfo").putObject("name",user.getName()).putObject("uid",user.getId());
+        return R.ok("userinfo").putObject("name",user.getName()).putObject("uid",user.getId()).putObject("imgSrc",user.getImgSrc());
     }
 
     @MessageMapping("/msg")
