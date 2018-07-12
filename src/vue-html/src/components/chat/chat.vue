@@ -12,8 +12,8 @@
         <Dropdown trigger="click" placement="bottom" class="dropdown" @on-click="dropdownEvent"> 
           <Icon class="head-setting" type="android-more-horizontal" size="26" color="#fff" @click="send()"></Icon>
           <DropdownMenu slot="list" >
-              <DropdownItem name="register">注册</DropdownItem>
               <DropdownItem name="login">登陆</DropdownItem>
+              <DropdownItem name="register">注册</DropdownItem>
           </DropdownMenu>
       </Dropdown>
       </Col>
@@ -74,8 +74,17 @@
           <Input v-model="registerUser.email" placeholder="输入电子邮件" clearable style="width: 90%"></Input>
         </FormItem>
         <FormItem label="头像Url："> 
-          <Input v-model="registerUser.imgSrc" placeholder="输入头像Url" clearable style="width: 90%"></Input>
+          <Input v-model="registerUser.imgSrc" :readonly="isUpload" placeholder="输入头像Url，上传图片大小在1MB之内" style="width: 90%">
+            <Button slot="append" >
+              <Icon type="android-upload" size="18">
+              </Icon>
+              <div style="filter:alpha(opacity=0);cursor: pointer; opacity: 0; position: absolute;  width: 50px;height:34px;overflow: hidden;top:0;right:0; ">
+                <input type="file" id="imgFile" @change="uploadFile()" accept="image/*" style="font-size: 200px;cursor: pointer;direction: rtl ！important; float: right\9; "/>
+              </div>
+            </Button>
+          </Input>
         </FormItem>
+        <img id="preImg" :src="preImg" style="width:100%">
       </Form>
     </Modal>
   </div>
@@ -106,7 +115,9 @@ export default {
         status:1,
         roleId:8
       },
-      content: []
+      content: [],
+      preImg:"",
+      isUpload:false,
     };
   },
   created() {
@@ -156,7 +167,7 @@ export default {
          this.$Message.error("没有用户名密码登陆");
          return
       }
-      const sock = new this.SockJS(this.baseURL);
+      const sock = new this.SockJS(this.baseURL+"/websocket");
       // const sock =new this.SockJS("http://www.northzx.net:60001/websocket");
       this.ws = this.Stomp.over(sock);
       let ws = this.ws;
@@ -186,7 +197,12 @@ export default {
             function(msg) {
                let body = msg.body;
                if(body) {
-                 $this.$Message.error(body);
+                  let body = eval("("+msg.body+")")
+                  $this.$Message.error(body.msg);
+                  if(body.code == 401){
+                    ws.disconnect();
+                    $this.ws = undefined;
+                  }
                }
             },
             {}
@@ -289,6 +305,22 @@ export default {
         this.$Message.error("未连接服务器");
       }
       return !!!this.ws
+    },
+    uploadFile:function () {
+      let $this = this;
+      let imgFile = document.getElementById('imgFile').files[0];
+      if(imgFile.size>1024*1024*1){
+        $this.$Message.error("图片大小在1MB之内");
+        return;
+      }
+      let reader = new FileReader();
+      reader.readAsDataURL(imgFile)
+      reader.onloadend = function () {
+        let dataURL = reader.result;
+        $this.registerUser.imgSrc = dataURL
+        $this.preImg = dataURL
+        $this.isUpload = true
+      };
     },
     loginOk: function() {
       this.connect();
@@ -406,6 +438,7 @@ export default {
       font-size: 1rem;
       padding: 5px 10px 5px;
       border-radius: 10px;
+      display:inline-block; 
     }
     .talk-color {
       background-color: #e0e0e0;

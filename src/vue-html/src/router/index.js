@@ -33,7 +33,11 @@ export default new Router({
     {
       path: '/',
       name: 'first',
-      component: chat
+      component: chat,
+      meta:{
+        title:"在线聊天",
+        viewport:"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0"
+      }
     },
     {
       path: '/home',

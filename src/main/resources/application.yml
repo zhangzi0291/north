@@ -5,7 +5,7 @@ server:
 #    key-password: northzx
 #    key-store-password: northzx
 #    keyStoreType: PKCS12
-  servlet:
+#  servlet:
 #    context-path: /springboot
   http2:
     enable: true
@@ -17,14 +17,26 @@ spring:
   datasource:
     druid:
       url: jdbc:postgresql://127.0.0.1:5432/springboot
-      username: postgres
-      password: 123456
+      username: root
+      password: root
   redis:
       database: 1
-      host: 192.168.101.246
+      host: 127.0.0.1
       port: 6379
-      password: 123456
+      password:
       timeout: 5000
+
+endpoints:
+  shutdown:
+    enabled: true
+    sensitive: true
+security:
+  user:
+    name: north
+    password: north
+management:
+  context-path: /north-manange
+  address: 127.0.0.1
 
 north:
   shiro-filter:

@@ -28,17 +28,18 @@ public class WebSocketHandleInterceptor implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        ChatUser unknowUser = new ChatUser();
-        unknowUser.setId(-1);
-        unknowUser.setName("未知用户");
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            ChatUser unknowUser = new ChatUser();
+            unknowUser.setId(-1);
+            unknowUser.setName("未知用户");
             String username = accessor.getFirstNativeHeader("username");
             String password = accessor.getFirstNativeHeader("password");
             password = (EncryptionUtil.getPasswordEncoder(username,password));
             SysUser user = SpringUtil.getBean(SysUserService.class).findByName(username);
             if (StringUtils.isEmpty(user) || !user.getPassword().equals(password)) {
-                return null;
+                accessor.setUser(unknowUser);
+                return message;
             }
 
             if(user.getRoleList() == null || user.getRoleList().isEmpty() || user.getRoleList().stream().filter(u ->{

@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,7 +31,7 @@ public class ChatController {
     @SubscribeMapping("/subscribe")
     public R subscribe(@Headers Map<String, Object> headers, Principal principal) throws UserNotExitException{
         ChatUser user = (ChatUser) principal;
-        if(user.isEmpty()) {
+        if(user.isEmpty() || user.getId().equals(-1)) {
            throw new UserNotExitException("用户不存在");
         }
         return R.ok("userinfo").putObject("name",user.getName()).putObject("uid",user.getId()).putObject("imgSrc",user.getImgSrc());
@@ -55,8 +56,9 @@ public class ChatController {
 
     @MessageExceptionHandler(UserNotExitException.class)
     public R handleException(UserNotExitException exception) {
-        messagingTemplate.convertAndSend("/sys/msg", exception.getMessage());
-        return R.error("exception" + exception.toString());
+        String message = StringUtils.isEmpty(exception.getMessage())?exception.toString():exception.getMessage();
+        messagingTemplate.convertAndSend("/sys/msg", R.error(R.ReturnCodeEnum.UNAUTHORIZED.getCode(),message));
+        return R.error(R.ReturnCodeEnum.UNAUTHORIZED.getCode(),"Exception: " + exception.toString());
     }
 
 
