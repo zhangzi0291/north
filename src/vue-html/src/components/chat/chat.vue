@@ -1,23 +1,14 @@
 <template>
   <div>
-    <Row type="flex" class-name="head-title" justify="space-around" align="middle" style="background:#00a2ea">
-      <Col  span="4" class-name="head-left">
-
-      </Col>
-      <Col span="16" class-name="head-center">
-        <p>{{title}}</p>
-      </Col>
-      <Col span="4" class-name="head-right">
-        
-        <Dropdown trigger="click" placement="bottom" class="dropdown" @on-click="dropdownEvent"> 
-          <Icon class="head-setting" type="android-more-horizontal" size="26" color="#fff" @click="send()"></Icon>
+    <chat-header>
+        <Dropdown slot="left-button" trigger="click" placement="bottom" @on-click="dropdownEvent"> 
+          <Icon class="head-setting" type="android-more-horizontal" size="26" color="#fff" ></Icon>
           <DropdownMenu slot="list" >
               <DropdownItem name="login">登陆</DropdownItem>
               <DropdownItem name="register">注册</DropdownItem>
           </DropdownMenu>
-      </Dropdown>
-      </Col>
-    </Row>
+        </Dropdown>
+    </chat-header>
     <Scroll ref="talkbox" class="talk-box" :height="msgBoxHeight" loading-text="加载中" :on-reach-top="topLoad">
       <template v-for="item in content">
         <Row type="flex" align="top">
@@ -378,23 +369,6 @@ export default {
   }
 }
 
-.head-title{
-  height: 3rem;
-  background:"#00a2ea";
-  text-align: center;
-  .head-center{
-    font-size: 1.1rem;
-    color: #fff;
-    font-weight:600;
-  }
-  .head-right{
-    
-    .head-setting{
-      cursor:pointer
-    }
-
-  }
-}
 .sendBox {
   margin: 0.5rem;
 }
