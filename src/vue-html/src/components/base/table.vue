@@ -18,7 +18,9 @@ export default {
       },
       data: [],
       tableLoad: true,
-      tableHeight: 521
+      tableHeight: 521,
+      ascs:new Set(),
+      descs:new Set(),
     }
   },
   props: {
@@ -53,12 +55,12 @@ export default {
   methods: {
     change: function(page) {
       this.tableLoad = true;
-      this.param.offset = page - 1
+      this.param.current = page
       this.searchData(this.param, page, this.page.pageSize)
     },
     chageSize: function(pageSize) {
       this.tableLoad = true;
-      this.param.limit = pageSize
+      this.param.size = pageSize
       this.searchData(this.param, this.page.current, pageSize)
     },
     changeHeight: function() {
@@ -75,10 +77,10 @@ export default {
         param = {}
       }
       if (!pageSize) {
-        this.param.limit = pageSize
+        this.param.size = pageSize
       }
       if (!current) {
-        this.param.offset = current - 1
+        this.param.current = current
       }
       this.param = Object.assign(this.param, param);
       this.$ajax({
@@ -96,8 +98,25 @@ export default {
     sort: function(sortOrder) {
       console.log(sortOrder)
       this.tableLoad = true;
-      this.param.order = sortOrder.order
-      this.param.sortCol = sortOrder.key
+      let key = this.toLine(sortOrder.key)
+      switch (sortOrder.order) {
+        case "normal":
+          this.ascs.clear()
+          this.descs.clear()
+          break;
+       case "asc":
+          this.ascs.add(key)
+          this.descs.clear()
+          break;
+       case "desc":
+          this.descs.add(key)
+          this.ascs.clear()
+          break;
+        default:
+          break;
+      }
+      this.param.ascs=Array.from(this.ascs)
+      this.param.descs=Array.from(this.descs)
       this.searchData(this.param, this.page.current, this.page.pageSize)
     }
   }

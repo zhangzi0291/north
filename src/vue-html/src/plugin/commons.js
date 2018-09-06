@@ -35,6 +35,16 @@ const loading = {
                     fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
             return fmt;
         }
+        // 下划线转换驼峰
+        Vue.prototype.toHump = function (name) {
+            return name.replace(/\_(\w)/g, function(all, letter){
+                return letter.toUpperCase();
+            });
+        }
+        // 驼峰转换下划线
+        Vue.prototype.toLine = function (name) {
+        return name.replace(/([A-Z])/g,"_$1").toLowerCase();
+        }
     }
 };
 
