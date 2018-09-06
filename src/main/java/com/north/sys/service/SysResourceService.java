@@ -6,7 +6,7 @@ import com.north.sys.entity.SysResourceExample;
 
 import java.util.List;
 
-public interface SysResourceService extends BaseService<SysResource, SysResourceExample> {
+public interface SysResourceService extends BaseService<SysResource> {
 
     List<SysResource> getAllResource() ;
 

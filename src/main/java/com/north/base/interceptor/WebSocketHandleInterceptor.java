@@ -31,7 +31,7 @@ public class WebSocketHandleInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             ChatUser unknowUser = new ChatUser();
-            unknowUser.setId(-1);
+            unknowUser.setId("-1");
             unknowUser.setName("未知用户");
             String username = accessor.getFirstNativeHeader("username");
             String password = accessor.getFirstNativeHeader("password");

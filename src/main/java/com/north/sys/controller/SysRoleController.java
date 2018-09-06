@@ -1,17 +1,17 @@
 package com.north.sys.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.north.base.Page;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.north.base.R;
 import com.north.sys.entity.*;
 import com.north.sys.service.SysResourceService;
 import com.north.sys.service.SysRoleResourceService;
 import com.north.sys.service.SysRoleService;
-import com.north.utils.CamelToUnderlineUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,21 +39,16 @@ public class SysRoleController {
     
     @RequestMapping("list")
     public R listJson(SysRole sysRole, Page page){
-        SysRoleExample example = new SysRoleExample();
-        SysRoleExample.Criteria criteria = example.createCriteria();
-        //设置查询条件 。。。
-        example.setPage(page);
-        example.setOrderByClause(" id ");
-        if(!StringUtils.isEmpty(page.getOrder())&&!StringUtils.isEmpty(page.getSortCol())){
-            example.setOrderByClause(CamelToUnderlineUtil.camelToUnderline(page.getSortCol())+" "+page.getOrder());
-        }
+        QueryWrapper<SysRole> wrapper = new QueryWrapper<>();
+
+        wrapper.orderByAsc("id");
+
         if(!StringUtils.isEmpty(sysRole.getRoleName())){
-            criteria.andRoleNameLike("%"+sysRole.getRoleName()+"%");
+            wrapper.like("role_name",sysRole.getRoleName());
         }
         try {
-            List< SysRole> list = sysRoleService.selectByExample(example);
-            Integer count = sysRoleService.countByExample(example);
-            return R.ok().putObject("rows",list).putObject("total", count);
+            IPage<SysRole> pages = sysRoleService.selectByWrapperAndPage(page,wrapper);
+            return R.ok().putObject("rows",pages.getRecords()).putObject("total", pages.getTotal());
         } catch (Exception e) {
             logger.error("Exception ", e);
         }
@@ -62,12 +57,8 @@ public class SysRoleController {
 
     @RequestMapping("selectOptions")
     public R selectOptions(SysRole sysRole){
-        SysRoleExample example = new SysRoleExample();
-        SysRoleExample.Criteria criteria = example.createCriteria();
-        //设置查询条件 。。。
-
         try {
-            List< SysRole> list = sysRoleService.selectByExample(example);
+            List< SysRole> list = sysRoleService.selectByWrapper(new QueryWrapper<>());
             List<Map<String,Object>> options = new ArrayList<>();
             list.forEach(role->{
                 Map<String,Object> map = new HashMap<>();
@@ -86,7 +77,7 @@ public class SysRoleController {
     public R addJson(SysRole sysRole ,String resources){
     	Integer num = 0;
         try {
-            num = sysRoleService.insertSelective(sysRole);
+            num = sysRoleService.insert(sysRole);
             List<Integer> resourceIdList = getResourceIdList(JSONArray.parseArray(resources,SysResource.class));
             sysRoleResourceService.insertRoleResource(sysRole.getId(), resourceIdList);
             if(num==0){
@@ -105,7 +96,7 @@ public class SysRoleController {
             List<SysRoleResource> rrlist =  sysRoleResourceService.getResourceByRoleId(id);
             List<SysResource> list = sysResourceService.getResourceMenus(null);
             List<SysResourceDto> options = setChildNood(list,rrlist);
-            return R.ok("data",sysRoleService.selectByPrimaryKey(id)).putObject("options",options);
+            return R.ok("data",sysRoleService.selectById(id)).putObject("options",options);
         } catch (Exception e) {
             logger.error("Exception ", e);
         }
@@ -144,7 +135,7 @@ public class SysRoleController {
     public R editJson(SysRole sysRole,String resources){
    		Integer num = 0;
         try {
-            num = sysRoleService.updateByPrimaryKeySelective(sysRole);
+            num = sysRoleService.updateById(sysRole);
             List<Integer> resourceIdList = getResourceIdList(JSONArray.parseArray(resources,SysResource.class));
             sysRoleResourceService.updateRoleResource(sysRole.getId(), resourceIdList);
             if(num==0){
@@ -162,7 +153,7 @@ public class SysRoleController {
         Integer num = 0;
         try {
             for(int i=0;i<ids.size();i++){
-                num+=sysRoleService.deleteByPrimaryKey(ids.get(i));
+                num+=sysRoleService.deleteById(ids.get(i));
                 sysRoleResourceService.deleteRoleResource(ids.get(i));
             }
         } catch (Exception e) {

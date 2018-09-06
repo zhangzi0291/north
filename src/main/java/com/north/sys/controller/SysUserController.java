@@ -1,17 +1,16 @@
 package com.north.sys.controller;
 
-import com.north.base.Page;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.north.base.R;
 import com.north.sys.entity.SysUser;
 import com.north.sys.entity.SysUserDto;
-import com.north.sys.entity.SysUserExample;
 import com.north.sys.service.SysUserRoleService;
 import com.north.sys.service.SysUserService;
-import com.north.utils.CamelToUnderlineUtil;
 import com.north.utils.EncryptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,17 +34,11 @@ public class SysUserController {
 
     @RequestMapping("list")
     public R listJson(SysUser sysUser, Page page){
-        SysUserExample example = new SysUserExample();
-        SysUserExample.Criteria criteria = example.createCriteria();
-        //设置查询条件 。。。
-        example.setPage(page);
-        if(!StringUtils.isEmpty(page.getOrder())&&!StringUtils.isEmpty(page.getSortCol())){
-            example.setOrderByClause(CamelToUnderlineUtil.camelToUnderline(page.getSortCol())+" "+page.getOrder());
-        }
+        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
+
         try {
-            List< SysUser> list = sysUserService.selectByExample(example);
-            Integer count = sysUserService.countByExample(example);
-            return R.ok().putObject("rows",list).putObject("total", count);
+            IPage< SysUser> list = sysUserService.selectByWrapperAndPage(page,new QueryWrapper());
+            return R.ok().putObject("rows",list.getRecords()).putObject("total", list.getTotal());
         } catch (Exception e) {
             logger.error("Exception ", e);
         }
@@ -66,8 +59,8 @@ public class SysUserController {
         }
         try {
     	    sysUser.setCreateTime(new Date());
-            num = sysUserService.insertSelective(sysUser);
-            sysUserRoleService.insertUserRole(sysUser.getId(),roleId);
+            num = sysUserService.insert(sysUser);
+            sysUserRoleService.insertUserRole(Integer.valueOf(sysUser.getId()),roleId);
             if(num==0){
                 return R.error("添加失败,无数据");
             }
@@ -97,8 +90,8 @@ public class SysUserController {
             sysUser.setPassword(EncryptionUtil.getPasswordEncoder(sysUser.getUsername(),sysUser.getPassword()));
         }
         try {
-            num = sysUserService.updateByPrimaryKeySelective(sysUser);
-            sysUserRoleService.updateUserRole(sysUser.getId(),roleId);
+            num = sysUserService.updateById(sysUser);
+            sysUserRoleService.updateUserRole(Integer.valueOf(sysUser.getId()),roleId);
             if(num==0){
                 return R.error("保存失败,无数据");
             }
@@ -115,7 +108,7 @@ public class SysUserController {
         Integer num = 0;
         try {
             for(int i=0;i<ids.size();i++){
-                num+=sysUserService.deleteByPrimaryKey(ids.get(i));
+                num+=sysUserService.deleteById(ids.get(i));
                 sysUserRoleService.deleteUserRole(ids.get(i));
             }
         } catch (Exception e) {

@@ -1,15 +1,13 @@
 package com.north.sys.controller;
 
-import com.north.base.Page;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.north.base.R;
 import com.north.sys.entity.SysRoleResource;
-import com.north.sys.entity.SysRoleResourceExample;
 import com.north.sys.service.SysRoleResourceService;
-import com.north.utils.CamelToUnderlineUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,17 +28,10 @@ public class SysRoleResourceController {
     
     @RequestMapping("list")
     public R listJson(SysRoleResource sysRoleResource, Page page){
-        SysRoleResourceExample example = new SysRoleResourceExample();
-        SysRoleResourceExample.Criteria criteria = example.createCriteria();
-        //设置查询条件 。。。
-        example.setPage(page);
-        if(!StringUtils.isEmpty(page.getOrder())&&!StringUtils.isEmpty(page.getSortCol())){
-            example.setOrderByClause(CamelToUnderlineUtil.camelToUnderline(page.getSortCol())+" "+page.getOrder());
-        }
+        QueryWrapper<SysRoleResource> wrapper = new QueryWrapper<>();
         try {
-            List< SysRoleResource> list = sysRoleResourceService.selectByExample(example);
-            Integer count = sysRoleResourceService.countByExample(example);
-            return R.ok().putObject("rows",list).putObject("total", count);
+            IPage<SysRoleResource> pages = sysRoleResourceService.selectByWrapperAndPage(page,wrapper);
+            return R.ok().putObject("rows",pages.getRecords()).putObject("total", pages.getTotal());
         } catch (Exception e) {
             logger.error("Exception ", e);
         }
@@ -51,7 +42,7 @@ public class SysRoleResourceController {
     public R addJson(SysRoleResource sysRoleResource ){
     	Integer num = 0;
         try {
-            num = sysRoleResourceService.insertSelective(sysRoleResource);
+            num = sysRoleResourceService.insert(sysRoleResource);
             if(num==0){
                 return R.error("保存失败,无数据");
             }
@@ -65,7 +56,7 @@ public class SysRoleResourceController {
    	@RequestMapping("get")
     public R get(Integer id){
         try {
-            return R.ok("data",sysRoleResourceService.selectByPrimaryKey(id));
+            return R.ok("data",sysRoleResourceService.selectById(id));
         } catch (Exception e) {
             logger.error("Exception ", e);
         }
@@ -76,7 +67,7 @@ public class SysRoleResourceController {
     public R editJson(Map<String, Object> map, SysRoleResource sysRoleResource){
    		Integer num = 0;
         try {
-            num = sysRoleResourceService.updateByPrimaryKeySelective(sysRoleResource);
+            num = sysRoleResourceService.updateById(sysRoleResource);
             if(num==0){
                 return R.error("保存失败,无数据");
             }
@@ -92,9 +83,7 @@ public class SysRoleResourceController {
     public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids ){
         Integer num = 0;
         try {
-            for(int i=0;i<ids.size();i++){
-                num+=sysRoleResourceService.deleteByPrimaryKey(ids.get(i));
-            }
+            num = sysRoleResourceService.deleteBatchIds(ids);
         } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");

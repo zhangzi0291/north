@@ -1,6 +1,8 @@
 package com.north.sys.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
+
 import java.util.List;
 
 public class SysRole {
@@ -8,6 +10,7 @@ public class SysRole {
     private String roleName;
     private String roleDesc;
     private String status;
+    @TableField(exist = false)
     private List<SysResource> resourceList;
     public SysRole setId(Integer id){
         this.id = id;

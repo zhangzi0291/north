@@ -6,7 +6,7 @@ import com.north.sys.entity.SysRoleExample;
 
 import java.util.List;
 
-public interface SysRoleService extends BaseService<SysRole, SysRoleExample> {
+public interface SysRoleService extends BaseService<SysRole> {
 
     List<SysRole> getRoleByResourceId(int resourceId) ;
 

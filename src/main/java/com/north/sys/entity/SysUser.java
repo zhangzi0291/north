@@ -1,10 +1,19 @@
 package com.north.sys.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.util.Date;
 import java.util.List;
 
+@TableName
 public class SysUser {
-    private Integer id;
+
+    @TableId(type=IdType.ID_WORKER_STR)
+    private String id;
+
     private String username;
     private String password;
     private String name;
@@ -15,13 +24,14 @@ public class SysUser {
     private Date expiredTime;
     private Date createTime;
     private String imgSrc;
+    @TableField(exist = false)
 	private List<SysRole> roleList;
 	
-    public SysUser setId(Integer id){
+    public SysUser setId(String id){
         this.id = id;
         return this;
     }
-    public Integer getId(){
+    public String getId(){
         return this.id;
     }
 

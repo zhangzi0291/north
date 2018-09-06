@@ -1,9 +1,10 @@
 package com.north.base.service.impl;
 
-import com.north.base.Example;
-import com.north.base.Page;
-import com.north.base.PageList;
-import com.north.base.dao.BaseDao;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.north.base.service.BaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,35 +12,30 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 
 /**
  * 公用的Service实现类，继承实现类的要传递2个泛型类型，第一个是实体Bean类型，第二个是查询Bean类型。
  */
-public abstract class BaseServiceImpl<T, E> implements BaseService<T, E> {
+public abstract class BaseServiceImpl<T> implements BaseService<T> {
 	private static Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
-	private BaseDao<T, E> _baseDao;
-	
+	private BaseMapper<T> _baseDao;
+
 	/**
-	 * 将继承该类的子类中的BaseDao赋值给该类中的_baseDao,通过调用子类的getDao()或者获取子类的dao<BaseDao>属性（该属性需要是public）
+	 * 将继承该类的子类中的BaseDao赋值给该类中的_baseDao,获取子类的dao<BaseMapper>属性
 	 */
 	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void setBaseDao()  throws Exception {
 		try {
-			_baseDao = getDao();
-			if(logger.isDebugEnabled()) {
-				logger.debug("从getDao()获取的_baseDao是{}"+_baseDao);
-			}
 			if(null != _baseDao) return;
 			Field[] fields = getClass().getDeclaredFields();
 			for(Field f : fields) {
 				f.setAccessible(true);
 				Object obj = f.get(this);
-				if(obj instanceof BaseDao) {
-					_baseDao = (BaseDao<T, E>)obj;
+				if(obj instanceof BaseMapper) {
+					_baseDao = (BaseMapper<T>)obj;
 					if("dao".equals(f.getName())) {
 						break;
 					}
@@ -51,86 +47,53 @@ public abstract class BaseServiceImpl<T, E> implements BaseService<T, E> {
 		}
 	}
 
-	public int countByExample(E example)  {
-		return _baseDao.countByExample(example);
-	}
-
-	public int deleteByExample(E example)  {
-		return _baseDao.deleteByExample(example);
-	}
-
-	public List<T> selectByExample(E example)  {
-		return _baseDao.selectByExample(example);
-	}
-
-	public int updateByExampleSelective(T record, E example)  {
-		return _baseDao.updateByExampleSelective(record, example);
-	}
-
-	public int updateByExample(T record, E example)  {
-		return _baseDao.updateByExample(record, example);
-	}
-
-	public int insert(T record)  {
+	@Override
+	public int insert(T record) {
 		return _baseDao.insert(record);
 	}
 
-	public int insertSelective(T record)  {
-		return _baseDao.insertSelective(record);
+	@Override
+	public int deleteById(Serializable id) {
+		return _baseDao.deleteById(id);
 	}
 
-	/**
-	 * 分页查询
-	 * @param example 查询条件
-	 * @return 分页查询的结果
-	 * @
-	 * @see BaseService#selectByExampleAndPage(Object)
-	 */
-	public PageList<T> selectByExampleAndPage(E example)  {
-		if(null != example) {
-			Page page = null;
-			List<T> list = null;
-			int count = 0;
-			if(example instanceof Example) {
-				page = ((Example) example).getPage();
-				((Example) example).setPage(null);
-				count = _baseDao.countByExample(example);
-				
-				if(count > 0) {
-					((Example) example).setPage(page);
-					list = _baseDao.selectByExample(example);
-				}
-			}
-			if(null == list) list = new ArrayList<T>(0);
-			PageList<T> pageList = new PageList<T>(list, count);
-			return pageList;
-		}
-		return new PageList<T>(new ArrayList<T>(0), 0);
+    @Override
+    public int deleteBatchIds(List<? extends Serializable> ids) {
+        return _baseDao.deleteBatchIds(ids);
+    }
+
+    @Override
+	public int deleteByWrapper(QueryWrapper<T> wrapper) {
+		return _baseDao.delete(wrapper);
 	}
 
-	public int deleteByPrimaryKey(Serializable primaryKey)  {
-		return _baseDao.deleteByPrimaryKey(primaryKey);
+	@Override
+	public int updateByWrapper(T record, UpdateWrapper<T> wrapper) {
+		return _baseDao.update(record,wrapper);
 	}
 
-	public T selectByPrimaryKey(Serializable primaryKey)  {
-		return _baseDao.selectByPrimaryKey(primaryKey);
+	@Override
+	public int updateById(T record) {
+		return _baseDao.updateById(record);
 	}
 
-	public int updateByPrimaryKeySelective(T record)  {
-		return _baseDao.updateByPrimaryKeySelective(record);
+	@Override
+	public T selectById(Serializable id) {
+		return _baseDao.selectById(id);
 	}
 
-	public int updateByPrimaryKey(T record)  {
-		return _baseDao.updateByPrimaryKey(record);
+	@Override
+	public List<T> selectByWrapper(QueryWrapper<T> wrapper) {
+		return _baseDao.selectList(wrapper);
 	}
 
-	/**
-	 * 默认实现返回null
-	 * @return
-	 * @
-	 * @see BaseService#getDao()
-	 */
-	public abstract BaseDao<T, E> getDao() ;
+	@Override
+	public IPage<T> selectByWrapperAndPage(Page page, QueryWrapper<T> wrapper) {
+		return _baseDao.selectPage(page,wrapper);
+	}
 
-
+	@Override
+	public int countByWrapper(QueryWrapper<T> wrapper) {
+		return _baseDao.selectCount(wrapper);
+	}
 }

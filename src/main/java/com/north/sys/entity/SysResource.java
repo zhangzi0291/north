@@ -1,6 +1,7 @@
 package com.north.sys.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -16,8 +17,8 @@ public class SysResource {
     private String status;
     private String resourceIcon;
     private Integer resourceOrderNum;
-
-	List<SysResource> child = new ArrayList<>();
+    @TableField(exist = false)
+	private List<SysResource> child = new ArrayList<>();
 	
     public SysResource setId(Integer id){
         this.id = id;

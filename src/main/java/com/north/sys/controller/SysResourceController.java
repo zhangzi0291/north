@@ -1,17 +1,17 @@
 package com.north.sys.controller;
 
 
-import com.north.base.Page;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.north.base.R;
 import com.north.sys.entity.SysResource;
 import com.north.sys.entity.SysResourceDto;
 import com.north.sys.entity.SysResourceExample;
 import com.north.sys.service.SysResourceService;
-import com.north.utils.CamelToUnderlineUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,26 +35,20 @@ public class SysResourceController {
 
     @RequestMapping("list")
     public R listJson(SysResource sysResource, Page page) {
-        SysResourceExample example = new SysResourceExample();
-        SysResourceExample.Criteria criteria = example.createCriteria();
+        QueryWrapper<SysResource> wrapper = new QueryWrapper<>();
         //设置查询条件
         if (!StringUtils.isEmpty(sysResource.getResourceName())) {
-            criteria.andResourceNameLike("%" + sysResource.getResourceName() + "%");
+            wrapper.like("resource_name",sysResource.getResourceName());
         }
         if (!StringUtils.isEmpty(sysResource.getResourceType())) {
-            criteria.andResourceTypeLike("%" + sysResource.getResourceType() + "%");
+            wrapper.like("resource_type",sysResource.getResourceType());
         }
         if (!StringUtils.isEmpty(sysResource.getResourceUrl())) {
-            criteria.andResourceUrlLike("%" + sysResource.getResourceUrl() + "%");
+            wrapper.like("resource_url",sysResource.getResourceUrl());
         }
-        if (!StringUtils.isEmpty(page.getOrder()) && !StringUtils.isEmpty(page.getSortCol())) {
-            example.setOrderByClause(CamelToUnderlineUtil.camelToUnderline(page.getSortCol()) + " " + page.getOrder());
-        }
-        example.setPage(page);
         try {
-            List<SysResource> list = sysResourceService.selectByExample(example);
-            Integer count = sysResourceService.countByExample(example);
-            return R.ok().putObject("rows", list).putObject("total", count);
+            IPage<SysResource> pages = sysResourceService.selectByWrapperAndPage(page,wrapper);
+            return R.ok().putObject("rows", pages.getRecords()).putObject("total", pages.getTotal());
         } catch (Exception e) {
             logger.error("Exception ", e);
         }
@@ -95,7 +89,7 @@ public class SysResourceController {
     public R addJson(SysResource sysResource) {
         Integer num = 0;
         try {
-            num = sysResourceService.insertSelective(sysResource);
+            num = sysResourceService.insert(sysResource);
             if (num == 0) {
                 return R.error("保存失败,无数据");
             }
@@ -109,7 +103,7 @@ public class SysResourceController {
     @RequestMapping("get")
     public R get(Integer id) {
         try {
-            return R.ok("data", sysResourceService.selectByPrimaryKey(id));
+            return R.ok("data", sysResourceService.selectById(id));
         } catch (Exception e) {
             logger.error("Exception ", e);
         }
@@ -120,7 +114,7 @@ public class SysResourceController {
     public R editJson(Map<String, Object> map, SysResource sysResource) {
         Integer num = 0;
         try {
-            num = sysResourceService.updateByPrimaryKeySelective(sysResource);
+            num = sysResourceService.updateById(sysResource);
             if (num == 0) {
                 return R.error("保存失败,无数据");
             }
@@ -135,9 +129,7 @@ public class SysResourceController {
     public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids) {
         Integer num = 0;
         try {
-            for (int i = 0; i < ids.size(); i++) {
-                num += sysResourceService.deleteByPrimaryKey(ids.get(i));
-            }
+            num = sysResourceService.deleteBatchIds(ids);
         } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");

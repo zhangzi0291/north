@@ -1,11 +1,10 @@
 package com.north.sys.service.impl;
 
 
-import com.north.base.dao.BaseDao;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.north.base.service.impl.BaseServiceImpl;
 import com.north.sys.dao.SysResourceDao;
 import com.north.sys.entity.SysResource;
-import com.north.sys.entity.SysResourceExample;
 import com.north.sys.service.SysResourceService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -18,22 +17,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service("SysResourceervice")
-public class SysResourceServiceImpl extends BaseServiceImpl<SysResource, SysResourceExample> implements SysResourceService {
+public class SysResourceServiceImpl extends BaseServiceImpl<SysResource> implements SysResourceService {
 
     @Resource
     private SysResourceDao dao;
 
-
-    @Override
-    public BaseDao<SysResource, SysResourceExample> getDao()  {
-        return dao;
-    }
-
-
     @Override
     public List<SysResource> getAllResource() {
-        SysResourceExample example = new SysResourceExample();
-        return dao.selectByExample(example);
+        return dao.selectList(new QueryWrapper<>());
     }
 
     @Override
