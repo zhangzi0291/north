@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface SysRoleResourceService extends BaseService<SysRoleResource> {
 
-    List<SysRoleResource> getResourceByRoleId(Integer roleId);
+    List<SysRoleResource> getResourceByRoleId(String roleId);
 
-    void insertRoleResource(Integer roleId, List<Integer> resourceIds);
-    void deleteRoleResource(Integer roleId);
-    void updateRoleResource(Integer roleId, List<Integer> resourceIds);
+    void insertRoleResource(String roleId, List<String> resourceIds);
+    void deleteRoleResource(String roleId);
+    void updateRoleResource(String roleId, List<String> resourceIds);
 
 }

@@ -7,22 +7,22 @@ import java.util.List;
 
 public class SysUserDto extends SysUser{
 
-    private Integer roleId;
+    private String roleId;
 
     public SysUserDto() {
 
     }
 
-    public SysUserDto(SysUser user, Integer roleId) {
+    public SysUserDto(SysUser user, String roleId) {
         BeanUtils.copyProperties(user,this);
         this.roleId = roleId;
     }
 
-    public Integer getRoleId() {
+    public String getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Integer roleId) {
+    public void setRoleId(String roleId) {
         this.roleId = roleId;
     }
 }

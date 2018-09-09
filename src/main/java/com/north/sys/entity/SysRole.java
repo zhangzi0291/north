@@ -1,22 +1,25 @@
 package com.north.sys.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.util.List;
 
 public class SysRole {
-    private Integer id;
+    @TableId(type=IdType.ID_WORKER_STR)
+    private String id;
     private String roleName;
     private String roleDesc;
     private String status;
     @TableField(exist = false)
     private List<SysResource> resourceList;
-    public SysRole setId(Integer id){
+    public SysRole setId(String id){
         this.id = id;
         return this;
     }
-    public Integer getId(){
+    public String getId(){
         return this.id;
     }
 

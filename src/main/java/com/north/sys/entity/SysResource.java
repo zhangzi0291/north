@@ -1,14 +1,17 @@
 package com.north.sys.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SysResource {
-    private Integer id;
+    @TableId(type=IdType.ID_WORKER_STR)
+    private String id;
     private String resourceName;
     private String resourceType;
     private String resourceUrl;
@@ -20,11 +23,11 @@ public class SysResource {
     @TableField(exist = false)
 	private List<SysResource> child = new ArrayList<>();
 	
-    public SysResource setId(Integer id){
+    public SysResource setId(String id){
         this.id = id;
         return this;
     }
-    public Integer getId(){
+    public String getId(){
         return this.id;
     }
 

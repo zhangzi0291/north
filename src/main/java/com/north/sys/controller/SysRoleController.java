@@ -78,7 +78,7 @@ public class SysRoleController {
     	Integer num = 0;
         try {
             num = sysRoleService.insert(sysRole);
-            List<Integer> resourceIdList = getResourceIdList(JSONArray.parseArray(resources,SysResource.class));
+            List<String> resourceIdList = getResourceIdList(JSONArray.parseArray(resources,SysResource.class));
             sysRoleResourceService.insertRoleResource(sysRole.getId(), resourceIdList);
             if(num==0){
                 return R.error("保存失败,无数据");
@@ -91,7 +91,7 @@ public class SysRoleController {
     }
     
    	@RequestMapping("get")
-    public R get(Integer id){
+    public R get(String id){
         try {
             List<SysRoleResource> rrlist =  sysRoleResourceService.getResourceByRoleId(id);
             List<SysResource> list = sysResourceService.getResourceMenus(null);
@@ -136,7 +136,7 @@ public class SysRoleController {
    		Integer num = 0;
         try {
             num = sysRoleService.updateById(sysRole);
-            List<Integer> resourceIdList = getResourceIdList(JSONArray.parseArray(resources,SysResource.class));
+            List<String> resourceIdList = getResourceIdList(JSONArray.parseArray(resources,SysResource.class));
             sysRoleResourceService.updateRoleResource(sysRole.getId(), resourceIdList);
             if(num==0){
                 return R.error("保存失败,无数据");
@@ -149,7 +149,7 @@ public class SysRoleController {
     }
     
     @RequestMapping("del")
-    public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids ){
+    public R delJson(Map<String, Object> map, @RequestParam("ids") List<String> ids ){
         Integer num = 0;
         try {
             for(int i=0;i<ids.size();i++){
@@ -164,8 +164,8 @@ public class SysRoleController {
     }
 
 
-    private List<Integer> getResourceIdList(List<SysResource> resourceList){
-        List<Integer> resourceIdList = new ArrayList<>();
+    private List<String> getResourceIdList(List<SysResource> resourceList){
+        List<String> resourceIdList = new ArrayList<>();
         resourceList.forEach(resource ->{
             resourceIdList.add(resource.getId());
         });

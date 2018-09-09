@@ -31,7 +31,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
 
         List<SysRoleResource> roleResourceList =  roleResourceDao.selectList(wrapper);
 
-        List<Integer> roleIdList = new ArrayList<>();
+        List<String> roleIdList = new ArrayList<>();
         for(SysRoleResource rr:roleResourceList){
             roleIdList.add(rr.getRoleId());
         }

@@ -23,14 +23,14 @@ public class SysRoleResourceServiceImpl extends BaseServiceImpl<SysRoleResource>
 
 
     @Override
-    public List<SysRoleResource> getResourceByRoleId(Integer roleId) {
+    public List<SysRoleResource> getResourceByRoleId(String roleId) {
         QueryWrapper<SysRoleResource> wrapper = new QueryWrapper<>();
         wrapper.eq("role_id",roleId);
         return dao.selectList(wrapper);
     }
 
     @Override
-    public void insertRoleResource(Integer roleId, List<Integer> resourceIds) {
+    public void insertRoleResource(String roleId, List<String> resourceIds) {
         resourceIds.forEach(resourceId ->{
             SysRoleResource rr = new SysRoleResource();
             rr.setRoleId(roleId);
@@ -51,14 +51,14 @@ public class SysRoleResourceServiceImpl extends BaseServiceImpl<SysRoleResource>
     }
 
     @Override
-    public void deleteRoleResource(Integer roleId) {
+    public void deleteRoleResource(String roleId) {
         QueryWrapper<SysRoleResource> wrapper = new QueryWrapper<>();
         wrapper.eq("role_id",roleId);
         dao.delete(wrapper);
     }
 
     @Override
-    public void updateRoleResource(Integer roleId, List<Integer> resourceIds) {
+    public void updateRoleResource(String roleId, List<String> resourceIds) {
 
         deleteRoleResource(roleId);
 

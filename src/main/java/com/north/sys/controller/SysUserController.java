@@ -46,7 +46,7 @@ public class SysUserController {
     }
     
     @RequestMapping("add")
-    public R addJson(SysUser sysUser ,Integer roleId){
+    public R addJson(SysUser sysUser ,String roleId){
     	Integer num = 0;
         if(StringUtils.isEmpty(sysUser.getUsername()) || sysUserService.findByName(sysUser.getUsername()) != null){
             return R.error("添加失败,用户已存在");
@@ -60,7 +60,7 @@ public class SysUserController {
         try {
     	    sysUser.setCreateTime(new Date());
             num = sysUserService.insert(sysUser);
-            sysUserRoleService.insertUserRole(Integer.valueOf(sysUser.getId()),roleId);
+            sysUserRoleService.insertUserRole(sysUser.getId(),roleId);
             if(num==0){
                 return R.error("添加失败,无数据");
             }
@@ -84,14 +84,14 @@ public class SysUserController {
     }
    
     @RequestMapping("edit")
-    public R editJson(Map<String, Object> map, SysUser sysUser, Integer roleId){
+    public R editJson(Map<String, Object> map, SysUser sysUser, String roleId){
    		Integer num = 0;
         if(!StringUtils.isEmpty(sysUser.getPassword())){
             sysUser.setPassword(EncryptionUtil.getPasswordEncoder(sysUser.getUsername(),sysUser.getPassword()));
         }
         try {
             num = sysUserService.updateById(sysUser);
-            sysUserRoleService.updateUserRole(Integer.valueOf(sysUser.getId()),roleId);
+            sysUserRoleService.updateUserRole(sysUser.getId(),roleId);
             if(num==0){
                 return R.error("保存失败,无数据");
             }
@@ -104,7 +104,7 @@ public class SysUserController {
     
     @RequestMapping("del")
     
-    public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids ){
+    public R delJson(Map<String, Object> map, @RequestParam("ids") List<String> ids ){
         Integer num = 0;
         try {
             for(int i=0;i<ids.size();i++){

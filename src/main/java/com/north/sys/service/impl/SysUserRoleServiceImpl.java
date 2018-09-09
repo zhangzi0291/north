@@ -19,7 +19,7 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole> impleme
 
 
     @Override
-    public void insertUserRole(Integer userId, Integer roleId) {
+    public void insertUserRole(String userId, String roleId) {
         SysUserRole ur = new SysUserRole();
         ur.setUserId(userId);
         ur.setRoleId(roleId);
@@ -27,14 +27,14 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole> impleme
     }
 
     @Override
-    public void deleteUserRole(Integer userId) {
+    public void deleteUserRole(String userId) {
         QueryWrapper<SysUserRole> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id",userId);
         dao.delete(wrapper);
     }
 
     @Override
-    public void updateUserRole(Integer userId, Integer roleId) {
+    public void updateUserRole(String userId, String roleId) {
         QueryWrapper<SysUserRole> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id",userId);
         dao.delete(wrapper);

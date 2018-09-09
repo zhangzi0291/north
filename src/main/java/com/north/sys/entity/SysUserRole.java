@@ -1,32 +1,36 @@
 package com.north.sys.entity;
 
 
-public class SysUserRole {
-    private Integer id;
-    private Integer userId;
-    private Integer roleId;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 
-    public SysUserRole setId(Integer id){
+public class SysUserRole {
+    @TableId(type=IdType.ID_WORKER_STR)
+    private String id;
+    private String userId;
+    private String roleId;
+
+    public SysUserRole setId(String id){
         this.id = id;
         return this;
     }
-    public Integer getId(){
+    public String getId(){
         return this.id;
     }
 
-    public SysUserRole setUserId(Integer userId){
+    public SysUserRole setUserId(String userId){
         this.userId = userId;
         return this;
     }
-    public Integer getUserId(){
+    public String getUserId(){
         return this.userId;
     }
 
-    public SysUserRole setRoleId(Integer roleId){
+    public SysUserRole setRoleId(String roleId){
         this.roleId = roleId;
         return this;
     }
-    public Integer getRoleId(){
+    public String getRoleId(){
         return this.roleId;
     }
 
