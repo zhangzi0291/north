@@ -28,9 +28,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
 
     @Override
     public SysUser findByName(String username) {
-        SysUserExample example = new SysUserExample();
-        SysUserExample.Criteria criteria = example.createCriteria();
-        criteria.andusernameEqualTo(username);
         SysUser user = dao.selectOne(new QueryWrapper<SysUser>().eq("username",username));
         List<SysRole> roleList = new ArrayList<>();
         if(user != null){

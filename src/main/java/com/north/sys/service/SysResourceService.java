@@ -2,7 +2,6 @@ package com.north.sys.service;
 
 import com.north.base.service.BaseService;
 import com.north.sys.entity.SysResource;
-import com.north.sys.entity.SysResourceExample;
 
 import java.util.List;
 

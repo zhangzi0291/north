@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.north.base.R;
 import com.north.sys.entity.SysResource;
 import com.north.sys.entity.SysResourceDto;
-import com.north.sys.entity.SysResourceExample;
 import com.north.sys.service.SysResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,8 +56,6 @@ public class SysResourceController {
 
     @RequestMapping("getAllMenu")
     public R getAllMenu(SysResource sysResource) {
-        SysResourceExample example = new SysResourceExample();
-        SysResourceExample.Criteria criteria = example.createCriteria();
         //设置查询条件 。。。
 
         try {

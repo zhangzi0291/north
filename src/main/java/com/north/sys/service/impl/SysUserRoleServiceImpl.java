@@ -2,11 +2,9 @@ package com.north.sys.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.north.base.dao.BaseDao;
 import com.north.base.service.impl.BaseServiceImpl;
 import com.north.sys.dao.SysUserRoleDao;
 import com.north.sys.entity.SysUserRole;
-import com.north.sys.entity.SysUserRoleExample;
 import com.north.sys.service.SysUserRoleService;
 import org.springframework.stereotype.Service;
 
