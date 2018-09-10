@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Controller
-public class ChatController {
+public class ChatWebSocketController {
 
     @Resource
     private SimpMessagingTemplate messagingTemplate;
