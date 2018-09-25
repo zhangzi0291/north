@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.north.chat.mapper.ChatAppMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.north.chat.entity.ChatApp">
+        <id column="id" property="id" />
+        <result column="chat_app_name" property="chatAppName" />
+        <result column="chat_app_id" property="chatAppId" />
+        <result column="chat_app_secret" property="chatAppSecret" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, chat_app_name, chat_app_id, chat_app_secret
+    </sql>
+
+</mapper>

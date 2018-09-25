@@ -2,11 +2,14 @@ package com.north.sys.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.north.base.service.impl.BaseServiceImpl;
-import com.north.sys.dao.SysRoleDao;
-import com.north.sys.dao.SysUserDao;
-import com.north.sys.dao.SysUserRoleDao;
-import com.north.sys.entity.*;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.north.sys.mapper.SysRoleMapper;
+import com.north.sys.mapper.SysUserMapper;
+import com.north.sys.mapper.SysUserRoleMapper;
+import com.north.sys.entity.SysRole;
+import com.north.sys.entity.SysUser;
+import com.north.sys.entity.SysUserDto;
+import com.north.sys.entity.SysUserRole;
 import com.north.sys.service.SysUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -17,14 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("SysUserService")
-public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysUserService {
+public class SysUserServiceImpl extends ServiceImpl<SysUserMapper,SysUser> implements SysUserService {
 
     @Resource
-    private SysUserDao dao;
+    private SysUserMapper dao;
     @Resource
-    private SysUserRoleDao userRoleDao;
+    private SysUserRoleMapper userRoleDao;
     @Resource
-    private SysRoleDao roleDao;
+    private SysRoleMapper roleDao;
 
     @Override
     public SysUser findByName(String username) {
@@ -46,7 +49,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     }
 
     @Override
-    public SysUserDto getUserAndRoleId(Integer userId) {
+    public SysUserDto getUserAndRoleId(String userId) {
         SysUser userinfo = dao.selectById(userId);
 
         QueryWrapper<SysUserRole> wrapper = new QueryWrapper<>();

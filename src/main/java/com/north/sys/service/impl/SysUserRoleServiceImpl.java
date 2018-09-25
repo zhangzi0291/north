@@ -2,21 +2,20 @@ package com.north.sys.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.north.base.service.impl.BaseServiceImpl;
-import com.north.sys.dao.SysUserRoleDao;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.north.sys.mapper.SysUserRoleMapper;
 import com.north.sys.entity.SysUserRole;
 import com.north.sys.service.SysUserRoleService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service("SysUserRoleService")
-public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole> implements SysUserRoleService {
+public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper,SysUserRole> implements SysUserRoleService {
 
     @Resource
-    private SysUserRoleDao dao;
-
-
+    private SysUserRoleMapper dao;
 
     @Override
     public void insertUserRole(String userId, String roleId) {
@@ -27,10 +26,12 @@ public class SysUserRoleServiceImpl extends BaseServiceImpl<SysUserRole> impleme
     }
 
     @Override
-    public void deleteUserRole(String userId) {
-        QueryWrapper<SysUserRole> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id",userId);
-        dao.delete(wrapper);
+    public void deleteUserRole(List<String> userIds) {
+        for(String userId:userIds) {
+            QueryWrapper<SysUserRole> wrapper = new QueryWrapper<>();
+            wrapper.eq("user_id", userId);
+            dao.delete(wrapper);
+        }
     }
 
     @Override

@@ -1,8 +1,8 @@
-package com.north.sys.dao;
+package com.north.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.north.sys.entity.SysRole;
 
-public interface SysRoleDao extends BaseMapper<SysRole> {
+public interface SysRoleMapper extends BaseMapper<SysRole> {
     
 }

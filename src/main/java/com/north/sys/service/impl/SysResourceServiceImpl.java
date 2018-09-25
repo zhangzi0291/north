@@ -2,8 +2,8 @@ package com.north.sys.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.north.base.service.impl.BaseServiceImpl;
-import com.north.sys.dao.SysResourceDao;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.north.sys.mapper.SysResourceMapper;
 import com.north.sys.entity.SysResource;
 import com.north.sys.service.SysResourceService;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service("SysResourceervice")
-public class SysResourceServiceImpl extends BaseServiceImpl<SysResource> implements SysResourceService {
+public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper,SysResource> implements SysResourceService {
 
     @Resource
-    private SysResourceDao dao;
+    private SysResourceMapper dao;
 
     @Override
     public List<SysResource> getAllResource() {
@@ -28,7 +28,7 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource> impleme
     }
 
     @Override
-    public List<SysResource> getResourceMenus(Integer id) {
+    public List<SysResource> getResourceMenus(String id) {
         Map<String, Object> param = new HashMap<>();
         param.put("userId", id);
         List<SysResource> list = dao.getResourceMenus(param);
@@ -36,7 +36,7 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource> impleme
     }
 
     @Override
-    public List<SysResource> getMenus(Integer id) {
+    public List<SysResource> getMenus(String id) {
         Map<String, Object> param = new HashMap<>();
         param.put("userId", id);
         List<SysResource> list = dao.selectMenus(param);
@@ -44,7 +44,7 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource> impleme
     }
 
     @Override
-    public List<SysResource> getMenusByRoleId(Integer id) {
+    public List<SysResource> getMenusByRoleId(String id) {
         Map<String, Object> param = new HashMap<>();
         param.put("roleId", id);
         List<SysResource> list = dao.selectMenus(param);
@@ -55,7 +55,7 @@ public class SysResourceServiceImpl extends BaseServiceImpl<SysResource> impleme
         if(!CollectionUtils.isEmpty(resourceList)) {
             if (CollectionUtils.isEmpty(nextNodeList)) {
                 List<SysResource> child = resourceList.stream().sorted(Comparator.comparing(SysResource::getResourceOrderNum))
-                        .filter(s -> s.getParentId().equals(-1)).collect(Collectors.toList());
+                        .filter(s -> s.getParentId().equals("-1")).collect(Collectors.toList());
                 if(CollectionUtils.isEmpty(child)){
                     return resourceList;
                 }

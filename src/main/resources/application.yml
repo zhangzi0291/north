@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 80
 #  ssl:
 #    key-store: classpath:keystore.p12
 #    key-password: northzx
@@ -9,8 +9,10 @@ server:
 #    context-path: /springboot
   http2:
     enable: true
-
-
+im:
+#  enable: false
+  port: 81
+  name: north
 spring:
   application:
     name: authority
@@ -20,11 +22,11 @@ spring:
       username: root
       password: root
   redis:
-      database: 1
-      host: 127.0.0.1
-      port: 6379
-      password:
-      timeout: 5000
+    database: 1
+    host: 127.0.0.1
+    port: 6379
+    password:
+    timeout: 5000
 
 endpoints:
   shutdown:
@@ -39,6 +41,7 @@ management:
   address: 127.0.0.1
 
 north:
+  token-key: accessToken
   shiro-filter:
     filter-chain-definition-map: |
         /sys/login:anon,

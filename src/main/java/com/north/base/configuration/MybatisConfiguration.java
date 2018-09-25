@@ -21,7 +21,7 @@ import java.util.List;
  * @Date 2018-9-1 15:55
  */
 @Configuration
-@MapperScan("com.north.*.dao")
+@MapperScan("com.north.*.mapper")
 public class MybatisConfiguration {
 
     /**

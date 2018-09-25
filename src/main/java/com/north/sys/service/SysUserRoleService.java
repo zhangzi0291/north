@@ -1,11 +1,13 @@
 package com.north.sys.service;
 
-import com.north.base.service.BaseService;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.north.sys.entity.SysUserRole;
 
-public interface SysUserRoleService extends BaseService<SysUserRole> {
+import java.util.List;
+
+public interface SysUserRoleService extends IService<SysUserRole> {
 
     void insertUserRole(String userId, String roleId);
-    void deleteUserRole(String userId);
+    void deleteUserRole(List<String> userId);
     void updateUserRole(String userId, String roleId);
 }

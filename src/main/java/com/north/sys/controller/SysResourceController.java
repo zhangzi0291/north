@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,21 +33,21 @@ public class SysResourceController {
     @Resource
     private SysResourceService sysResourceService;
 
-    @RequestMapping("list")
+    @RequestMapping(path = "list", method = {RequestMethod.GET, RequestMethod.POST})
     public R listJson(SysResource sysResource, Page page) {
         QueryWrapper<SysResource> wrapper = new QueryWrapper<>();
         //设置查询条件
         if (!StringUtils.isEmpty(sysResource.getResourceName())) {
-            wrapper.like("resource_name",sysResource.getResourceName());
+            wrapper.like("resource_name",sysResource.getResourceName().trim());
         }
         if (!StringUtils.isEmpty(sysResource.getResourceType())) {
-            wrapper.like("resource_type",sysResource.getResourceType());
+            wrapper.like("resource_type",sysResource.getResourceType().trim());
         }
         if (!StringUtils.isEmpty(sysResource.getResourceUrl())) {
-            wrapper.like("resource_url",sysResource.getResourceUrl());
+            wrapper.like("resource_url",sysResource.getResourceUrl().trim());
         }
         try {
-            IPage<SysResource> pages = sysResourceService.selectByWrapperAndPage(page,wrapper);
+            IPage<SysResource> pages = sysResourceService.page(page,wrapper);
             return R.ok().putObject("rows", pages.getRecords()).putObject("total", pages.getTotal());
         } catch (Exception e) {
             logger.error("Exception ", e);
@@ -54,7 +55,7 @@ public class SysResourceController {
         return R.error("无数据");
     }
 
-    @RequestMapping("getAllMenu")
+    @RequestMapping(path = "getAllMenu", method = {RequestMethod.GET, RequestMethod.POST})
     public R getAllMenu(SysResource sysResource) {
         //设置查询条件 。。。
 
@@ -82,55 +83,55 @@ public class SysResourceController {
         return options;
     }
 
-    @RequestMapping("add")
+    @RequestMapping(path = "add", method = {RequestMethod.GET, RequestMethod.POST})
     public R addJson(SysResource sysResource) {
-        Integer num = 0;
+        Boolean flag = false;
         try {
-            num = sysResourceService.insert(sysResource);
-            if (num == 0) {
+            flag = sysResourceService.save(sysResource);
+            if (!flag) {
                 return R.error("保存失败,无数据");
             }
         } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
-        return R.ok("data", num);
+        return R.ok("data", flag);
     }
 
-    @RequestMapping("get")
-    public R get(Integer id) {
+    @RequestMapping(path = "get", method = {RequestMethod.GET, RequestMethod.POST})
+    public R get(String id) {
         try {
-            return R.ok("data", sysResourceService.selectById(id));
+            return R.ok("data", sysResourceService.getById(id));
         } catch (Exception e) {
             logger.error("Exception ", e);
         }
         return R.error("无数据");
     }
 
-    @RequestMapping("edit")
+    @RequestMapping(path = "edit", method = {RequestMethod.GET, RequestMethod.POST})
     public R editJson(Map<String, Object> map, SysResource sysResource) {
-        Integer num = 0;
+        Boolean flag = false;
         try {
-            num = sysResourceService.updateById(sysResource);
-            if (num == 0) {
+            flag = sysResourceService.updateById(sysResource);
+            if (!flag) {
                 return R.error("保存失败,无数据");
             }
         } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
-        return R.ok("data", num);
+        return R.ok("data", flag);
     }
 
-    @RequestMapping("del")
+    @RequestMapping(path = "del", method = {RequestMethod.GET, RequestMethod.POST})
     public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids) {
-        Integer num = 0;
+        Boolean flag = false;
         try {
-            num = sysResourceService.deleteBatchIds(ids);
+            flag = sysResourceService.removeByIds(ids);
         } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
-        return R.ok("data", num);
+        return R.ok("data", flag);
     }
 }

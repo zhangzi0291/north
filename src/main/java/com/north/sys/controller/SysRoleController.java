@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,17 +38,17 @@ public class SysRoleController {
     @Resource
     private SysResourceService sysResourceService;
     
-    @RequestMapping("list")
+    @RequestMapping(path = "list", method = {RequestMethod.GET, RequestMethod.POST})
     public R listJson(SysRole sysRole, Page page){
         QueryWrapper<SysRole> wrapper = new QueryWrapper<>();
 
         wrapper.orderByAsc("id");
 
         if(!StringUtils.isEmpty(sysRole.getRoleName())){
-            wrapper.like("role_name",sysRole.getRoleName());
+            wrapper.like("role_name",sysRole.getRoleName().trim());
         }
         try {
-            IPage<SysRole> pages = sysRoleService.selectByWrapperAndPage(page,wrapper);
+            IPage<SysRole> pages = sysRoleService.page(page,wrapper);
             return R.ok().putObject("rows",pages.getRecords()).putObject("total", pages.getTotal());
         } catch (Exception e) {
             logger.error("Exception ", e);
@@ -55,10 +56,10 @@ public class SysRoleController {
         return R.error("无数据");
     }
 
-    @RequestMapping("selectOptions")
+    @RequestMapping(path = "selectOptions", method = {RequestMethod.GET, RequestMethod.POST})
     public R selectOptions(SysRole sysRole){
         try {
-            List< SysRole> list = sysRoleService.selectByWrapper(new QueryWrapper<>());
+            List< SysRole> list = sysRoleService.list(new QueryWrapper<>());
             List<Map<String,Object>> options = new ArrayList<>();
             list.forEach(role->{
                 Map<String,Object> map = new HashMap<>();
@@ -73,30 +74,30 @@ public class SysRoleController {
         return R.error("无数据");
     }
 
-    @RequestMapping("add")
+    @RequestMapping(path = "add", method = {RequestMethod.GET, RequestMethod.POST})
     public R addJson(SysRole sysRole ,String resources){
-    	Integer num = 0;
+    	Boolean flag = false;
         try {
-            num = sysRoleService.insert(sysRole);
+            flag = sysRoleService.save(sysRole);
             List<String> resourceIdList = getResourceIdList(JSONArray.parseArray(resources,SysResource.class));
             sysRoleResourceService.insertRoleResource(sysRole.getId(), resourceIdList);
-            if(num==0){
+            if(!flag){
                 return R.error("保存失败,无数据");
             }
         } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
-        return R.ok("data",num);
+        return R.ok("data",flag);
     }
     
-   	@RequestMapping("get")
+   	@RequestMapping(path = "get", method = {RequestMethod.GET, RequestMethod.POST})
     public R get(String id){
         try {
             List<SysRoleResource> rrlist =  sysRoleResourceService.getResourceByRoleId(id);
             List<SysResource> list = sysResourceService.getResourceMenus(null);
             List<SysResourceDto> options = setChildNood(list,rrlist);
-            return R.ok("data",sysRoleService.selectById(id)).putObject("options",options);
+            return R.ok("data",sysRoleService.getById(id)).putObject("options",options);
         } catch (Exception e) {
             logger.error("Exception ", e);
         }
@@ -131,36 +132,34 @@ public class SysRoleController {
         return options;
     }
 
-    @RequestMapping("edit")
+    @RequestMapping(path = "edit", method = {RequestMethod.GET, RequestMethod.POST})
     public R editJson(SysRole sysRole,String resources){
-   		Integer num = 0;
+   		Boolean flag = false;
         try {
-            num = sysRoleService.updateById(sysRole);
+            flag = sysRoleService.updateById(sysRole);
             List<String> resourceIdList = getResourceIdList(JSONArray.parseArray(resources,SysResource.class));
             sysRoleResourceService.updateRoleResource(sysRole.getId(), resourceIdList);
-            if(num==0){
+            if(!flag){
                 return R.error("保存失败,无数据");
             }
         } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
-        return R.ok("data",num);
+        return R.ok("data",flag);
     }
     
-    @RequestMapping("del")
+    @RequestMapping(path = "del", method = {RequestMethod.GET, RequestMethod.POST})
     public R delJson(Map<String, Object> map, @RequestParam("ids") List<String> ids ){
-        Integer num = 0;
+        Boolean flag = false;
         try {
-            for(int i=0;i<ids.size();i++){
-                num+=sysRoleService.deleteById(ids.get(i));
-                sysRoleResourceService.deleteRoleResource(ids.get(i));
-            }
+            flag = sysRoleService.removeByIds(ids);
+            sysRoleResourceService.deleteRoleResource(ids);
         } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
-        return R.ok("data",num);
+        return R.ok("data",flag);
     }
 
 

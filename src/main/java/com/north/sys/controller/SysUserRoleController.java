@@ -9,6 +9,7 @@ import com.north.sys.service.SysUserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,12 +27,12 @@ public class SysUserRoleController {
     @Resource
     private SysUserRoleService sysUserRoleService;
 
-    @RequestMapping("list")
+    @RequestMapping(path = "list", method = {RequestMethod.GET, RequestMethod.POST})
     public R listJson(SysUserRole sysUserRole, Page page){
         QueryWrapper<SysUserRole> wrapper = new QueryWrapper<>();
 
         try {
-            IPage<SysUserRole> pages = sysUserRoleService.selectByWrapperAndPage(page,wrapper);
+            IPage<SysUserRole> pages = sysUserRoleService.page(page,wrapper);
             return R.ok().putObject("rows",pages.getRecords()).putObject("total", pages.getTotal());
         } catch (Exception e) {
             logger.error("Exception ", e);
@@ -39,56 +40,55 @@ public class SysUserRoleController {
         return R.error("无数据");
     }
 
-    @RequestMapping("add")
+    @RequestMapping(path = "add", method = {RequestMethod.GET, RequestMethod.POST})
     public R addJson(SysUserRole sysUserRole ){
-    	Integer num = 0;
+    	Boolean flag = false;
         try {
-            num = sysUserRoleService.insert(sysUserRole);
-            if(num==0){
+            flag = sysUserRoleService.save(sysUserRole);
+            if(!flag){
                 return R.error("保存失败,无数据");
             }
         } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
-        return R.ok("data",num);
+        return R.ok("data",flag);
     }
 
-   	@RequestMapping("get")
-    public R get(Integer id){
+   	@RequestMapping(path = "get", method = {RequestMethod.GET, RequestMethod.POST})
+    public R get(String id){
         try {
-            return R.ok("data",sysUserRoleService.selectById(id));
+            return R.ok("data",sysUserRoleService.getById(id));
         } catch (Exception e) {
             logger.error("Exception ", e);
         }
         return R.error("无数据");
     }
 
-    @RequestMapping("edit")
+    @RequestMapping(path = "edit", method = {RequestMethod.GET, RequestMethod.POST})
     public R editJson(Map<String, Object> map, SysUserRole sysUserRole){
-   		Integer num = 0;
+   		Boolean flag = false;
         try {
-            num = sysUserRoleService.updateById(sysUserRole);
-            if(num==0){
+            flag = sysUserRoleService.updateById(sysUserRole);
+            if(!flag){
                 return R.error("保存失败,无数据");
             }
         } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
-        return R.ok("data",num);
+        return R.ok("data",flag);
     }
     
-    @RequestMapping("del")
-    
+    @RequestMapping(path = "del", method = {RequestMethod.GET, RequestMethod.POST})
     public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids ){
-        Integer num = 0;
+        Boolean flag = false;
         try {
-            num = sysUserRoleService.deleteBatchIds(ids);
+            flag = sysUserRoleService.removeByIds(ids);
         } catch (Exception e) {
             logger.error("Exception ", e);
             return R.error("保存失败,出现异常");
         }
-        return R.ok("data",num);
+        return R.ok("data",flag);
     }
 }

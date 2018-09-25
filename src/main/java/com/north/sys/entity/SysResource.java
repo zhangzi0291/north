@@ -15,7 +15,7 @@ public class SysResource {
     private String resourceName;
     private String resourceType;
     private String resourceUrl;
-    private Integer parentId;
+    private String parentId;
     private String permission;
     private String status;
     private String resourceIcon;
@@ -55,11 +55,11 @@ public class SysResource {
         return this.resourceUrl;
     }
 
-    public SysResource setParentId(Integer parentId){
+    public SysResource setParentId(String parentId){
         this.parentId = parentId;
         return this;
     }
-    public Integer getParentId(){
+    public String getParentId(){
         return this.parentId;
     }
 

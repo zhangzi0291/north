@@ -1,15 +1,58 @@
 package com.north.chat.entity;
 
-import com.north.sys.entity.SysUser;
-
-import java.security.Principal;
+import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
 
 /**
- * 类的描述
+ * <p>
+ * 
+ * </p>
  *
- * @Author zhengxiangnan
- * @Date 2018/7/11 14:02
+ * @author Mht
+ * @since 2018-09-18
  */
-public class ChatUser extends SysUser implements Principal{
+@TableName("chat_user")
+public class ChatUser implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
+    private String id;
+
+    private String userId;
+
+    /**
+     * 1：在线 0：离线
+     */
+    private String onlineType;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+    public String getOnlineType() {
+        return onlineType;
+    }
+
+    public void setOnlineType(String onlineType) {
+        this.onlineType = onlineType;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatUser{" +
+        "id=" + id +
+        ", userId=" + userId +
+        ", onlineType=" + onlineType +
+        "}";
+    }
 }

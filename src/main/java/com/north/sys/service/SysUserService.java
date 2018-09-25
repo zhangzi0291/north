@@ -1,12 +1,12 @@
 package com.north.sys.service;
 
-import com.north.base.service.BaseService;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.north.sys.entity.SysUser;
 import com.north.sys.entity.SysUserDto;
 
-public interface SysUserService extends BaseService<SysUser> {
+public interface SysUserService extends IService<SysUser> {
 
     SysUser findByName(String username);
-    SysUserDto getUserAndRoleId(Integer userId);
+    SysUserDto getUserAndRoleId(String userId);
 
 }

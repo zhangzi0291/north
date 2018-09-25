@@ -2,24 +2,25 @@ package com.north.sys.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.north.base.service.impl.BaseServiceImpl;
-import com.north.sys.dao.SysResourceDao;
-import com.north.sys.dao.SysRoleResourceDao;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.north.sys.mapper.SysResourceMapper;
+import com.north.sys.mapper.SysRoleResourceMapper;
 import com.north.sys.entity.SysResource;
 import com.north.sys.entity.SysRoleResource;
 import com.north.sys.service.SysRoleResourceService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("SysRoleResourceService")
-public class SysRoleResourceServiceImpl extends BaseServiceImpl<SysRoleResource> implements SysRoleResourceService {
+public class SysRoleResourceServiceImpl extends ServiceImpl<SysRoleResourceMapper,SysRoleResource> implements SysRoleResourceService {
 
     @Resource
-    private SysRoleResourceDao dao;
+    private SysRoleResourceMapper dao;
     @Resource
-    private SysResourceDao resourceDao;
+    private SysResourceMapper resourceDao;
 
 
     @Override
@@ -51,16 +52,19 @@ public class SysRoleResourceServiceImpl extends BaseServiceImpl<SysRoleResource>
     }
 
     @Override
-    public void deleteRoleResource(String roleId) {
-        QueryWrapper<SysRoleResource> wrapper = new QueryWrapper<>();
-        wrapper.eq("role_id",roleId);
-        dao.delete(wrapper);
+    public void deleteRoleResource(List<String> roleIds) {
+        for(String roleId:roleIds) {
+            QueryWrapper<SysRoleResource> wrapper = new QueryWrapper<>();
+            wrapper.eq("role_id", roleId);
+            dao.delete(wrapper);
+        }
     }
 
     @Override
     public void updateRoleResource(String roleId, List<String> resourceIds) {
-
-        deleteRoleResource(roleId);
+        List<String> roleIds = new ArrayList<>();
+        roleIds.add(roleId);
+        deleteRoleResource(roleIds);
 
         insertRoleResource(roleId,resourceIds);
 

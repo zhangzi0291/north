@@ -4,6 +4,7 @@ import com.north.base.session.RedisSessionDao;
 import com.north.base.session.SimpleSessionFactory;
 import com.north.base.shiro.ShiroPermissionsFilter;
 import com.north.base.shiro.ShiroRealm;
+import com.north.utils.SessionUtil;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
