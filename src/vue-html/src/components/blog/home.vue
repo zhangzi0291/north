@@ -27,7 +27,7 @@
       <CarouselItem class="carousel-item">
         <img 
           class="carousel-img" 
-          src="/static/images/logo.jpg" 
+          src="/images/logo.jpg" 
           key="max-logo" >
       </CarouselItem>
       <CarouselItem>

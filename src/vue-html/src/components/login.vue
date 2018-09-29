@@ -4,51 +4,30 @@
       <Header>Header</Header>
       <Content class='layout-content'>
 
-        <Card 
-          class='login-card' 
-          @keyup="login">
+        <Card class='login-card' @keyup="login">
           <div style="text-align:center">
-            <p 
-              class='login-tilte' 
-              slot="title">登录</p>
+            <p class='login-tilte' slot="title">登录</p>
             <div class='login-content'>
-              <Form 
-                ref="form" 
-                :model="user" 
-                :rules="rule">
+              <Form ref="form" :model="user" :rules="rule">
                 <FormItem prop="username">
-                  <Input 
-                    class='login-input' 
-                    v-model="user.username" 
-                    :value="user.username" 
-                    clearable 
-                    autofocus>
+                  <Input class='login-input' v-model="user.username" :value="user.username" clearable autofocus>
                   <span slot="prepend">
-                    <Icon type="md-person"/>
+                    <Icon type="md-person" />
                   </span>
-                                    </Input>
+                  </Input>
                 </FormItem>
                 <FormItem prop="password">
-                  <Input 
-                    class='login-input' 
-                    v-model="user.password" 
-                    :type='passtype' 
-                    :icon='passicon' 
-                    :value="user.password" 
-                    @on-click='showPassword'>
+                  <Input class='login-input' v-model="user.password" :type='passtype' :icon='passicon' :value="user.password" @on-click='showPassword'>
                   <span slot="prepend">
-                    <Icon type="md-lock"/>
+                    <Icon type="md-lock" />
                   </span>
-                                    </Input>
+                  </Input>
                 </FormItem>
                 <FormItem prop="user">
                   <Checkbox v-model="remember">记住密码</Checkbox><br>
                 </FormItem>
                 <FormItem prop="user" style="text-align:center">
-                  <Button 
-                    class='login-button' 
-                    type="primary" 
-                    @click="login">登录</Button>
+                  <Button class='login-button' type="primary" @click="login">登录</Button>
                 </FormItem>
               </Form>
             </div>
@@ -69,7 +48,6 @@ export default {
         password: localStorage.password
       },
       isShow: true,
-      write: false,
       rule: {
         username: [{ required: true, message: "用户名必填", trigger: "blur" }],
         password: [{ required: true, message: "密码必填", trigger: "blur" }]
@@ -125,7 +103,7 @@ export default {
             localStorage.password = "";
           }
           let loginparam = {
-            user:res.data.user
+            user: res.data.user
           }
           $this.$store.commit("LOGIN", loginparam);
           $this.$router.push("/home");
@@ -158,7 +136,7 @@ export default {
   text-align: left;
 }
 
-.login-content > * {
+.login-content>* {
   width: 266px;
   /* margin-bottom: 100px; */
 }

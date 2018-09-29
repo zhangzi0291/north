@@ -41,7 +41,7 @@ public class WebSocketHandleInterceptor implements ChannelInterceptor {
             String password = accessor.getFirstNativeHeader("password");
             String token = accessor.getFirstNativeHeader(tokenKey);
             if(!StringUtils.isEmpty(token)){
-                SysUser user = SpringUtil.getBean(SessionUtil.class).getTokenUser(token);
+                SysUser user = SpringUtil.getBean(SessionUtil.class).getSessionUser(token);
                 // 绑定user
                 ChatUser chatUser = new ChatUser();
                 BeanUtils.copyProperties(user, chatUser);

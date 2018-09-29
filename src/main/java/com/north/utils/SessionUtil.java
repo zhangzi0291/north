@@ -2,6 +2,7 @@ package com.north.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.north.base.service.RedisService;
+import com.north.base.session.SimpleSession;
 import com.north.sys.entity.SysUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -27,25 +28,19 @@ public class SessionUtil {
     @Resource
     private RedisService redisService;
 
-    public String setToken(SysUser user){
-        String token = Base64.getEncoder().encodeToString(JSON.toJSONBytes(user));
-        redisService.set(user.getUsername(),token);
-        return token;
-    }
-
-    public String getToken(String username){
-        if(StringUtils.isEmpty(username)){
-            return "";
+    public SimpleSession getSession(String sessionId){
+        if(StringUtils.isEmpty(sessionId)){
+            return new SimpleSession();
         }
-        String base64 = redisService.get(username,String.class);
-        return base64;
+        SimpleSession simpleSession = redisService.get(sessionId,SimpleSession.class);
+        return simpleSession;
     }
 
-    public SysUser getTokenUser(String token){
-        if(StringUtils.isEmpty(token)){
+    public SysUser getSessionUser(String sessionId){
+        if(StringUtils.isEmpty(sessionId)){
             return new SysUser();
         }
-        SysUser user = JSON.parseObject(Base64.getDecoder().decode(token),SysUser.class);
+        SysUser user = (SysUser)getSession(sessionId).getAttribute("user");
         return user;
     }
 }

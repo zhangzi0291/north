@@ -7,19 +7,16 @@ import com.north.sys.entity.SysResource;
 import com.north.sys.entity.SysUser;
 import com.north.sys.service.SysResourceService;
 import com.north.utils.EncryptionUtil;
-import com.north.utils.IpUtil;
 import com.north.utils.SessionUtil;
-import io.swagger.annotations.*;
+import io.swagger.  annotations.*;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,7 +97,7 @@ public class SysLoginController {
             session.setAttribute("user",nowUser);
             nowUser.setPassword(null);
             //保存Token
-            String tokenStr = sessionUtil.setToken(nowUser);
+            String tokenStr = session.getId().toString();
             return R.ok("登陆成功").putObject(tokenKey,tokenStr);
         }else{
             token.clear();
@@ -140,7 +137,7 @@ public class SysLoginController {
             session.setAttribute("user",nowUser);
             nowUser.setPassword(null);
             //保存Token
-            String tokenStr = sessionUtil.setToken(nowUser);
+            String tokenStr = session.getId().toString();;
             return R.ok("登陆成功").putObject("user",SecurityUtils.getSubject().getPrincipal()).putObject(tokenKey,tokenStr);
         }else{
             token.clear();

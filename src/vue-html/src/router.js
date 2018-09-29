@@ -8,28 +8,9 @@ const HelloWorld = resolve =>
     () => resolve(require("@/components/HelloWorld.vue")),
     "HelloWorld"
   );
+
 const login = resolve =>
   require.ensure([], () => resolve(require("@/components/login.vue")), "login");
-const chatframe = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/chat/chatframe.vue")),
-    "chatframe"
-  );
-const chatbox = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/chat/chat.vue")),
-    "chat"
-  );
-const chatindex = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/chat/index.vue")),
-    "chatindex"
-  );
-
-
 const index = resolve =>
   require.ensure([], () => resolve(require("@/components/index.vue")), "index");
 const sysmenu = resolve =>
@@ -50,6 +31,32 @@ const sysuser = resolve =>
     () => resolve(require("@/components/sys/user/sysuser.vue")),
     "sysuser"
   );
+
+const chatframe = resolve =>
+  require.ensure(
+    [],
+    () => resolve(require("@/components/chat/chatframe.vue")),
+    "chatframe"
+  );
+const chatbox = resolve =>
+  require.ensure(
+    [],
+    () => resolve(require("@/components/chat/chat.vue")),
+    "chat"
+  );
+const chatindex = resolve =>
+  require.ensure(
+    [],
+    () => resolve(require("@/components/chat/index.vue")),
+    "chatindex"
+  );
+const chatlogin = resolve =>
+  require.ensure(
+    [],
+    () => resolve(require("@/components/chat/login.vue")),
+    "chatlogin"
+  );
+
 const blogindex = resolve =>
   require.ensure(
     [],
@@ -123,7 +130,7 @@ const router = new Router({
       component: chatframe,
       children: [
         {
-          path: "chatbox",
+          path: "box",
           name: "chatbox",
           component: chatbox,
         },
@@ -131,6 +138,11 @@ const router = new Router({
           path: "index",
           name: "chatindex",
           component: chatindex,
+        },
+        {
+          path: "login",
+          name: "chatlogin",
+          component: chatlogin,
         },
       ]
     },

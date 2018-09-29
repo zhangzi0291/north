@@ -1,5 +1,5 @@
 <template>
-<Row>
+<Row  class-name="chat-frame-body" >
     <chat-header>
       <Button slot="left-button" to @click="$router.go(-1)" type="text" size="large" ghost shape="circle" icon="md-arrow-back" ></Button>
       <Dropdown 
@@ -149,6 +149,12 @@ export default {
           password: $this.password
         }
       }).then(function(res) {
+        const data = {
+          vue: $this,
+          res: res
+        }
+        $this.$store.commit("CONNECTWS", data);
+        console.log($this.$store)
         if (res.data.code == "200") {
           let loginparam = {
             user:res.data.user,
@@ -198,4 +204,10 @@ export default {
 };
 </script>
 <style scoped>
+.chat-frame-body{
+  overflow-x: hidden;
+  height: 100%;
+}
+
+
 </style>

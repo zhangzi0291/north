@@ -11,7 +11,7 @@
 </template>
 <script>
 
-import handle from "./handle.js";
+
 import chatBox from "@/components/chat/chatbox";
 export default {
   name: "Chat",
@@ -84,6 +84,7 @@ export default {
           password: $this.password
         }
       }).then(function(res) {
+
         if (res.data.code == "200") {
           $this.token = res.data.accessToken;
           $this.user.uid = res.data.user.id;
