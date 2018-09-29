@@ -6,8 +6,8 @@
 
 <script>
 export default {
-  name: 'App'
-}
+  name: "App"
+};
 </script>
 
 <style>
@@ -16,12 +16,12 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
-  font-family:"Microsoft YaHei";
+  font-family: "Microsoft YaHei";
 }
-.wrapper {  
-    min-height: 100%;  
-    margin: 0 auto -60px; /* -60pxthe bottom margin is the negative value of the footer's height */  
-}  
+.wrapper {
+  min-height: 100%;
+  margin: 0 auto -60px; /* -60pxthe bottom margin is the negative value of the footer's height */
+}
 .maxheigh {
   height: 100%;
 }
@@ -35,7 +35,7 @@ body {
   text-align: center;
   color: #fff;
 }
-#app > div > .head-title >.head-right > div > div.ivu-select-dropdown{
+#app > div > .head-title > .head-right > div > div.ivu-select-dropdown {
   margin-top: 10px;
 }
 </style>

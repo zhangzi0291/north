@@ -8,8 +8,8 @@
       style="background:#00a2ea">
       <Col 
         span="4" 
-        class-name="head-right" >
-      <slot name="left-button"/>
+        class-name="head-left">
+      <slot name="right-button"/>
       </Col>
       <Col 
         span="16" 
@@ -18,8 +18,8 @@
       </Col>
       <Col 
         span="4" 
-        class-name="head-right">
-      <slot name="right-button"/>
+        class-name="head-right" >
+      <slot name="left-button"/>
       </Col>
     </Row>
   </div>
