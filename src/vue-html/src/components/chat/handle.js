@@ -16,7 +16,6 @@ var IMHandler = function () {
     this.onmessage = function (event, ws, param) {
       var data = eval("("+event.data+")");
       let vue = param.vue;
-      console.log(data)
       if("没有权限"==data){
         vue.$Message.error(data);
         tio.close()

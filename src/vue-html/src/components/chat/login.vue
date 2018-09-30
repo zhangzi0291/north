@@ -105,6 +105,11 @@ export default {
         }
       }).then(function(res) {
         if (res.data.code == "200") {
+          const data = {
+            vue: $this,
+            user: res.data.user
+          }
+          $this.$store.commit("CONNECTWS", data);
           if ($this.remember) {
             localStorage.username = $this.user.username;
             localStorage.password = $this.user.password;
@@ -113,10 +118,11 @@ export default {
             localStorage.password = "";
           }
           let loginparam = {
-            user: res.data.user
+            user:res.data.user,
+            token:res.data.accessToken
           }
           $this.$store.commit("LOGIN", loginparam);
-          $this.$router.push("/home");
+          $this.$router.push("/chat/box");
         } else {
           $this.errorModal(res.data.msg);
         }

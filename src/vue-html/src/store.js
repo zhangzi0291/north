@@ -16,6 +16,11 @@ const store = {
       : {},
     ws:{},
   },
+  getters: {
+    getUser:function(){
+      return JSON.parse(sessionStorage.getItem("user"));
+    }
+  },
   mutations: {
     LOGIN(state, loginParam) {
       state.logined = true;
@@ -31,24 +36,28 @@ const store = {
       sessionStorage.setItem("user", JSON.stringify({}));
     },
     CONNECTWS(state,data){
+      state.ws={};
       const vue = data.vue;
-      const res = data.res;
-      if (res.data.code == "200") {
-          let token = res.data.accessToken;
-          let uid = res.data.user.id;
-          let name = res.data.user.name;
-          let param = { token : token};
-          let param2 = { 
-            vue: vue,
-            username: name,
-            // content: content,
-            userId: uid,
-          };
-          state.ws = new tio.ws(vue.wsURL,param,param2,new handle());
-          console.log(state.ws)
-          state.ws.connect(state.ws);
-        }
-       
+      if(!data.accessToken||!data.user){
+        vue.$Message.error("没有用户信息");
+      }
+      let token = data.accessToken;
+      let uid = data.user.id;
+      let name = data.user.name;
+      let param = { token : token};
+      let param2 = { 
+        vue: vue,
+        username: name,
+        // content: content,
+        userId: uid,
+      };
+      state.ws = new tio.ws(vue.wsURL,param,param2,new handle());
+      state.ws.connect(state.ws);    
+      const wsdata = {
+        ws:state.ws,
+        // time:new Date().getTime()
+      }
+      console.log(JSON.stringify(wsdata))
     }
   }
 }

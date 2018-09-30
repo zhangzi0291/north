@@ -23,16 +23,15 @@ export default {
       title: "在线聊天", //13字一行
       msgNum: 0,
       isNowWindow: document.hidden,
-      ws: undefined,
       msg: "",
-      msgBoxHeight: "600",
+      msgBoxHeight: 600,
       username: "",
       password: "",
       loginWindow: false,
       registerWindow: false,
-      user: {
-        name: "",
-        uid: "",
+      user: { 
+        name: this.$store.state.user.name,
+        uid: this.$store.state.user.id,
         gid: ""
       },
       registerUser: {
@@ -46,6 +45,9 @@ export default {
   },
   created() {
     //设置页面高度
+    if(this.ws.param){
+      this.ws.param.vue = this
+    }
     const inputHeight = 100;
     this.msgBoxHeight =
       window.document.documentElement.clientHeight - inputHeight;
@@ -54,6 +56,11 @@ export default {
         window.document.documentElement.clientHeight - inputHeight;
     };
    
+  },
+  computed:{
+    ws:function(){
+      return this.$store.state.ws
+    }
   },
   mounted() {
     const $this = this;

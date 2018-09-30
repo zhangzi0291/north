@@ -55,7 +55,7 @@ const loading = {
         if (error.response.status === 401) {
           return next({path: '/login',})
         }
-        if(error.response.status === 403) {
+        if(error.response.status != 200 || error.response.status != 302) {
           app.errorModal(error.response.data.message)
         }
         return Promise.reject(error);
