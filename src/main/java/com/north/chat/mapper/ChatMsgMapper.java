@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  *  Mapper 接口
  * </p>
  *
- * @author Mht
+ * @author NorthZX
  * @since 2018-09-18
  */
 public interface ChatMsgMapper extends BaseMapper<ChatMsg> {

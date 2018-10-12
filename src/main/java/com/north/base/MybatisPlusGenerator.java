@@ -11,7 +11,6 @@ import com.baomidou.mybatisplus.generator.config.converts.PostgreSqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
-import com.north.chat.entity.ChatUser;
 
 /**
  * mybatisPlus生成器
@@ -28,7 +27,7 @@ public class MybatisPlusGenerator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        gc.setAuthor("Mht");
+        gc.setAuthor("NorthZX");
         gc.setOutputDir("D:/mybatis");
         gc.setFileOverride(false);// 是否覆盖同名文件，默认是false
         gc.setActiveRecord(false);// 不需要ActiveRecord特性的请改为false
@@ -66,7 +65,7 @@ public class MybatisPlusGenerator {
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
         strategy.setTablePrefix(new String[] { "" });// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[] { "chat_app","chat_group","chat_user","chat_msg" }); // 需要生成的表
+        strategy.setInclude(new String[] { "genealogy_event_timeline","genealogy_family","genealogy_person","genealogy_person_timeline" }); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -90,7 +89,7 @@ public class MybatisPlusGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.north.chat");
+        pc.setParent("com.north.genealogy");
 //        pc.setModuleName("test");
         mpg.setPackageInfo(pc);
 

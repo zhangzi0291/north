@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  *  服务类
  * </p>
  *
- * @author Mht
+ * @author NorthZX
  * @since 2018-09-18
  */
 public interface IChatUserService extends IService<ChatUser> {
