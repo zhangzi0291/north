@@ -7,7 +7,8 @@
       :data="data" 
       border 
       :height="tableHeight" 
-      @on-sort-change="sort"/>
+      @on-sort-change="sort"
+      @on-row-dblclick="functions.onRowDblclick"/>
     <br>
     <Page 
       :total="page.total" 
@@ -46,6 +47,16 @@ export default {
     },
     columns: {
       type: Array
+    },
+    functions:{
+      type:Object,
+      default:function(){
+        return {
+          onRowDblclick:function(){
+            
+          },
+        }
+      }
     }
   },
   mounted: function() {

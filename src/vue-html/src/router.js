@@ -63,13 +63,27 @@ const blogindex = resolve =>
     () => resolve(require("@/components/blog/index.vue")),
     "blogindex"
   );
-const bloghome = resolve =>
+  
+  const bloghome = resolve =>
   require.ensure(
     [],
     () => resolve(require("@/components/blog/home.vue")),
     "bloghome"
-  );
+    );
 
+  const genealogyFamily = resolve =>
+    require.ensure(
+      [],
+      () => resolve(require("@/components/genealogy/family/family.vue")),
+      "genealogyFamily"
+    );
+  const genealogyTopology = resolve =>
+    require.ensure(
+      [],
+      () => resolve(require("@/components/genealogy/topology.vue")),
+      "genealogyTopology"
+    );
+    
 Vue.use(Router);
 
 const router = new Router({
@@ -122,6 +136,23 @@ const router = new Router({
           name: "sysuser",
           component: sysuser
         }
+      ]
+    },
+    {
+      path: "/genealogy",
+      name: "genealogy",
+      component: index,
+      children: [
+        {
+          path: "family",
+          name: "genealogyFamily",
+          component: genealogyFamily
+        },
+        {
+          path: ":id/topology",
+          name: "topology",
+          component: genealogyTopology
+        },
       ]
     },
     {
