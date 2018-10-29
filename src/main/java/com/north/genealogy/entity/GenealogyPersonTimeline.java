@@ -1,5 +1,7 @@
 package com.north.genealogy.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
 import java.io.Serializable;
@@ -16,7 +18,7 @@ import java.io.Serializable;
 public class GenealogyPersonTimeline implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    @TableId(type=IdType.ID_WORKER_STR)
     private String id;
 
     /**

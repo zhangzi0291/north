@@ -81,7 +81,7 @@ public class SysUserRoleController {
     }
     
     @RequestMapping(path = "del", method = {RequestMethod.GET, RequestMethod.POST})
-    public R delJson(Map<String, Object> map, @RequestParam("ids") List<Integer> ids ){
+    public R delJson(Map<String, Object> map, @RequestParam("ids") List<String> ids ){
         Boolean flag = false;
         try {
             flag = sysUserRoleService.removeByIds(ids);

@@ -20,7 +20,7 @@ import java.util.List;
  * @Author zxn
  * @Date 2018-10-11 12:26
  */
-public class BaseController<T extends IService<U>,U> {
+public abstract class BaseController<T extends IService<U>,U> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
@@ -30,8 +30,14 @@ public class BaseController<T extends IService<U>,U> {
     public R listJson(U bean, Page page){
         QueryWrapper<U> wrapper = setListWrapper(bean);
         try {
-            IPage< U> list = service.page(page,wrapper);
-            return R.ok().putObject("rows",list.getRecords()).putObject("total", list.getTotal());
+            if(page == null){
+                List<U> list = service.list(wrapper);
+                return R.ok().putObject("rows",list).putObject("total", list.size());
+            }else{
+                IPage< U> list = service.page(page,wrapper);
+                return R.ok().putObject("rows",list.getRecords()).putObject("total", list.getTotal());
+            }
+
         } catch (Exception e) {
             logger.error("Exception ", e);
         }

@@ -30,7 +30,7 @@ import java.util.Map;
  * @since 2018-10-10
  */
 @RestController
-@RequestMapping("/genealogyFamily")
+@RequestMapping("genealogy/family")
 public class GenealogyFamilyController extends BaseController<IGenealogyFamilyService,GenealogyFamily> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -40,6 +40,12 @@ public class GenealogyFamilyController extends BaseController<IGenealogyFamilySe
         QueryWrapper wrapper = new QueryWrapper<GenealogyFamily>();
         if(!StringUtils.isEmpty(bean.getId())) {
             wrapper.eq("id", bean.getId());
+        }
+        if(!StringUtils.isEmpty(bean.getGenealogyArea())) {
+            wrapper.eq("genealogy_area", bean.getGenealogyArea());
+        }
+        if(!StringUtils.isEmpty(bean.getGenealogySurname())) {
+            wrapper.eq("genealogy_surname", bean.getGenealogySurname());
         }
         return wrapper;
     }
