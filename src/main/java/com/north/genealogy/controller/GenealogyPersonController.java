@@ -78,7 +78,12 @@ public class GenealogyPersonController extends BaseController<IGenealogyPersonSe
             tagetList.add(dto);
         });
         List<GenealogyPersonDto> tlist = setChildNood(tagetList,null);
-        return R.ok().putObject("node",tlist);
+        List<GenealogyPersonDto> rootlist = new ArrayList<>();
+        GenealogyPersonDto root = new GenealogyPersonDto();
+        root.setGenealogyName("起点");
+        root.setGenealogySex("男");
+        root.setChild(tlist);
+        return R.ok().putObject("node",root);
     }
 
     private List<GenealogyPersonDto> setChildNood(List<GenealogyPersonDto> resourceList, List<GenealogyPersonDto> nextNodeList) {
