@@ -9,6 +9,12 @@ const HelloWorld = resolve =>
     "HelloWorld"
   );
 
+const D3test = resolve =>
+  require.ensure(
+    [],
+    () => resolve(require("@/components/D3test.vue")),
+    "D3test"
+  );
 const login = resolve =>
   require.ensure([], () => resolve(require("@/components/login.vue")), "login");
 const index = resolve =>
@@ -83,7 +89,7 @@ const router = new Router({
     {
       path: "/",
       name: "first",
-      component: chatframe,
+      component: D3test,
       meta: {
         title: "在线聊天",
         viewport:
