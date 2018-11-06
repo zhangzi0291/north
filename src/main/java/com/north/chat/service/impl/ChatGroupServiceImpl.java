@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
  *  服务实现类
  * </p>
  *
- * @author Mht
+ * @author NorthZX
  * @since 2018-09-18
  */
-@Service
+@Service("IChatGroupService")
 public class ChatGroupServiceImpl extends ServiceImpl<ChatGroupMapper, ChatGroup> implements IChatGroupService {
 
 }

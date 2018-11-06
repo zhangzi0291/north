@@ -5,6 +5,10 @@ const loading = {
     const getParams = function(data) {
       let param = new URLSearchParams();
       for (var key in data) {
+        if(data[key] instanceof Date){
+          param.append(key, data[key].getTime());
+          continue;
+        }
         if (
           typeof data[key] == "object" &&
           data[key] != null &&

@@ -8,7 +8,7 @@ import java.io.Serializable;
  * 
  * </p>
  *
- * @author Mht
+ * @author NorthZX
  * @since 2018-09-18
  */
 @TableName("chat_user")

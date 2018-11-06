@@ -61,6 +61,7 @@
           <Input 
             v-model="data[item.key]" 
             :readonly='item.readonly' 
+            :on-focus="item.click"
             v-else />
         </FormItem>
       </template>
@@ -101,7 +102,6 @@ export default {
           (val.type == "date" || val.type == "daterange") &&
           $this.data[val.key]
         ) {
-          console.log($this.data[val.key]);
           $this.data[val.key] = new Date($this.data[val.key]);
         }
       });
@@ -161,7 +161,6 @@ export default {
         let type = element.type;
         param[key] = this.data[key];
         if ((type == "date" || type == "daterange") && this.data[key]) {
-          console.log(this.data[key]);
           param[key] = this.data[key].getTime();
         }
       }

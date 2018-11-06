@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service("SysResourceervice")
+@Service("SysResourceService")
 public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper,SysResource> implements SysResourceService {
 
     @Resource
