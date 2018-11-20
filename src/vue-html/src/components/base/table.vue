@@ -114,14 +114,14 @@ export default {
         url: this.url,
         data: this.param
       })
-        .then(function(res) {
-          $this.page.total = res.data.total;
-          $this.data = res.data.rows;
-          $this.tableLoad = false;
-        })
-        .catch(function(error) {
-          $this.tableLoad = false;
-        });
+      .then(function(res) {
+        $this.page.total = res.data.total;
+        $this.data = res.data.rows;
+        $this.tableLoad = false;
+      })
+      .catch(function(error) {
+        $this.tableLoad = false;
+      });
     },
     sort: function(sortOrder) {
       console.log(sortOrder);

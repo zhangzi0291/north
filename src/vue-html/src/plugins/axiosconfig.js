@@ -60,7 +60,7 @@ const loading = {
           return next({path: '/login',})
         }
         if(error.response.status != 200 || error.response.status != 302) {
-          app.errorModal(error.response.data.message)
+          Vue.prototype.$Message.error(error.response.data.msg)
         }
         return Promise.reject(error);
       });

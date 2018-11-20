@@ -2,7 +2,7 @@
 <Card :bordered="false">
 <Tabs value="name1" type="card">
     <TabPane label="拓扑" name="name1" icon="md-people">
-      <topo ref="topo"></topo>
+      <tp ref="topo" :data="tpTree"></tp>
       <!-- <canvas ref="tp" id="tp" width="1000" height="400" ></canvas> -->
     </TabPane>
     <TabPane label="列表" name="name2" icon="md-card">
@@ -131,10 +131,10 @@
 </Card>
 </template>
 <script>
-import topo from "./topo"
+import tp from "./tp"
 export default {
   components:{
-    topo
+    tp
   },
   data() {
     return {
@@ -153,7 +153,8 @@ export default {
         add: "/genealogy/person/add",
         get: "/genealogy/person/get",
         edit: "/genealogy/person/edit",
-        del: "/genealogy/person/del"
+        del: "/genealogy/person/del",
+        tpTree: "/genealogy/person/getChild2"
       },
       detail: {
         data: {},
@@ -355,7 +356,7 @@ export default {
           }
         ]
       },
-      
+      tpTree:{},
     };
   },
   computed: {
@@ -472,7 +473,15 @@ export default {
       return flag;
     },
   },
-  
+  mounted() {
+    this.$ajax({
+      method: "post",
+      url: this.url.tpTree
+    })
+    .then((res)=>{
+      this.tpTree = res.data.node
+    })
+  }
 };
 </script>
 <style lang="less" scoped>

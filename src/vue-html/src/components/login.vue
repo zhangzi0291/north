@@ -108,7 +108,7 @@ export default {
           $this.$store.commit("LOGIN", loginparam);
           $this.$router.push("/home");
         } else {
-          $this.errorModal(res.data.msg);
+          $this.$Message.error(res.data.msg);
         }
       });
     }
