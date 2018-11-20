@@ -154,7 +154,7 @@ export default {
         get: "/genealogy/person/get",
         edit: "/genealogy/person/edit",
         del: "/genealogy/person/del",
-        tpTree: "/genealogy/person/getChild2"
+        tpTree: "/genealogy/person/getChildTree"
       },
       detail: {
         data: {},

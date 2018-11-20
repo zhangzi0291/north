@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,12 +23,29 @@ public class GenealogyPersonDto extends GenealogyPerson implements Serializable 
 
     private List<GenealogyPersonDto> child;
 
+    private GenealogyPersonDto spouse;
+
     public List<GenealogyPersonDto> getChild() {
+        if (child == null) {
+            synchronized (List.class) {
+                if (child == null) {
+                    child = new ArrayList<>();
+                }
+            }
+        }
         return child;
     }
 
     public void setChild(List<GenealogyPersonDto> child) {
         this.child = child;
+    }
+
+    public GenealogyPersonDto getSpouse() {
+        return spouse;
+    }
+
+    public void setSpouse(GenealogyPersonDto spouse) {
+        this.spouse = spouse;
     }
 
     @Override

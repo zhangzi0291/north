@@ -23,10 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -68,48 +66,59 @@ public class GenealogyPersonController extends BaseController<IGenealogyPersonSe
         return super.editJson(bean);
     }
 
-    @RequestMapping("getChild")
-    public R getChild(){
+    @RequestMapping("getChildTree")
+    public R getChildTree(){
         List<GenealogyPerson> list = (List<GenealogyPerson>)this.listJson(new GenealogyPerson(),null).get("rows");
-        List<GenealogyPersonDto> tagetList = new ArrayList<>();
+        List<GenealogyPersonDto> tagetList = new CopyOnWriteArrayList<>();
+        List<GenealogyPersonDto> spouseList = new CopyOnWriteArrayList<>();
+        List<GenealogyPersonDto> saveList = new CopyOnWriteArrayList<>();
         list.stream().forEach(genealogyPerson -> {
             GenealogyPersonDto dto = new GenealogyPersonDto();
             BeanUtils.copyProperties(genealogyPerson, dto);
             tagetList.add(dto);
         });
-        List<GenealogyPersonDto> tlist = setChildNood(tagetList,null);
-        List<GenealogyPersonDto> rootlist = new ArrayList<>();
+        list.stream().forEach(genealogyPerson -> {
+            GenealogyPersonDto dto = new GenealogyPersonDto();
+            if(!StringUtils.isEmpty(genealogyPerson.getSpouseId())){
+                BeanUtils.copyProperties(genealogyPerson, dto);
+                spouseList.add(dto);
+            }
+        });
+        tagetList.forEach(v->{
+            if(v.getSpouseId() != null){
+                getSpouseNode(spouseList,v);
+            }
+        });
+        tagetList.forEach(v->{
+            if("-1".equals(v.getParentId()) ){
+                getChildNode(tagetList,v);
+                saveList.add(v);
+            }
+        });
         GenealogyPersonDto root = new GenealogyPersonDto();
         root.setGenealogyName("起点");
         root.setGenealogySex("男");
-        root.setChild(tlist);
-        return R.ok().putObject("node",root);
+        root.setChild(saveList);
+            return R.ok().putObject("node",root);
+    }
+    private List<GenealogyPersonDto> getChildNode(List<GenealogyPersonDto> list , GenealogyPersonDto parent){
+        list.forEach(v->{
+            if(parent.getId().equals(v.getParentId())){
+                parent.getChild().add(v);
+                list.remove(v);
+                getChildNode(list,v);
+            }
+        });
+        return list;
+    }
+    private List<GenealogyPersonDto> getSpouseNode(List<GenealogyPersonDto> list , GenealogyPersonDto spouse){
+        list.forEach(v->{
+            if(v.getId().equals(spouse.getSpouseId())){
+                spouse.setSpouse(v);
+                list.remove(v);
+            }
+        });
+        return list;
     }
 
-    private List<GenealogyPersonDto> setChildNood(List<GenealogyPersonDto> resourceList, List<GenealogyPersonDto> nextNodeList) {
-        if(!CollectionUtils.isEmpty(resourceList)) {
-            if (CollectionUtils.isEmpty(nextNodeList)) {
-                List<GenealogyPersonDto> child = resourceList.stream()
-                        .filter(s -> s.getParentId()==null).collect(Collectors.toList());
-                if(CollectionUtils.isEmpty(child)){
-                    return resourceList;
-                }
-                resourceList.removeAll(child);
-                nextNodeList = child;
-                setChildNood(resourceList, child);
-            } else {
-                nextNodeList.forEach(p -> {
-                    List<GenealogyPersonDto> child = resourceList.stream()
-                            .filter(s -> s.getParentId().equals(p.getId())).collect(Collectors.toList());
-                    p.setChild(child);
-                    if(CollectionUtils.isEmpty(child)){
-                        return;
-                    }
-                    resourceList.removeAll(child);
-                    setChildNood(resourceList, child);
-                });
-            }
-        }
-        return nextNodeList;
-    }
 }

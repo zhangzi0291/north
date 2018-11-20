@@ -63,7 +63,7 @@ const loading = {
           Vue.prototype.$Message.error(error.response.data.msg)
         }
         return Promise.reject(error);
-      });
+      });``
       next();
     });
     //请求后置
