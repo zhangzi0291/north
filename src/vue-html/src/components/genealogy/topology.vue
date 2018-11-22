@@ -1,139 +1,123 @@
 <template>
-<Card :bordered="false">
-<Tabs value="name1" type="card">
-    <TabPane label="拓扑" name="name1" icon="md-people">
-      <tp ref="topo" :data="tpTree"></tp>
-      <!-- <canvas ref="tp" id="tp" width="1000" height="400" ></canvas> -->
-    </TabPane>
-    <TabPane label="列表" name="name2" icon="md-card">
+  <Card :bordered="false">
+    <Tabs value="name1" type="card">
+      <TabPane label="拓扑" name="name1" icon="md-people">
+        <tp ref="topo" :data="tpTree" id="tp"></tp>
+        <!-- <canvas ref="tp" id="tp" width="1000" height="400" ></canvas> -->
+      </TabPane>
+      <TabPane label="列表" name="name2" icon="md-card">
         <div>
-        <Form 
-          inline 
-          :model="searchData">
-          <FormItem label-for='search'>
-            <Input 
-              v-model="searchData.genealogyName" 
-              class="input-search" 
-              placeholder="姓名" 
-              clearable/>
-          </FormItem>
-          <FormItem>
-            <Button 
-              type="primary" shape="circle" 
-              @click='search'>查询</Button>
-              <Button type="primary" @click="openPersonShow" >BOX</Button>
+          <Form inline :model="searchData">
+            <FormItem label-for='search'>
+              <Input v-model="searchData.genealogyName" class="input-search" placeholder="姓名" clearable/>
+            </FormItem>
+            <FormItem>
+              <Button type="primary" shape="circle" @click='search'>查询</Button>
 
-            <Dropdown 
-              trigger="click" 
-              @on-click='dropdownFunction'>
-              <Button shape="circle">
-                其他功能
-                <Icon type="md-arrow-dropdown"/>
-              </Button>
-              <DropdownMenu slot="list">
-                <DropdownItem name='add'>
-                  <Icon type="android-add-circle" size='18' />
-                  <span class="layout-text">新增</span>
-                </DropdownItem>
-                <DropdownItem divided>
-                  <Icon type="android-upload" size='18' />
-                  <span class="layout-text">导入</span>
-                </DropdownItem>
-                <DropdownItem>
-                  <Icon type="android-download" size='18' />
-                  <span class="layout-text">导出</span>
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </FormItem>
-        </Form>
-      </div>
-      
-      <t-table ref='table' :url='url.list' :param='data.param' :columns='data.columns'/>
-    </TabPane>
+              <Dropdown trigger="click" @on-click='dropdownFunction'>
+                <Button shape="circle">
+                  其他功能
+                  <Icon type="md-arrow-dropdown" />
+                </Button>
+                <DropdownMenu slot="list">
+                  <DropdownItem name='add'>
+                    <Icon type="android-add-circle" size='18' />
+                    <span class="layout-text">新增</span>
+                  </DropdownItem>
+                  <DropdownItem divided>
+                    <Icon type="android-upload" size='18' />
+                    <span class="layout-text">导入</span>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <Icon type="android-download" size='18' />
+                    <span class="layout-text">导出</span>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </FormItem>
+          </Form>
+        </div>
 
+        <t-table ref='table' :url='url.list' :param='data.param' :columns='data.columns' />
+      </TabPane>
 
-    <Modal v-model="editshow" title="编辑" @on-ok="editok" >
+      <Modal v-model="editshow" title="编辑" @on-ok="editok">
         <Form ref="editModal" :model="detailDate" inline :rules='detail.rule'>
-            <FormItem label="姓名：" v-model="detailDate.genealogyName" prop="genealogyName" style="width:47%;">
-             <Input v-model="detailDate.genealogyName"  />
-            </FormItem>
-            <FormItem label="性别：" v-model="detailDate.genealogySex" prop="genealogySex" style="width:47%;" >
-              <RadioGroup v-model="detailDate.genealogySex" style="width: 100%" >
-                <Radio label="男"/>
-                <Radio label="女"/>
-              </RadioGroup>
-            </FormItem>
-            <FormItem label="生日："  v-model="detailDate.genealogyBirthday" prop="genealogyBirthday"  style="width:47%;">
-             <DatePicker v-model="detailDate.genealogyBirthday" type="datetime" style="width: 100%"/>
-            </FormItem>
-            <FormItem label="卒日：" v-model="detailDate.genealogyDeadtime" prop="genealogyDeadtime"  style="width:47%;">
-             <DatePicker v-model="detailDate.genealogyDeadtime" type="datetime" style="width: 100%"/>
-            </FormItem>
-            <FormItem label="父辈:" v-model="detailDate.parentId" prop="parentId"  style="width:47%;">
-             <Input v-model="detailDate.parentId" @on-focus="openPersonShow('P')" />
-            </FormItem>
-            <FormItem label="配偶:" v-model="detailDate.spouseId" prop="spouseId" style="width:47%;" >
-             <Input v-model="detailDate.spouseId" @on-focus="openPersonShow('S')" />
-            </FormItem>
-            <FormItem label="人生经历：" v-model="detailDate.genealogyExperience" prop="genealogyExperience"  style="width:100%;">
-             <Input v-model="detailDate.genealogyExperience" type="textarea" :rows="4"  />
-            </FormItem>
+          <FormItem label="姓名：" v-model="detailDate.genealogyName" prop="genealogyName" style="width:47%;">
+            <Input v-model="detailDate.genealogyName" />
+          </FormItem>
+          <FormItem label="性别：" v-model="detailDate.genealogySex" prop="genealogySex" style="width:47%;">
+            <RadioGroup v-model="detailDate.genealogySex" style="width: 100%">
+              <Radio label="男" />
+              <Radio label="女" />
+            </RadioGroup>
+          </FormItem>
+          <FormItem label="生日：" v-model="detailDate.genealogyBirthday" prop="genealogyBirthday" style="width:47%;">
+            <DatePicker v-model="detailDate.genealogyBirthday" type="datetime" style="width: 100%" />
+          </FormItem>
+          <FormItem label="卒日：" v-model="detailDate.genealogyDeadtime" prop="genealogyDeadtime" style="width:47%;">
+            <DatePicker v-model="detailDate.genealogyDeadtime" type="datetime" style="width: 100%" />
+          </FormItem>
+          <FormItem label="父辈:" v-model="detailDate.parentId" prop="parentId" style="width:47%;">
+            <Input v-model="detailDate.parentId" @on-focus="openPersonShow('P')" />
+          </FormItem>
+          <FormItem label="配偶:" v-model="detailDate.spouseId" prop="spouseId" style="width:47%;">
+            <Input v-model="detailDate.spouseId" @on-focus="openPersonShow('S')" />
+          </FormItem>
+          <FormItem label="人生经历：" v-model="detailDate.genealogyExperience" prop="genealogyExperience" style="width:100%;">
+            <Input v-model="detailDate.genealogyExperience" type="textarea" :rows="4" />
+          </FormItem>
         </Form>
-    </Modal>
-    <Modal v-model="addshow" title="新增" @on-ok="addok" >
-      <Form ref="addModal" :model="add.data" inline :rules='add.rule'>
-            <FormItem label="姓名：" v-model="add.data.genealogyName" prop="genealogyName" style="width:47%;">
-             <Input v-model="add.data.genealogyName"  />
-            </FormItem>
-            <FormItem label="性别：" v-model="add.data.genealogySex" prop="genealogySex" style="width:47%;">
-              <RadioGroup v-model="add.data.genealogySex" style="width: 100%" >
-                <Radio label="男"/>
-                <Radio label="女"/>
-              </RadioGroup>
-            </FormItem>
-            <FormItem label="生日：" v-model="add.data.genealogyBirthday" prop="genealogyBirthday" style="width:47%;">
-             <DatePicker v-model="add.data.genealogyBirthday" type="datetime" style="width: 100%"/>
-            </FormItem>
-            <FormItem label="卒日：" v-model="add.data.genealogyDeadtime" prop="genealogyDeadtime" style="width:47%;">
-             <DatePicker v-model="add.data.genealogyDeadtime" type="datetime" style="width: 100%"/>
-            </FormItem>
-            <FormItem label="父辈:" v-model="add.data.parentId" prop="parentId" style="width:47%;">
-             <Input v-model="add.data.parentId" @on-focus="openPersonShow('P')" />
-            </FormItem>
-            <FormItem label="配偶:" v-model="add.data.spouseId" prop="spouseId" style="width:47%;">
-             <Input v-model="add.data.spouseId" @on-focus="openPersonShow('S')"  />
-            </FormItem>
-            <FormItem label="人生经历：" v-model="add.data.genealogyExperience" prop="genealogyExperience" style="width: 100%" >
-             <Input v-model="add.data.genealogyExperience" type="textarea" :rows="4"  />
-            </FormItem>
-      </Form>
-    </Modal>
+      </Modal>
+      <Modal v-model="addshow" title="新增" @on-ok="addok">
+        <Form ref="addModal" :model="add.data" inline :rules='add.rule'>
+          <FormItem label="姓名：" v-model="add.data.genealogyName" prop="genealogyName" style="width:47%;">
+            <Input v-model="add.data.genealogyName" />
+          </FormItem>
+          <FormItem label="性别：" v-model="add.data.genealogySex" prop="genealogySex" style="width:47%;">
+            <RadioGroup v-model="add.data.genealogySex" style="width: 100%">
+              <Radio label="男" />
+              <Radio label="女" />
+            </RadioGroup>
+          </FormItem>
+          <FormItem label="生日：" v-model="add.data.genealogyBirthday" prop="genealogyBirthday" style="width:47%;">
+            <DatePicker v-model="add.data.genealogyBirthday" type="datetime" style="width: 100%" />
+          </FormItem>
+          <FormItem label="卒日：" v-model="add.data.genealogyDeadtime" prop="genealogyDeadtime" style="width:47%;">
+            <DatePicker v-model="add.data.genealogyDeadtime" type="datetime" style="width: 100%" />
+          </FormItem>
+          <FormItem label="父辈:" v-model="add.data.parentId" prop="parentId" style="width:47%;">
+            <Input v-model="add.data.parentId" @on-focus="openPersonShow('P')" />
+          </FormItem>
+          <FormItem label="配偶:" v-model="add.data.spouseId" prop="spouseId" style="width:47%;">
+            <Input v-model="add.data.spouseId" @on-focus="openPersonShow('S')" />
+          </FormItem>
+          <FormItem label="人生经历：" v-model="add.data.genealogyExperience" prop="genealogyExperience" style="width: 100%">
+            <Input v-model="add.data.genealogyExperience" type="textarea" :rows="4" />
+          </FormItem>
+        </Form>
+      </Modal>
 
-    <Modal v-model="personShow" title="请选择" @on-ok="personOk" draggable>
+      <Modal v-model="personShow" title="请选择" @on-ok="personOk" draggable>
         <div>
-        <Form inline :model="searchData2">
-          <FormItem label-for='search'>
-            <Input 
-              v-model="searchData2.genealogyName" 
-              class="input-search" 
-              placeholder="姓名" 
-              clearable/>
-          </FormItem>
-          <FormItem>
-            <Button type="primary" shape="circle" @click='search2'>查询</Button>
-          </FormItem>
-        </Form>
-        <t-table ref='table2' :url='url.list' :param='selectData.param' :columns='selectData.columns' :functions="functions"/>
-      </div>
-    </Modal>
-</Tabs>
-</Card>
+          <Form inline :model="searchData2">
+            <FormItem label-for='search'>
+              <Input v-model="searchData2.genealogyName" class="input-search" placeholder="姓名" clearable/>
+            </FormItem>
+            <FormItem>
+              <Button type="primary" shape="circle" @click='search2'>查询</Button>
+            </FormItem>
+          </Form>
+          <t-table ref='table2' :url='url.list' :param='selectData.param' :columns='selectData.columns' :functions="functions" />
+        </div>
+      </Modal>
+    </Tabs>
+  </Card>
 </template>
 <script>
 import tp from "./tp"
 export default {
-  components:{
+  components: {
     tp
   },
   data() {
@@ -144,7 +128,7 @@ export default {
       searchData2: {
         genealogyName: ""
       },
-      PorS:"P",
+      PorS: "P",
       editshow: false,
       addshow: false,
       personShow: false,
@@ -183,7 +167,7 @@ export default {
         }
       },
       add: {
-        data: {genealogyId:this.$route.params.id},
+        data: { genealogyId: this.$route.params.id },
         columns: [
           { key: "id", value: "id", hidden: true },
           { key: "genealogyName", value: "姓名" },
@@ -209,7 +193,7 @@ export default {
         }
       },
       data: {
-        param: {genealogyId:this.$route.params.id,},
+        param: { genealogyId: this.$route.params.id, },
         columns: [
           {
             type: "selection"
@@ -236,7 +220,7 @@ export default {
                       }
                     }).then(function(res) {
                       $this.editshow = true;
-                      res.data.data.genealogyId=$this.$route.params.id
+                      res.data.data.genealogyId = $this.$route.params.id
                       $this.detail.data = res.data.data;
                     });
                     $this.editshow = false;
@@ -263,8 +247,8 @@ export default {
                       }
                     }).then(function(res) {
                       $this.$refs.table.searchData();
-                      $this.$refs.topo.loadData();
                       $this.successModal("删除成功");
+                      $this.initTopo()
                     });
                   }
                 }
@@ -356,37 +340,37 @@ export default {
           }
         ]
       },
-      tpTree:{},
+      tpTree: {},
     };
   },
   computed: {
-    functions:function(){
+    functions: function() {
       let $this = this;
       return {
-          onRowDblclick:function(val){
-            let config = {
-              title:"确认",
-              content:"确认是  "+val.genealogyName+"  吗",
-              onOk:function(){
-                $this.personShow = false;
-                if($this.PorS == "P"){
-                  $this.detail.data.parentId = val.id
-                  $this.add.data.parentId = val.id
-                }else if($this.PorS == "S"){
-                  $this.detail.data.spouseId = val.id
-                  $this.add.data.spouseId = val.id
-                }
+        onRowDblclick: function(val) {
+          let config = {
+            title: "确认",
+            content: "确认是  " + val.genealogyName + "  吗",
+            onOk: function() {
+              $this.personShow = false;
+              if ($this.PorS == "P") {
+                $this.detail.data.parentId = val.id
+                $this.add.data.parentId = val.id
+              } else if ($this.PorS == "S") {
+                $this.detail.data.spouseId = val.id
+                $this.add.data.spouseId = val.id
               }
             }
-            $this.$Modal.confirm(config)
           }
+          $this.$Modal.confirm(config)
         }
-      },
+      }
+    },
     detailDate: function() {
       let data = this.detail.data;
       for (let key in data) {
         if (key == "genealogyBirthday" || key == "genealogyDeadtime") {
-          if(data[key]){
+          if (data[key]) {
             data[key] = new Date(data[key]);
           }
         }
@@ -409,7 +393,7 @@ export default {
         $this.addshow = false;
         setTimeout(function() {
           $this.addshow = true;
-          $this.add.data = {genealogyId:$this.$route.params.id}
+          $this.add.data = { genealogyId: $this.$route.params.id }
         }, 1);
       }
     },
@@ -428,9 +412,9 @@ export default {
         data: $this.detailDate
       }).then(function(res) {
         $this.$refs.table.searchData();
-        $this.$refs.topo.loadData();
         $this.detail.data = {};
         $this.successModal("编辑成功");
+        $this.initTopo()
       });
     },
     addok: function() {
@@ -448,13 +432,13 @@ export default {
         data: $this.add.data
       }).then(function(res) {
         $this.$refs.table.searchData();
-        $this.$refs.topo.loadData();
         $this.add.data = {};
         $this.successModal("新增成功");
+        $this.initTopo()
       });
       this.addshow = false;
     },
-    personOk: function() {},
+    personOk: function() { },
     openPersonShow: function(ps) {
       this.PorS = ps;
       this.personShow = true;
@@ -472,15 +456,36 @@ export default {
       });
       return flag;
     },
+    getSpouseToChild: function(data){
+        for (var i in data) {
+            let d = data[i]
+            if(!d){
+              continue
+            }
+            if(!!d.spouse){
+              d.child.push(d.spouse)
+            }
+            if(!d.child){
+              continue
+            }
+            if (d.child.length>0) {
+                this.getSpouseToChild(d.child);
+            }
+        }
+    },
+    initTopo: function (){
+      this.$ajax({
+        method: "post",
+        url: this.url.tpTree
+      })
+      .then((res) => {
+          this.tpTree = res.data.node
+          this.getSpouseToChild(this.tpTree.child)
+      })
+    }
   },
   mounted() {
-    this.$ajax({
-      method: "post",
-      url: this.url.tpTree
-    })
-    .then((res)=>{
-      this.tpTree = res.data.node
-    })
+    this.initTopo()
   }
 };
 </script>
@@ -488,7 +493,8 @@ export default {
 .tabs {
   background-color: #fff;
 }
-#tp{
+
+#tp {
   width: 100%;
   height: 100%;
 }
