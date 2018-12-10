@@ -8,6 +8,9 @@ import com.north.sys.entity.SysUser;
 import com.north.sys.service.SysUserService;
 import com.north.utils.IpUtil;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +23,8 @@ public class PublicController {
 
     @Resource
     private SysUserService userService;
+    @Resource
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @RequestMapping(path = "/getIp", method = {RequestMethod.GET, RequestMethod.POST})
     public R getIp(HttpServletRequest request) {
@@ -28,10 +33,11 @@ public class PublicController {
     }
 
     @RequestMapping(path = "/test", method = {RequestMethod.GET, RequestMethod.POST})
-    public R test(HttpServletRequest request) {
-        Page page = new Page();
-        IPage<SysUser> p =  userService.page(page,new QueryWrapper());
-        return R.ok().putObject("ip",p).putObject("rows",p.getRecords());
+    public R test(String topic) {
+        for(int i=0;i<10;i++) {
+            ListenableFuture<SendResult<String, String>> value = kafkaTemplate.send(topic, "hello world "+i);
+        }
+        return R.ok().putObject("test","ok");
     }
 
-}
+    }
