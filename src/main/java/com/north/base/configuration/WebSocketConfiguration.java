@@ -1,36 +1,7 @@
 package com.north.base.configuration;
 
-import com.north.base.interceptor.WebSocketHandleInterceptor;
-import com.north.base.tio.webservice.NorthIpStatListener;
-import com.north.base.tio.webservice.NorthServerAioListener;
-import com.north.base.tio.webservice.NorthWsMsgHandler;
-import com.north.chat.entity.ChatUser;
-import com.north.common.im.ImConfig;
-import com.north.utils.SessionUtil;
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.messaging.simp.config.ChannelRegistration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.server.HandshakeInterceptor;
-import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
-import org.tio.server.ServerGroupContext;
-import org.tio.utils.time.Time;
-import org.tio.websocket.server.WsServerStarter;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import java.io.IOException;
-import java.security.Principal;
-import java.util.Map;
 
 @Configuration
 //@EnableWebSocketMessageBroker
@@ -38,27 +9,27 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer{
 
 
 
-    @Bean
-    public WsServerStarter northWebsocketStarter() throws IOException {
-        if(ImConfig.ENABLE) {
-            Integer port = ImConfig.PORT;
-
-            WsServerStarter wsServerStarter = new WsServerStarter(port, NorthWsMsgHandler.me);
-            ServerGroupContext serverGroupContext = wsServerStarter.getServerGroupContext();
-            serverGroupContext.setName(ImConfig.NAME);
-            serverGroupContext.setServerAioListener(NorthServerAioListener.me);
-            //设置ip监控
-            serverGroupContext.setIpStatListener(NorthIpStatListener.me);
-            //设置ip统计时间段
-            serverGroupContext.ipStats.addDurations(new Long[]{Time.MINUTE_1});
-            //设置心跳超时时间
-            serverGroupContext.setHeartbeatTimeout(1000 * 60);
-
-            wsServerStarter.start();
-            return wsServerStarter;
-        }
-        return null;
-    }
+//    @Bean
+//    public WsServerStarter northWebsocketStarter() throws IOException {
+//        if(ImConfig.ENABLE) {
+//            Integer port = ImConfig.PORT;
+//
+//            WsServerStarter wsServerStarter = new WsServerStarter(port, NorthWsMsgHandler.me);
+//            ServerGroupContext serverGroupContext = wsServerStarter.getServerGroupContext();
+//            serverGroupContext.setName(ImConfig.NAME);
+//            serverGroupContext.setServerAioListener(NorthServerAioListener.me);
+//            //设置ip监控
+//            serverGroupContext.setIpStatListener(NorthIpStatListener.me);
+//            //设置ip统计时间段
+//            serverGroupContext.ipStats.addDurations(new Long[]{Time.MINUTE_1});
+//            //设置心跳超时时间
+//            serverGroupContext.setHeartbeatTimeout(1000 * 60);
+//
+//            wsServerStarter.start();
+//            return wsServerStarter;
+//        }
+//        return null;
+//    }
 
 //    private static long HEART_BEAT=10000;
 //    @Resource

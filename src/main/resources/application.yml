@@ -40,29 +40,11 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
-
-endpoints:
-  shutdown:
-    enabled: true
-    sensitive: true
-security:
-  user:
-    name: north
-    password: north
-management:
-  context-path: /north-manange
-  address: 127.0.0.1
-
 north:
   token-key: accessToken
   shiro-filter:
     filter-chain-definition-map: |
-        /sys/login:anon,
-        /sys/logout:anon,
-        /sys/unlogin:anon,
-        /favicon.ico:anon,
-        /druid/*:anon,
-        /admin/*:authc,
+        /*:anon,
         /sys/*:authc,
 mybatis:
   config: classpath:mybatis-config.xml
