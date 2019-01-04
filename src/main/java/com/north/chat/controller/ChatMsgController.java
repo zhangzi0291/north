@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2018-09-18
  */
 @RestController
-@RequestMapping("/chatMsg")
+@RequestMapping("chatMsg")
 public class ChatMsgController {
 
 }

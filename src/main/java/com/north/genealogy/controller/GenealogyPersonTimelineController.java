@@ -32,7 +32,7 @@ import java.util.Map;
  * @since 2018-10-10
  */
 @RestController
-@RequestMapping("/genealogyPersonTimeline")
+@RequestMapping("genealogy/person/timeline")
 public class GenealogyPersonTimelineController extends BaseController<IGenealogyPersonTimelineService,GenealogyPersonTimeline> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());

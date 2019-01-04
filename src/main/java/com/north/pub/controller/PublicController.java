@@ -35,9 +35,8 @@ public class PublicController {
     @RequestMapping(path = "/test", method = {RequestMethod.GET, RequestMethod.POST})
     public R test(String topic) {
         for(int i=0;i<10;i++) {
-            ListenableFuture<SendResult<String, String>> value = kafkaTemplate.send(topic, "hello world "+i);
+            ListenableFuture<SendResult<String, String>> value = kafkaTemplate.send(topic,"key", "hello world "+i);
         }
         return R.ok().putObject("test","ok");
     }
-
-    }
+}

@@ -1,11 +1,10 @@
 package com.north.utils;
 
-import sun.misc.BASE64Encoder;
-
 import javax.sound.midi.Soundbank;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 /**
  * 类的描述
@@ -28,8 +27,7 @@ public class EncryptionUtil {
     public static String getMD5Str(String value){
         try {
             MessageDigest md5=MessageDigest.getInstance("MD5");
-            BASE64Encoder base64en = new BASE64Encoder();
-            String md5str=base64en.encode(md5.digest(value.getBytes("utf-8")));
+            String md5str= Base64.getEncoder().encodeToString(md5.digest(value.getBytes("utf-8")));
             return md5str;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

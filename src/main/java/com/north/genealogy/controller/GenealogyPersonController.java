@@ -27,7 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @since 2018-10-10
  */
 @RestController
-@RequestMapping("/genealogy/person")
+@RequestMapping("genealogy/person")
 public class GenealogyPersonController extends BaseController<IGenealogyPersonService,GenealogyPerson> {
     
     private Logger logger = LoggerFactory.getLogger(this.getClass());

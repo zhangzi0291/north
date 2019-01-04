@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2018-09-18
  */
 @RestController
-@RequestMapping("/chatUser")
+@RequestMapping("chatUser")
 public class ChatUserController {
 
 }

@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("sysRoleResource")
+@RequestMapping("sys/role/resource")
 public class SysRoleResourceController {
     
     private Logger logger = LoggerFactory.getLogger(this.getClass());
