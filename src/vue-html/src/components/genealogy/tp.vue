@@ -11,9 +11,10 @@ export default {
   data() {
     return {
       zoom: {},
-      width:0,
-      height:0,
-      transformNode:{}
+      width: 0,
+      height: 0,
+      transformNode: {},
+      otherNode: undefined,
     }
   },
   props: {
@@ -21,9 +22,9 @@ export default {
       type: Object,
       default: {}
     },
-    click:{
+    click: {
       type: Function,
-      default: function(){
+      default: function() {
 
       }
     },
@@ -42,11 +43,14 @@ export default {
       this.width = this.$el.clientWidth;
       this.height = this.$el.clientHeight;
       d3.select("svg").remove()
+
+      var depth = this.recursion(this.data)
+
       var svg = d3.select(this.$el).append("svg")
         .attr("width", this.$el.clientWidth)
         .attr("height", this.$el.clientHeight)
-        .attr("viewBox", "0 -30 "+this.$el.clientWidth+" "+this.$el.clientHeight+"")
-      
+        .attr("viewBox", "0 -50 " + this.$el.clientWidth + " " + (this.$el.clientHeight + 60) + "")
+
       var g = svg.append("g").attr("class", "container")
 
       var context = g.append("g").attr("class", "context")
@@ -54,7 +58,7 @@ export default {
         return d.child
       });
 
-      var tree = d3.tree().size([this.width , 1080])
+      var tree = d3.tree().size([this.width > 720 ? this.width : 720, depth * 200])
         .separation(function(a, b) {
           return (a.parent == b.parent ? 1 : 2) / a.depth;
         })
@@ -70,19 +74,34 @@ export default {
       const transform = d3.zoomIdentity.translate(0, 0).scale(1)
       this.zoom = d3.zoom()
         .scaleExtent([0.5, 10])
-        .translateExtent([[-this.width*1/3,0],[this.width*4/3,1280]])
+        .translateExtent([[-this.width * 1 / 3, 0], [this.width * 4 / 3, 1280]])
         // .clickDistance([50])
         .on('zoom', function() {
-          console.log(this)
-          let oldTransform = d3.zoomTransform(d3.select('svg').node()) 
-          let transform = d3.zoomIdentity.translate(oldTransform.x,oldTransform.y).scale(oldTransform.k)    
+          let oldTransform = d3.zoomTransform(d3.select('svg').node())
+          let transform = d3.zoomIdentity.translate(oldTransform.x, oldTransform.y).scale(oldTransform.k)
           return d3.select('g.container').attr('transform', d3.event.transform)
-        })       
+        })
 
-      svg.call(this.zoom).on("dblclick.zoom",null)
+      svg.call(this.zoom).on("dblclick.zoom", null)
 
     },
-    locationPoint(x,y){
+    recursion(data, depth) {
+      if (!depth) {
+        depth = 1;
+      }
+      let tempDepth = depth;
+      if (data.child && data.child.length > 0) {
+        for (var i = 0; i < data.child.length; i++) {
+          var temp = this.recursion(data.child[i], ++depth);
+
+          if (temp > tempDepth) {
+            tempDepth = temp;
+          }
+        }
+      }
+      return tempDepth
+    },
+    locationPoint(x, y) {
 
     },
     links(g, links) {
@@ -117,17 +136,23 @@ export default {
         .append("g")
         .attr("class", "nodes")
         .attr("x", (d, i) => d.x)
-        .attr("y", (d, i) =>  d.y)
+        .attr("y", (d, i) => d.y)
         .attr("transform", function(d, i) {
           var cx = d.x;
           var cy = d.y;
           return "translate(" + cx + "," + cy + ")";
         }).on("click", function() {
           let x = d3.select(this).attr("x")
-          let y = d3.select(this).attr("y")/1
+          let y = d3.select(this).attr("y") / 1
+
+          if ($this.otherNode) {
+            $this.otherNode.select("circle").attr("stroke", "blue")
+          }
+          $this.otherNode = d3.select(this);
+          d3.select(this).select("circle").attr("stroke", "red")
           // console.log(x,y)
           // let transform = d3.zoomIdentity.translate(x,y).scale(1)    
-          $this.zoom.translateTo(g,x,y)
+          $this.zoom.translateTo(g, x, y)
           // d3.select('g.container').attr('transform', transform)
         })
 
@@ -169,7 +194,7 @@ export default {
 </script>
 
 <style lang="less">
-.topo{
-  overflow:hidden
+.topo {
+  overflow: hidden
 }
 </style>
