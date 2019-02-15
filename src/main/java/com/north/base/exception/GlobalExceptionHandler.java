@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +25,17 @@ public class GlobalExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     public static final String DEFALT_ERROR_VIEW = "error";
+
+    @ResponseBody
+    @ExceptionHandler(value = NoHandlerFoundException.class)
+    public R NoHandlerFoundExceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception e) throws Exception {
+        logger.error("Exception:",e);
+        response.setStatus(404);
+        return R.error(404,"未发现接口");
+    }
+
+
+
 
     @ResponseBody
     @ExceptionHandler(value = Exception.class)

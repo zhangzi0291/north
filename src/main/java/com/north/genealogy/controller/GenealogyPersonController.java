@@ -50,6 +50,14 @@ public class GenealogyPersonController extends BaseController<IGenealogyPersonSe
     }
 
     @Override
+    public R addJson(GenealogyPerson bean) {
+        if(StringUtils.isEmpty(bean.getParentId())){
+            bean.setParentId("-1");
+        }
+        return super.addJson(bean);
+    }
+
+    @Override
     public R editJson(GenealogyPerson bean) {
         if(bean.getGenealogyDeadtime()==null){
 
@@ -90,7 +98,7 @@ public class GenealogyPersonController extends BaseController<IGenealogyPersonSe
         root.setGenealogyName("起点");
         root.setGenealogySex("男");
         root.setChild(saveList);
-            return R.ok().putObject("node",root);
+        return R.ok().putObject("node",root);
     }
     private List<GenealogyPersonDto> getChildNode(List<GenealogyPersonDto> list , GenealogyPersonDto parent){
         list.forEach(v->{

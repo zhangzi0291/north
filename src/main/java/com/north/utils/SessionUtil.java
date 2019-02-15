@@ -1,18 +1,13 @@
 package com.north.utils;
 
-import com.alibaba.fastjson.JSON;
 import com.north.base.service.RedisService;
 import com.north.base.session.SimpleSession;
 import com.north.sys.entity.SysUser;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Base64;
 
 /**
  * 类的描述

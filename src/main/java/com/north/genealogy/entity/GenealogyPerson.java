@@ -53,7 +53,12 @@ public class GenealogyPerson implements Serializable {
      */
     private String parentId;
 
+    /**
+     * 配偶id
+     */
     private String spouseId;
+
+    private String genealogyAvatar;
 
     public String getId() {
         return id;
@@ -119,18 +124,27 @@ public class GenealogyPerson implements Serializable {
         this.spouseId = spouseId;
     }
 
+    public String getGenealogyAvatar() {
+        return genealogyAvatar;
+    }
+
+    public void setGenealogyAvatar(String genealogyAvatar) {
+        this.genealogyAvatar = genealogyAvatar;
+    }
+
     @Override
     public String toString() {
         return "GenealogyPerson{" +
-        "id=" + id +
-        ", genealogyId=" + genealogyId +
-        ", genealogyName=" + genealogyName +
-        ", genealogySex=" + genealogySex +
-        ", genealogyBirthday=" + genealogyBirthday +
-        ", genealogyDeadtime=" + genealogyDeadtime +
-        ", genealogyExperience=" + genealogyExperience +
-        ", parentId=" + parentId +
-        ", spouseId=" + spouseId +
-        "}";
+                "id='" + id + '\'' +
+                ", genealogyId='" + genealogyId + '\'' +
+                ", genealogyName='" + genealogyName + '\'' +
+                ", genealogySex='" + genealogySex + '\'' +
+                ", genealogyBirthday=" + genealogyBirthday +
+                ", genealogyDeadtime=" + genealogyDeadtime +
+                ", genealogyExperience='" + genealogyExperience + '\'' +
+                ", parentId='" + parentId + '\'' +
+                ", spouseId='" + spouseId + '\'' +
+                ", genealogyAvatar='" + genealogyAvatar + '\'' +
+                '}';
     }
 }
