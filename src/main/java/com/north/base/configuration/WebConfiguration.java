@@ -2,6 +2,12 @@ package com.north.base.configuration;
 
 import com.north.base.converter.StringToDateConverter;
 import com.north.base.filter.CorsFilter;
+import org.reflections.Reflections;
+import org.reflections.scanners.FieldAnnotationsScanner;
+import org.reflections.scanners.MethodAnnotationsScanner;
+import org.reflections.scanners.MethodParameterScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -9,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -30,8 +37,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 import javax.annotation.Resource;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @Configuration
 public class WebConfiguration extends WebMvcConfigurationSupport implements ApplicationContextAware {
@@ -90,13 +100,18 @@ public class WebConfiguration extends WebMvcConfigurationSupport implements Appl
      * @return
      */
     @Bean
-    public String initEditableValidation() {
+    public String initEditableValidation() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         ConfigurableWebBindingInitializer initializer = (ConfigurableWebBindingInitializer) handlerAdapter
                 .getWebBindingInitializer();
         if (initializer.getConversionService() != null) {
             GenericConversionService genericConversionService = (GenericConversionService) initializer
                     .getConversionService();
-            genericConversionService.addConverter(new StringToDateConverter());
+            Reflections reflections =  new Reflections("com.north.base.converter");
+            Set<Class<? extends Converter>> set = reflections.getSubTypesOf( Converter.class );
+            for (Class clazz : set) {
+                genericConversionService.addConverter((Converter) clazz.getDeclaredConstructor().newInstance());
+            }
+
         }
         return null;
     }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 类的描述
@@ -26,9 +27,13 @@ public abstract class BaseController<T extends IService<U>,U> {
     @Autowired
     private T service;
 
+    protected QueryWrapper<U> setListWrapper(U bean, Map<String,String> map){
+        return new QueryWrapper<U>();
+    }
+
     @RequestMapping(path = "list", method = {RequestMethod.GET, RequestMethod.POST})
-    public R listJson(U bean, Page page){
-        QueryWrapper<U> wrapper = setListWrapper(bean);
+    public R listJson(U bean, Page page, @RequestParam Map<String,String> map){
+        QueryWrapper<U> wrapper = setListWrapper(bean,map);
         try {
             if(page == null){
                 List<U> list = service.list(wrapper);
@@ -97,7 +102,4 @@ public abstract class BaseController<T extends IService<U>,U> {
         return R.ok("data",flag);
     }
 
-    protected QueryWrapper<U> setListWrapper(U bean){
-        return new QueryWrapper<U>();
-    }
 }

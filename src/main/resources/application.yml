@@ -9,20 +9,17 @@ server:
 #    context-path: /springboot
   http2:
     enable: true
-netty:
-  server:
-    port: 81
 
 spring:
   application:
-    name: authority
+    name: north
   mvc:
     throw-exception-if-no-handler-found: true
   datasource:
     druid:
       url: jdbc:postgresql://127.0.0.1:5432/springboot
-      username: root
-      password: root
+      username: postgres
+      password: postgres
   redis:
     database: 1
     host: 127.0.0.1
