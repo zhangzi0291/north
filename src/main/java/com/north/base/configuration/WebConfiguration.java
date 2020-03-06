@@ -81,13 +81,11 @@ public class WebConfiguration extends WebMvcConfigurationSupport implements Appl
             converters.add(new AtomFeedHttpMessageConverter());
             converters.add(new RssChannelHttpMessageConverter());
         }
-
         if (jackson2XmlPresent) {
             converters.add(new MappingJackson2XmlHttpMessageConverter(Jackson2ObjectMapperBuilder.xml().applicationContext(this.applicationContext).build()));
         } else if (jaxb2Present) {
             converters.add(new Jaxb2RootElementHttpMessageConverter());
         }
-
         if (jackson2Present) {
             converters.add(new MappingJackson2HttpMessageConverter(Jackson2ObjectMapperBuilder.json().applicationContext(this.applicationContext).build()));
         } else if (gsonPresent) {

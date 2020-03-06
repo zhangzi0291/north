@@ -24,7 +24,7 @@ public class SpringUtil implements ApplicationContextAware {
         if(SpringUtil.applicationContext == null) {
             SpringUtil.applicationContext = applicationContext;
         }
-        logger.debug("========ApplicationContext配置成功,在普通类可以通过调用SpringUtils.getAppContext()获取applicationContext对象,applicationContext="+SpringUtil.applicationContext+"========");
+//        logger.debug("========ApplicationContext配置成功,在普通类可以通过调用SpringUtils.getAppContext()获取applicationContext对象,applicationContext="+SpringUtil.applicationContext+"========");
     }
 
     //获取applicationContext

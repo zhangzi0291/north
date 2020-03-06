@@ -1,11 +1,7 @@
 package com.north.sys.entity;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-
 public class SysRoleResource {
-    @TableId(type=IdType.ID_WORKER_STR)
     private String id;
     private String roleId;
     private String resourceId;

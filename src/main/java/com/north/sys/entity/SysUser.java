@@ -1,15 +1,12 @@
 package com.north.sys.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.util.Date;
 import java.util.List;
 
 public class SysUser {
 
-    @TableId(type=IdType.ID_WORKER_STR)
     private String id;
 
     private String username;

@@ -1,14 +1,11 @@
 package com.north.sys.entity;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.util.List;
 
 public class SysRole {
-    @TableId(type=IdType.ID_WORKER_STR)
     private String id;
     private String roleName;
     private String roleDesc;

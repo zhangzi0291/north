@@ -8,8 +8,7 @@ import com.north.sys.entity.SysUser;
 import com.north.sys.service.SysResourceService;
 import com.north.utils.EncryptionUtil;
 import com.north.utils.SessionUtil;
-import io.swagger.  annotations.*;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import io.swagger.annotations.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.session.Session;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 

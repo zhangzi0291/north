@@ -22,16 +22,19 @@ public class CorsFilter extends GenericFilterBean {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String origin = request.getHeader("ORIGIN");
-
-        response.setHeader("Access-Control-Allow-Origin", origin);//* or origin as u prefer
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "content-type, authorization, x-requested-with");
-        if (request.getMethod().equals("OPTIONS")) {
-            response.setStatus(HttpServletResponse.SC_OK);
-        }else {
+        if ( origin == null ) {
             filterChain.doFilter(request, response);
+        } else {
+            response.setHeader("Access-Control-Allow-Origin", origin);//* or origin as u prefer
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+            response.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, OPTIONS, DELETE");
+            response.setHeader("Access-Control-Max-Age", "3600");
+            response.setHeader("Access-Control-Allow-Headers", "content-type, authorization, x-requested-with");
+            if (request.getMethod().equals("OPTIONS")) {
+                response.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                filterChain.doFilter(request, response);
+            }
         }
 
     }
