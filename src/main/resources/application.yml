@@ -33,16 +33,6 @@ spring:
     port: 6379
     password:
     timeout: 5000
-  kafka:
-    producer:
-      bootstrap-servers: http://192.168.43.100:9092,http://192.168.43.101:9092,http://192.168.43.102:9092
-#    bootstrap-servers:
-#    producer:
-#      retries: 0
-#      batch-size: 16384
-#      buffer-memory: 33554432
-#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 north:
   token-key: accessToken
