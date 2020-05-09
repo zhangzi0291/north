@@ -1,5 +1,5 @@
 import axios from "axios";
-import router from "../router";
+import router from "../router/index";
 const loading = {
   install: function(Vue) {
     const getParams = function(data) {
@@ -22,7 +22,6 @@ const loading = {
       }
       return param;
     };
-    let baseURL = "http://127.0.0.1:80/";
     let wsURL = "ws://127.0.0.1:81/";
     Vue.prototype.baseURL = baseURL;
     Vue.prototype.wsURL = wsURL;
@@ -56,11 +55,25 @@ const loading = {
         
         return response;
       }, error => {
+        if(error.response == undefined){
+          Vue.prototype.$Message.error("服务器无响应")
+        }
+        console.log(error.response)
         if (error.response.status === 401) {
           return next({path: '/login',})
         }
+
         if(error.response.status != 200 || error.response.status != 302) {
-          Vue.prototype.$Message.error(error.response.data.msg)
+          if(error.response.data.status==500){
+            Vue.prototype.$Message.error(
+              error.response.data.error
+              +"<br>"+
+              error.response.data.message
+            )
+          }
+          if(error.response.data.msg){
+            Vue.prototype.$Message.error(error.response.data.msg)
+          }
         }
         return Promise.reject(error);
       });``

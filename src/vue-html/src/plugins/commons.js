@@ -2,9 +2,7 @@ import table from "@/components/base/table";
 import mModal from "@/components/base/modal";
 import menu from "@/components/base/menu/menu";
 import header from "@/components/base/header/header";
-import chatHeader from "@/components/chat/chatheader";
-// import SockJS from "sockjs-client";
-// import Stomp from "stompjs";
+import detail from "@/components/base/detail";
 
 const loading = {
   install: function(Vue) {
@@ -14,7 +12,7 @@ const loading = {
     Vue.component("mMenu", menu);
     Vue.component("mHeader", header);
     Vue.component("mModal", mModal);
-    Vue.component("chatHeader", chatHeader);
+    Vue.component("dDetail", detail);
 
     Date.prototype.Format = function(fmt) {
       //

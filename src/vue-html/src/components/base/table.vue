@@ -8,7 +8,8 @@
       border 
       :height="tableHeight" 
       @on-sort-change="sort"
-      @on-row-dblclick="functions.onRowDblclick"/>
+      @on-row-dblclick="functions.onRowDblclick"
+      />
     <br>
     <Page 
       :total="page.total" 

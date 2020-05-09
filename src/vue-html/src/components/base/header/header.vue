@@ -11,6 +11,9 @@
           type="md-menu"
           size="30"/>
       </Button>
+      <span class="nav-title">
+        华东三区资源管理系统
+      </span>
     </div>
     <div class="header-avator-con">
       <div class="user-dropdown-menu-con">

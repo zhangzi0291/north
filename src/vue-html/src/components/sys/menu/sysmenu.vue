@@ -204,18 +204,23 @@ export default {
                 on: {
                   click: () => {
                     let $this = this;
-                    let array = [];
-                    array.push(params.row.id);
-                    this.$ajax({
-                      method: "post",
-                      url: $this.url.del,
-                      data: {
-                        ids: array
-                      }
-                    }).then(function(res) {
-                      $this.$refs.table.searchData();
-                      $this.successModal("删除成功");
-                    });
+                    this.$Modal.confirm({
+                        title: '确定删除吗',
+                        onOk: () => {
+                            let array = [];
+                            array.push(params.row.id);
+                            this.$ajax({
+                              method: "post",
+                              url: $this.url.del,
+                              data: {
+                                ids: array
+                              }
+                            }).then(function(res) {
+                              $this.$refs.table.searchData();
+                              $this.successModal("删除成功");
+                            });
+                        },
+                    }); 
                   }
                 }
               });

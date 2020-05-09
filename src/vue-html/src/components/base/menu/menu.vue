@@ -79,7 +79,7 @@ export default {
       this.$router.push(name);
     }
   },
-  beforeMount() {
+  created() {
     let $this = this;
     this.$ajax({
       method: "post",
