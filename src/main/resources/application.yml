@@ -2,6 +2,7 @@ server:
   port: 80
   http2:
     enable: true
+
 #  servlet:
 #    context-path: /springboot
 #  ssl:
@@ -15,6 +16,11 @@ spring:
     name: north
   mvc:
     throw-exception-if-no-handler-found: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+      max-request-size: 1000MB
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/springboot
     username: postgres
@@ -28,28 +34,31 @@ spring:
     password:
     timeout: 5000
   kafka:
-    bootstrap-servers: 127.0.0.1:9092
     producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      client-id: north-client
-    consumer:
-      group-id: north
-      enable-auto-commit: true
-      auto-commit-interval: 1000
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      bootstrap-servers: http://192.168.43.100:9092,http://192.168.43.101:9092,http://192.168.43.102:9092
+#    bootstrap-servers:
+#    producer:
+#      retries: 0
+#      batch-size: 16384
+#      buffer-memory: 33554432
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 north:
   token-key: accessToken
   shiro-filter:
+    enable-redis: false
+    global-session-timeout: 1800000 #30*60*1000
     filter-chain-definition-map: |
         /sys/login:anon,
         /sys/logout:anon,
         /sys/unlogin:anon,
+        /sys/403:anon,
+        /sys/getMenu:authc,
         /favicon.ico:anon,
+        /public/*:anon,
         /admin/*:anon,
-        /sys/*:anon,
+        /sys/**:roles[role1],
 
 mybatis-plus:
   config-location: classpath:mybatis-config.xml

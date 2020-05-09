@@ -1,9 +1,13 @@
 package com.north.base.shiro;
 
+import com.alibaba.fastjson.JSON;
+import com.north.base.R;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
+import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
+import org.apache.shiro.web.servlet.ShiroHttpServletResponse;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,25 +43,26 @@ public class ShiroPermissionsFilter extends FormAuthenticationFilter {
         session.setAttribute(SAVED_REQUEST_KEY, savedRequest);
     }
 
-//    @Override
-//    protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws IOException {
-//        logger.info("----------权限控制-------------");
-//        ShiroHttpServletRequest httpServletRequest = (ShiroHttpServletRequest) servletRequest;
-//        ShiroHttpServletResponse httpServletResponse = (ShiroHttpServletResponse) servletResponse;
-//        String header = httpServletRequest.getHeader("X-Requested-With");
-//        boolean isAjax = "XMLHttpRequest" == header;
-//        if (isAjax) {//如果是ajax返回指定格式数据
-//            logger.info("----------AJAX请求拒绝-------------");
-//            httpServletResponse.setCharacterEncoding("UTF-8");
-//            httpServletResponse.setContentType("application/json");
-//            //返回禁止访问json字符串
-//            httpServletResponse.getWriter().write(JSON.toJSONString(R.error(R.ReturnCodeEnum.UNAUTHORIZED.getCode(),"hh")));
-//        } else {//如果是普通请求进行重定向
-//            logger.info("----------普通请求拒绝-------------");
-//            httpServletResponse.sendRedirect("/sys/403");
-//        }
-//        return false;
-//    }
+    @Override
+    protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws IOException {
+        logger.debug("----------权限控制-------------");
+        ShiroHttpServletRequest httpServletRequest = (ShiroHttpServletRequest) servletRequest;
+        ShiroHttpServletResponse httpServletResponse = (ShiroHttpServletResponse) servletResponse;
+        String header = httpServletRequest.getHeader("X-Requested-With");
+        boolean isAjax = "XMLHttpRequest".equalsIgnoreCase(header);
+        if (isAjax) {//如果是ajax返回指定格式数据
+            logger.debug("----------AJAX请求拒绝-------------");
+            httpServletResponse.setCharacterEncoding("UTF-8");
+            httpServletResponse.setContentType("application/json");
+            //返回禁止访问json字符串
+            httpServletResponse.setStatus(R.ReturnCodeEnum.UNAUTHORIZED.getCode());
+            httpServletResponse.getWriter().write(JSON.toJSONString(R.error(R.ReturnCodeEnum.UNAUTHORIZED.getCode(),"未登录")));
+        } else {//如果是普通请求进行重定向
+            logger.info("----------普通请求拒绝-------------");
+            httpServletResponse.sendRedirect("/sys/403");
+        }
+        return false;
+    }
 
 
 }

@@ -4,6 +4,7 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,8 @@ import java.util.concurrent.TimeUnit;
 public class RedisSessionDao extends AbstractSessionDAO {
 
     // Session超时时间，单位为毫秒
-    private long expireTime = 30*60*1000;
+    @Value("${north.shiro-filter.global-session-timeout:30*60*1000}")
+    private long expireTime;
 
     @Resource
     private RedisTemplate redisTemplate;// Redis操作类，对这个使用不熟悉的，可以参考前面的博客

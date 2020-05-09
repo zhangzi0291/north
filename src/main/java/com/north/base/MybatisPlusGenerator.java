@@ -55,8 +55,8 @@ public class MybatisPlusGenerator {
 //            }
         });
         dsc.setDriverName("org.postgresql.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("root");
+        dsc.setUsername("postgres");
+        dsc.setPassword("postgres");
         dsc.setUrl("jdbc:postgresql://127.0.0.1:5432/springboot");
         mpg.setDataSource(dsc);
 
@@ -65,7 +65,7 @@ public class MybatisPlusGenerator {
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
         strategy.setTablePrefix(new String[] { "" });// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[] { "genealogy_event_timeline","genealogy_family","genealogy_person","genealogy_person_timeline" }); // 需要生成的表
+        strategy.setInclude(new String[] { "test_table" }); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -89,7 +89,7 @@ public class MybatisPlusGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.north.genealogy");
+        pc.setParent("com.north.test");
 //        pc.setModuleName("test");
         mpg.setPackageInfo(pc);
 

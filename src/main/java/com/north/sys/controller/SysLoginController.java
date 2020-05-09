@@ -16,6 +16,7 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +50,7 @@ public class SysLoginController {
     @Resource
     private SessionUtil sessionUtil;
 
-    @ApiOperation("根据用户id查询菜单")
+    @ApiOperation(value = "根据用户id查询菜单")
     @RequestMapping(path = "/getMenu", method = {RequestMethod.GET, RequestMethod.POST})
     public R getMenu(@ApiParam(name = "id",value = "用户ID",required = true)String id) {
         return R.ok("menu",resourceService.getMenus(id));
@@ -122,22 +123,21 @@ public class SysLoginController {
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), EncryptionUtil.getPasswordEncoder(user.getUsername(),user.getPassword()));
         //获取当前的Subject
         Subject currentUser = SecurityUtils.getSubject();
-        System.out.println(currentUser.hashCode());
         Session session = SecurityUtils.getSubject().getSession();
         //登陆检查
         R r = loginCheck(username, token, currentUser);
-        if(r!=null){
+        if(r != null){
             return r;
         }
         //验证是否登录成功
         if(currentUser.isAuthenticated()){
             logger.debug("用户[{}]登录认证通过",username);
-            session = SecurityUtils.getSubject().getSession(true);
+//            session = SecurityUtils.getSubject().getSession();
             SysUser nowUser = (SysUser) currentUser.getPrincipal();
             session.setAttribute("user",nowUser);
             nowUser.setPassword(null);
             //保存Token
-            String tokenStr = session.getId().toString();;
+            String tokenStr = session.getId().toString();
             return R.ok("登陆成功").putObject("user",SecurityUtils.getSubject().getPrincipal()).putObject(tokenKey,tokenStr);
         }else{
             token.clear();

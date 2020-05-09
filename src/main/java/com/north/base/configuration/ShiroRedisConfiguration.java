@@ -1,5 +1,7 @@
 package com.north.base.configuration;
 
+import com.north.base.session.RedisSessionDao;
+import com.north.base.session.SimpleSessionFactory;
 import com.north.base.shiro.ShiroPermissionsFilter;
 import com.north.base.shiro.ShiroRealm;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -28,11 +30,8 @@ import java.util.Map;
  * @Date 2018/6/21 10:46
  */
 @Configuration
-@ConditionalOnProperty(name="north.shiro-filter.enable-redis",havingValue = "false")
-public class ShiroConfiguration {
-
-    @Value("${north.shiro-filter.global-session-timeout}")
-    private Long globalSessionTimeout;
+@ConditionalOnProperty(name="north.shiro-filter.enable-redis",havingValue = "true")
+public class ShiroRedisConfiguration {
 
     private List<String> filterChainDefinitionMap;
 
@@ -55,14 +54,14 @@ public class ShiroConfiguration {
     }
 
     @Bean
-    public DefaultWebSessionManager configWebSessionManager(){
+    public DefaultWebSessionManager configWebSessionManager(RedisSessionDao redisSessionDao,SimpleSessionFactory simpleSessionFactory){
         DefaultWebSessionManager manager = new DefaultWebSessionManager();
-        //允许cookie跨域访问
         manager.getSessionIdCookie().setSameSite(Cookie.SameSiteOptions.NONE);
-
 //        manager.setCacheManager(cacheManager);// 加入缓存管理器
+        manager.setSessionDAO(redisSessionDao);// 设置SessionDao
+        manager.setSessionFactory(simpleSessionFactory);
         manager.setDeleteInvalidSessions(true);// 删除过期的session
-        manager.setGlobalSessionTimeout(globalSessionTimeout);// 设置全局session超时时间
+        manager.setGlobalSessionTimeout(redisSessionDao.getExpireTime());// 设置全局session超时时间
         manager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session
 
         return manager;
@@ -73,12 +72,12 @@ public class ShiroConfiguration {
      * @return
      */
     @Bean
-    public DefaultWebSecurityManager securityManager(){
+    public DefaultWebSecurityManager securityManager(RedisSessionDao redisSessionDao,SimpleSessionFactory simpleSessionFactory){
         DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
         //设置realm
         securityManager.setRealm(shiroRealm());
 
-        securityManager.setSessionManager(configWebSessionManager());
+        securityManager.setSessionManager(configWebSessionManager(redisSessionDao,simpleSessionFactory));
 
         return securityManager;
     }
@@ -118,6 +117,7 @@ public class ShiroConfiguration {
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
+
         return chainDefinition;
     }
 
