@@ -1,14 +1,13 @@
 server:
   port: 80
-  http2:
-    enable: true
-
 #  servlet:
 #    context-path: /springboot
+
+#  http2:
+#    enabled: true
 #  ssl:
-#    key-store: classpath:keystore.p12
-#    key-password: northzx
-#    key-store-password: northzx
+#    key-store: classpath:xxxx.pfx
+#    key-store-password: xxxx
 #    keyStoreType: PKCS12
 
 spring:
@@ -48,7 +47,7 @@ north:
         /favicon.ico:anon,
         /public/*:anon,
         /admin/*:anon,
-        /sys/**:roles[role1],
+        /sys/**:anon,
 
 mybatis-plus:
   config-location: classpath:mybatis-config.xml

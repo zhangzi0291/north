@@ -41,7 +41,7 @@ public class PublicController {
         });
         return R.ok().putObject("test2",json);
     }
-    
+
 
     public static void main(String[] args) {
 //        String jsonStr = "{timestamp : \"2020-04-28 17:49:31.724\", app : \"zuulserver\", thread : \"http-nio-8041-exec-2\", logger: \"com.cx.zuulserver.auth.JwtLoginFilter\", level: \"INFO\", msg: \"token有效期1000L * 60 * 60 * 24 * 365 * 501576800000000\"}";
