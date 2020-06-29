@@ -1,9 +1,7 @@
 package com.north.base.shiro;
 
-import com.alibaba.fastjson.JSON;
 import com.north.sys.entity.SysUser;
 import com.north.sys.service.SysUserService;
-import com.north.utils.SessionUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -13,12 +11,11 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.web.subject.WebSubject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +25,7 @@ import java.util.Set;
  * @Author zhengxiangnan
  * @Date 2018/6/21 10:49
  */
+//@Component("authorizer")
 public class ShiroRealm extends AuthorizingRealm {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());

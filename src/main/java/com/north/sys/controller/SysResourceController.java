@@ -58,7 +58,6 @@ public class SysResourceController {
     @RequestMapping(path = "getAllMenu", method = {RequestMethod.GET, RequestMethod.POST})
     public R getAllMenu(SysResource sysResource) {
         //设置查询条件 。。。
-
         try {
             List<SysResource> list = sysResourceService.getResourceMenus(null);
             List<SysResourceDto> options = setChildNood(list);

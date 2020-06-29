@@ -1,6 +1,8 @@
 package com.north.base.excel.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.north.base.converter.LocalDateTimeConverter;
+import com.north.sys.entity.SysLog;
 import com.north.utils.CamelToUnderlineUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -17,10 +19,7 @@ import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
 
@@ -131,10 +130,16 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
 
     /**
      * 子类实现把javaBean分类为需要新增的和需要更新的
-     * @param bean
+     * @param beans
      * @return
      */
-    protected abstract InsertOrUpdate getInsertOrUpdateMap(List<T> bean);
+    protected InsertOrUpdate getInsertOrUpdateMap(List<T> beans){
+        InsertOrUpdate iou = new InsertOrUpdate();
+        for (T bean : beans) {
+            iou.addInsertBeans(bean);
+        }
+        return iou;
+    };
 
     /**
      * 读取excel内容，包括第一行的表头
@@ -433,7 +438,8 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
             if(value instanceof LocalDateTime){
                 result = value;
             }else {
-                result = LocalDateTime.parse(value.toString(), dateTimeFormatter);
+                LocalDateTimeConverter ldtc = new LocalDateTimeConverter();
+                result = ldtc.convert(value.toString());
             }
         } else if (fieldType.isAssignableFrom(Double.class)) {
             result = Double.valueOf(value.toString());
@@ -517,12 +523,14 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
 
     public static class CellNames{
 
-        public CellNames(List<String> cellNames, List<String> cellNameCns) {
-            if(cellNames.size()!=cellNameCns.size()){
+        public CellNames(String[] cellNames, String[] cellNameCns) {
+            List<String> cellNamesList = Arrays.asList(cellNames);
+            List<String> cellNameCnsList = Arrays.asList(cellNameCns);
+            if(cellNamesList.size()!=cellNameCnsList.size()){
                 throw new RuntimeException("表头不对应");
             }
-            this.cellNames = cellNames;
-            this.cellNameCns = cellNameCns;
+            this.cellNames = cellNamesList;
+            this.cellNameCns = cellNameCnsList;
         }
 
         List<String> cellNames = new ArrayList<>();

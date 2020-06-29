@@ -37,69 +37,11 @@ const sysuser = resolve =>
     () => resolve(require("@/components/sys/user/sysuser.vue")),
     "sysuser"
   );
-
-const gisstatistic = resolve =>
+const syslog = resolve =>
   require.ensure(
     [],
-    () => resolve(require("@/components/rework/gisstatistic.vue")),
-    "gisstatistic"
-  );
-
-const reworklist = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/rework/reworklist.vue")),
-    "reworklist"
-  );
-
-const partnerinfolist = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/partnerinfo/partnerinfolist.vue")),
-    "partnerinfolist"
-  );
-const employeeinfolist = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/employeeinfo/employeeinfolist.vue")),
-    "employeeinfolist"
-  );
-const materiallist = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/material/materiallist.vue")),
-    "materiallist"
-  );
-const wiredscheduledplanlist = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/wiredscheduledplan/wiredscheduledplanlist.vue")),
-    "wiredscheduledplanlist"
-  );
-const wirelessscheduledplanlist = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/wirelessscheduledplan/wirelessscheduledplanlist.vue")),
-    "wirelessscheduledplanlist"
-  );
-  
-const statchartlist = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/statchart/statchartlist.vue")),
-    "statchartlist"
-  );
-const statchart = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/statchart/statchart.vue")),
-    "statchart"
-  );
-const demo = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/demo/demo.vue")),
-    "demo"
+    () => resolve(require("@/components/sys/log/syslog.vue")),
+    "syslog"
   );
 Vue.use(Router);
 
@@ -158,101 +100,13 @@ const router = new Router({
           path: "user",
           name: "sysuser",
           component: sysuser
+        },
+        {
+          path: "log",
+          name: "syslog",
+          component: syslog
         }
-      ]
-    },
-    {
-      path: "/rework",
-      name: "reworkindex",
-      component: index,
-      children: [
-        {
-          path: "gisstatistic",
-          name: "gisstatistic",
-          component: gisstatistic
-        },
-        {
-          path: "reworklist",
-          name: "reworklist",
-          component: reworklist
-        },
-      ]
-    },
-    {
-      path: "/partnerinfo",
-      name: "partnerinfoindex",
-      component: index,
-      children: [
-        {
-          path: "list",
-          name: "partnerinfolist",
-          component: partnerinfolist
-        },
-      ]
-    },
-    {
-      path: "/employeeinfo",
-      name: "employeeinfoindex",
-      component: index,
-      children: [
-        {
-          path: "list",
-          name: "employeeinfolist",
-          component: employeeinfolist
-        },
-      ]
-    },
-    {
-      path: "/material",
-      name: "materialindex",
-      component: index,
-      children: [
-        {
-          path: "list",
-          name: "materiallist",
-          component: materiallist
-        },
-      ]
-    },
-    {
-      path: "/wired",
-      name: "wiredindex",
-      component: index,
-      children: [
-        {
-          path: "list",
-          name: "wiredscheduledplanlist",
-          component: wiredscheduledplanlist
-        },
-      ]
-    },
-    {
-      path: "/wireless",
-      name: "wirelessindex",
-      component: index,
-      children: [
-        {
-          path: "list",
-          name: "wirelessscheduledplanlist",
-          component: wirelessscheduledplanlist
-        },
-      ]
-    },
-    {
-      path: "/statchart",
-      name: "statchartindex",
-      component: index,
-      children: [
-        {
-          path: "list",
-          name: "statchartlist",
-          component: statchartlist
-        },
-        {
-          path: "chart",
-          name: "statchart",
-          component: statchart
-        },
+        
       ]
     },
     

@@ -1,5 +1,9 @@
 package com.north.base.configuration;
 
+import com.github.streamone.shiro.session.RedissonSessionDao;
+import com.github.streamone.shiro.session.RedissonWebSessionManager;
+import com.north.base.data.RedisProperties;
+import com.north.base.shiro.RedisSessionFactory;
 import com.north.base.shiro.ShiroPermissionsFilter;
 import com.north.base.shiro.ShiroRealm;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -9,13 +13,18 @@ import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.Cookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,7 +37,6 @@ import java.util.Map;
  * @Date 2018/6/21 10:46
  */
 @Configuration
-@ConditionalOnProperty(name="north.shiro-filter.enable-redis",havingValue = "false")
 public class ShiroConfiguration {
 
     @Value("${north.shiro-filter.global-session-timeout}")
@@ -54,20 +62,6 @@ public class ShiroConfiguration {
         return myShiroRealm;
     }
 
-    @Bean
-    public DefaultWebSessionManager configWebSessionManager(){
-        DefaultWebSessionManager manager = new DefaultWebSessionManager();
-        //允许cookie跨域访问
-        manager.getSessionIdCookie().setSameSite(Cookie.SameSiteOptions.NONE);
-
-//        manager.setCacheManager(cacheManager);// 加入缓存管理器
-        manager.setDeleteInvalidSessions(true);// 删除过期的session
-        manager.setGlobalSessionTimeout(globalSessionTimeout);// 设置全局session超时时间
-        manager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session
-
-        return manager;
-    }
-
     /**
      * 安全管理器DefaultWebSecurityManager是Shiro的核心模块
      * @return
@@ -77,11 +71,54 @@ public class ShiroConfiguration {
         DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
         //设置realm
         securityManager.setRealm(shiroRealm());
-
         securityManager.setSessionManager(configWebSessionManager());
+        return securityManager;
+    }
+    @Bean
+    public DefaultWebSessionManager configWebSessionManager(){
+        DefaultWebSessionManager manager = new DefaultWebSessionManager();
+        //允许cookie跨域访问
+
+        return manager;
+    }
+
+    /**
+     * 安全管理器DefaultWebSecurityManager是Shiro的核心模块
+     * @return
+     */
+    @Bean
+    @ConditionalOnBean(value = RedissonClient.class)
+    public DefaultWebSecurityManager securityManager(RedissonClient redisson){
+        RedissonSessionDao sessionDao = new RedissonSessionDao();
+        sessionDao.setRedisson(redisson);
+
+        RedissonWebSessionManager sessionManager = new RedissonWebSessionManager();
+        sessionManager.setSessionDAO(sessionDao);
+        sessionManager.getSessionIdCookie().setSameSite(Cookie.SameSiteOptions.NONE);;
+        sessionManager.setGlobalSessionTimeout(1800000);
+
+        DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
+        //设置realm
+        securityManager.setRealm(shiroRealm());
+        securityManager.setSessionManager(sessionManager);
 
         return securityManager;
     }
+
+//    @Bean
+//    @ConditionalOnBean(RedisSessionDao.class)
+//    public DefaultWebSessionManager configWebSessionManager(RedisSessionDao redisSessionDao){
+//        DefaultWebSessionManager manager = new DefaultWebSessionManager();
+//        manager.getSessionIdCookie().setSameSite(Cookie.SameSiteOptions.NONE);
+////        manager.setCacheManager(cacheManager);// 加入缓存管理器
+//        manager.setSessionDAO(redisSessionDao);// 设置SessionDao
+//        manager.setSessionFactory(new SimpleSessionFactory());
+//        manager.setDeleteInvalidSessions(true);// 删除过期的session
+//        manager.setGlobalSessionTimeout(redisSessionDao.getExpireTime());// 设置全局session超时时间
+//        manager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session
+//        return manager;
+//    }
+
 
     /**
      * ShiroFilterFactoryBean用来配置需要被拦截的请求

@@ -1,5 +1,10 @@
 server:
   port: 80
+
+  servlet:
+    session:
+      cookie:
+        http-only: false
 #  servlet:
 #    context-path: /springboot
 
@@ -32,11 +37,16 @@ spring:
     port: 6379
     password:
     timeout: 5000
+#  jackson:
+#    defaultPropertyInclusion: non_null
+#    deserialization:
+#      FAIL_ON_UNKNOWN_PROPERTIES: false
+
 
 north:
   token-key: accessToken
   shiro-filter:
-    enable-redis: false
+    enable-redis: true
     global-session-timeout: 1800000 #30*60*1000
     filter-chain-definition-map: |
         /sys/login:anon,

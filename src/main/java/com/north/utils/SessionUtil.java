@@ -1,8 +1,8 @@
 package com.north.utils;
 
 import com.north.base.service.RedisService;
-import com.north.base.session.SimpleSession;
 import com.north.sys.entity.SysUser;
+import org.apache.shiro.session.mgt.SimpleSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

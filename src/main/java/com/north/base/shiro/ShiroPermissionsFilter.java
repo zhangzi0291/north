@@ -1,7 +1,7 @@
 package com.north.base.shiro;
 
-import com.alibaba.fastjson.JSON;
 import com.north.base.R;
+import com.north.utils.JSONUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -56,7 +56,7 @@ public class ShiroPermissionsFilter extends FormAuthenticationFilter {
             httpServletResponse.setContentType("application/json");
             //返回禁止访问json字符串
             httpServletResponse.setStatus(R.ReturnCodeEnum.UNAUTHORIZED.getCode());
-            httpServletResponse.getWriter().write(JSON.toJSONString(R.error(R.ReturnCodeEnum.UNAUTHORIZED.getCode(),"未登录")));
+            httpServletResponse.getWriter().write(JSONUtil.parseObjectToJSONString(R.error(R.ReturnCodeEnum.UNAUTHORIZED.getCode(),"未登录")));
         } else {//如果是普通请求进行重定向
             logger.info("----------普通请求拒绝-------------");
             httpServletResponse.sendRedirect("/sys/403");
