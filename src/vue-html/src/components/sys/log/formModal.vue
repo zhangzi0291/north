@@ -68,18 +68,22 @@ export default {
 
   },
   props: {
+    //标题
     title:{
       type: String,
       default: ""
     },
+    //查询单条记录接口的url
     getUrl:{
       type: String,
       default: ""
     },
+    //新增接口的url
     addUrl:{
       type: String,
       default: ""
     },
+    //编辑接口的url
     editUrl:{
       type: String,
       default: ""
@@ -92,8 +96,10 @@ export default {
       
   },
   methods: {
+    //提交
     ok: function() {
       let $this = this;
+    //可以做校验
     //   if (this.$refs.editModal.validateForm()) {
     //     $this.addshow = false;
     //     setTimeout(function() {
@@ -107,9 +113,11 @@ export default {
         data: this.data
       }).then(function(res) {
         $this.successModal("操作成功");
+        //刷新表格
         $this.$parent.$refs.table.searchData();
       });
     },
+    //弹出或关闭模态窗
     changeShow(id){
         this.id = id;
         console.log(this.id)

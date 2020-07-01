@@ -34,22 +34,26 @@ export default {
     };
   },
   props: {
+    //导出的中文
     exportLabel:{
       type: Array,
       default: ()=>{
           return []
       }
     },
+    //导出的字段
     exportKey:{
       type: Array,
       default: ()=>{
           return []
       }
     },
+    //标题
     title:{
         type:String,
         default:"",
     },
+    //导出接口的url
     getExportExcelUrl:{
         type:String,
         default:"",
@@ -67,10 +71,12 @@ export default {
     }
   },
   methods: {
+    //打开或关闭模态窗
     changeShow(){
         this.exportTargetKeys = []
         this.show = !this.show
     },
+    //调用导出
     exportExcel(){
       if(!this.exportTargetKeys.length){
         this.$Message.error("至少选择一项导出")

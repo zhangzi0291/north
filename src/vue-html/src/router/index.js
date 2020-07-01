@@ -72,15 +72,9 @@ const router = new Router({
           path: "index",
           name: "homeindex",
           component: homeindex
-        },
-        {
-          path: "index2",
-          name: "homeindex2",
-          component: homeindex
         }
       ]
     },
-    
     {
       path: "/sys",
       name: "sysindex",

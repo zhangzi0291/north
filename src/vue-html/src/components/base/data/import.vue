@@ -36,32 +36,33 @@ export default {
     };
   },
   props: {
+    //标题
     title:{
         type:String,
         default:"",
     },
-    searchData:{
-        type:Object,
-        default:()=>{},
-    },
+    //导入接口的url
     getImportExcelUrl:{
         type:String,
         default:"",
     },
+    //模板下载的url
     getTemplateUrl:{
         type:String,
         default:"",
     },
   },
   methods: {
+    //打开或关闭模态窗
     changeShow(){
         this.show = !this.show
     },
+    //上传开始时开启loading状态
     beforeUpload(){
       this.importLoadingShow = true;
     },
+    //上传成功后，输出错误信息
     uploadSuccess(response, file, fileList){
-      this.searchData;
       var errorList = response.errorList
       var errorMessage = ''
       for (const key in errorList) {
@@ -81,7 +82,7 @@ export default {
       }
       this.importLoadingShow = false;
     },
-    
+    //下载模板
     downloadTemplate(){
       window.location.href = this.getTemplateUrl+"?fileName="+this.title+".xlsx"
     },
