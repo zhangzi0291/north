@@ -64,7 +64,7 @@
       <Row class="center" >
           <Col span="12" style="height:100%">
           </Col>
-         <Col span="12" style="height:100%">
+          <Col span="12" style="height:100%">
           </Col>
       </Row>
     </div>

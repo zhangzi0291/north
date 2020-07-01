@@ -1,6 +1,7 @@
 package com.north.sys.controller;
 
 
+import com.north.annotation.log.NorthLog;
 import com.north.base.R;
 import com.north.base.service.RedisService;
 import com.north.sys.entity.SysResource;
@@ -106,6 +107,7 @@ public class SysLoginController {
         return R.error("登陆失败");
     }
 
+    @NorthLog()
     @ApiOperation("登陆")
     @ApiImplicitParams({
         @ApiImplicitParam(name="username",value="用户名",dataType="string", paramType = "query"),
