@@ -1,7 +1,7 @@
 <style scoped lang="less">
 /deep/.title{
     font-size: 20px;
-    font-weight: 1000px;
+    font-weight: 900;
 }
 /deep/.ivu-form-item-content{
     word-wrap:break-word;  

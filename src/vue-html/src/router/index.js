@@ -43,6 +43,12 @@ const syslog = resolve =>
     () => resolve(require("@/components/sys/log/syslog.vue")),
     "syslog"
   );
+const sysdict = resolve =>
+  require.ensure(
+    [],
+    () => resolve(require("@/components/sys/dict/sysdict.vue")),
+    "sysdict"
+  );
 Vue.use(Router);
 
 const router = new Router({
@@ -99,6 +105,11 @@ const router = new Router({
           path: "log",
           name: "syslog",
           component: syslog
+        },
+        {
+          path: "dict",
+          name: "sysdict",
+          component: sysdict
         }
         
       ]

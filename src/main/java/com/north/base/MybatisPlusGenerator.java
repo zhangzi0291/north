@@ -2,15 +2,30 @@ package com.north.base;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
+import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.GlobalConfig;
 import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
+import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.converts.PostgreSqlTypeConvert;
+import com.baomidou.mybatisplus.generator.config.po.TableField;
+import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * mybatisPlus生成器
@@ -21,6 +36,37 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 public class MybatisPlusGenerator {
 
     public static void main(String[] args) {
+        String TEMPLATE_PATH = "src\\main\\resources\\ftl\\";
+        String CLASS_PATH = "D:/mybatis";
+        String packageName = "com.north.sys";
+        String tableName = "sys_dict";
+
+
+
+
+        List<TableInfo> tableInfoList = createMybatisPlus(CLASS_PATH, packageName, tableName);
+
+        Map<String, Object> dataMap = new HashMap<String, Object>();
+        dataMap.put("title", tableInfoList.get(0).getComment());
+        dataMap.put("entityName", tableInfoList.get(0).getEntityName());
+        dataMap.put("serviceName", tableInfoList.get(0).getServiceName());
+        dataMap.put("requestMapping", "/sys/dict");
+        dataMap.put("date", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        dataMap.put("tableInfoList", tableInfoList.get(0).getFields());
+        createVue(TEMPLATE_PATH, CLASS_PATH,tableInfoList.get(0).getControllerName()+".java","controller.ftl", dataMap);
+        createVue(TEMPLATE_PATH, CLASS_PATH,tableInfoList.get(0).getEntityName()+"ExcelService.java","excelService.ftl", dataMap);
+
+        createVue(TEMPLATE_PATH, CLASS_PATH,"sysdict.vue","page.ftl", dataMap);
+
+        List<TableField> fieldList= tableInfoList.get(0).getFields();
+        fieldList = fieldList.subList(1,fieldList.size());
+        dataMap.put("tableInfoList", fieldList);
+
+        createVue(TEMPLATE_PATH, CLASS_PATH,"formModal.vue","formModal.ftl", dataMap);
+
+    }
+
+    private static List<TableInfo> createMybatisPlus(String CLASS_PATH, String packageName, String tableName) {
         AutoGenerator mpg = new AutoGenerator();
         // 选择 freemarker 引擎，默认 Veloctiy
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
@@ -28,7 +74,7 @@ public class MybatisPlusGenerator {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         gc.setAuthor("NorthZX");
-        gc.setOutputDir("D:/mybatis");
+        gc.setOutputDir(CLASS_PATH);
         gc.setFileOverride(false);// 是否覆盖同名文件，默认是false
         gc.setActiveRecord(false);// 不需要ActiveRecord特性的请改为false
         gc.setEnableCache(false);// XML 二级缓存
@@ -45,6 +91,10 @@ public class MybatisPlusGenerator {
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setDbType(DbType.POSTGRE_SQL);
+        dsc.setDriverName("org.postgresql.Driver");
+        dsc.setUsername("postgres");
+        dsc.setPassword("postgres");
+        dsc.setUrl("jdbc:postgresql://127.0.0.1:5432/springboot");
         dsc.setTypeConvert(new PostgreSqlTypeConvert() {
             // 自定义数据库表字段类型转换【可选】
 //            @Override
@@ -54,10 +104,6 @@ public class MybatisPlusGenerator {
 //                return super.processTypeConvert(fieldType);
 //            }
         });
-        dsc.setDriverName("org.postgresql.Driver");
-        dsc.setUsername("postgres");
-        dsc.setPassword("postgres");
-        dsc.setUrl("jdbc:postgresql://127.0.0.1:5432/springboot");
         mpg.setDataSource(dsc);
 
         // 策略配置
@@ -65,7 +111,7 @@ public class MybatisPlusGenerator {
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
         strategy.setTablePrefix(new String[] { "" });// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[] { "sys_log" }); // 需要生成的表
+        strategy.setInclude(new String[] { tableName }); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -78,7 +124,7 @@ public class MybatisPlusGenerator {
         // 自定义 service 实现类父类
         // strategy.setSuperServiceImplClass("com.baomidou.demo.TestServiceImpl");
         // 自定义 controller 父类
-        // strategy.setSuperControllerClass("com.baomidou.demo.TestController");
+        strategy.setSuperControllerClass("com.north.base.BaseController");
         // 【实体】是否生成字段常量（默认 false）
         // public static final String ID = "test_id";
         // strategy.setEntityColumnConstant(true);
@@ -89,16 +135,16 @@ public class MybatisPlusGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.north.sys");
+        pc.setParent(packageName);
 //        pc.setModuleName("test");
         mpg.setPackageInfo(pc);
 
-        // 注入自定义配置，可以在 VM 中使用 cfg.abc 【可无】
+//        // 注入自定义配置，可以在 VM 中使用 cfg.abc 【可无】
 //        InjectionConfig cfg = new InjectionConfig() {
 //            @Override
 //            public void initMap() {
 //                Map<String, Object> map = new HashMap<String, Object>();
-//                map.put("abc", this.getConfig().getGlobalConfig().getAuthor() + "-mp");
+//                map.put("title", "==我的字典==");
 //                this.setMap(map);
 //            }
 //        };
@@ -144,9 +190,40 @@ public class MybatisPlusGenerator {
 
         // 执行生成
         mpg.execute();
+        ConfigBuilder config = mpg.getConfig();
+        return config.getTableInfoList();
+    }
 
-        // 打印注入设置【可无】
-//        System.err.println(mpg.getCfg().getMap().get("abc"));
+    private static void createVue(String TEMPLATE_PATH, String CLASS_PATH, String tableName, String ftlName, Map<String, Object> dataMap) {
+        // step1 创建freeMarker配置实例
+        Configuration configuration = new Configuration(Configuration. getVersion());
+        Writer out = null;
+        try {
+            // step2 获取模版路径
+            configuration.setDirectoryForTemplateLoading(new File(TEMPLATE_PATH));
+            // step3 创建数据模型
+
+            // step4 加载模版文件
+            Template template = configuration.getTemplate(ftlName);
+            // step5 生成数据
+
+            File docFile = new File(CLASS_PATH + "\\vue\\" + tableName);
+            Files.createDirectories(Paths.get(CLASS_PATH + "\\vue\\"));
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(docFile)));
+            // step6 输出文件
+            template.process(dataMap, out);
+            System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^文件创建成功 !");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != out) {
+                    out.flush();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
     }
 
 }

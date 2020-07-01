@@ -99,6 +99,7 @@ public class SysRoleController {
         try {
             List<SysRoleResource> rrlist =  sysRoleResourceService.getResourceByRoleId(id);
             List<SysResource> list = sysResourceService.getResourceMenus(null);
+
             List<SysResourceDto> options = setChildNood(list,rrlist);
             return R.ok("data",sysRoleService.getById(id)).putObject("options",options);
         } catch (Exception e) {

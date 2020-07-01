@@ -1,7 +1,4 @@
 <style scoped lang="less">
-.demo-spin-icon-load {
-  animation: ani-demo-spin 1s linear infinite;
-}
 .right{
   flex: 1;
   text-align: right;

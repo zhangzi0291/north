@@ -49,7 +49,7 @@ public class SysLogController extends BaseController<SysLog, ISysLogService> {
     @RequestMapping("importExcel")
     public R importExcel(@RequestParam("file") MultipartFile file, String userId) throws Exception{
 
-        String fileName = "合作人员信息表";
+        String fileName = "系统日志";
         List<String> cellNames = getCellNameMapList().getCellNames();
 
         int titleSize = sysLogExcelService.getTitle(file.getInputStream()).size();
