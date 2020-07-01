@@ -48,14 +48,13 @@ north:
   shiro-filter:
     enable-redis: true
     global-session-timeout: 1800000 #30*60*1000
-    filter-chain-definition-map: |
+    filter-chain-definition: |
         /sys/login:anon,
         /sys/logout:anon,
         /sys/unlogin:anon,
         /sys/403:anon,
         /sys/getMenu:authc,
         /favicon.ico:anon,
-        /public/*:anon,
         /admin/*:anon,
         /sys/**:anon,
 

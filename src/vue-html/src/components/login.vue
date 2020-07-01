@@ -3,7 +3,7 @@
     <Layout class='maxheigh'>
       <Header>
         <div class="header">
-          <span>华东三区资源管理系统</span>
+          <span>后台管理系统</span>
         </div>
       </Header>
       <Content class='layout-content'>

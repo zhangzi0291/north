@@ -82,7 +82,7 @@ export default {
     return {
       url: {
         list: "/sys/menu/list",
-        getAllMenu: "/sys/menu/getAllMenu",
+        getAllMenu: "/sys/menu/getAllResource",
         add: "/sys/menu/add",
         get: "/sys/menu/get",
         edit: "/sys/menu/edit",
@@ -97,6 +97,7 @@ export default {
           { key: "resourceUrl", value: "URL" },
           { key: "parentId", value: "父元素id" },
           { key: "resourceType", value: "类型" },
+          { key: "permission", value: "所需权限" },
           { key: "resourceIcon", value: "图标" },
           { key: "resourceOrderNum", value: "排序号" }
         ],
@@ -122,6 +123,7 @@ export default {
           { key: "resourceUrl", value: "URL" },
           { key: "parentId", value: "父元素id" },
           { key: "resourceType", value: "类型" },
+          { key: "permission", value: "所需权限" },
           { key: "resourceIcon", value: "图标" },
           { key: "resourceOrderNum", value: "排序号" }
         ],

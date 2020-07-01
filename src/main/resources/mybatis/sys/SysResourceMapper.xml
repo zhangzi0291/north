@@ -34,12 +34,26 @@
         LEFT JOIN sys_user_role ur ON r.id = ur.role_id
         LEFT JOIN sys_user u ON u.id = ur.user_id
         where 1=1
+        <if test="resourceType != null and resourceType != '' ">
+            and rs.resource_type = #{resourceType}
+        </if>
         <if test="userId != null and userId != '1' ">
-            and u.id = #{userId,jdbcType=INTEGER}
+            and u.id = #{userId}
         </if>
         <if test="roleId != null and roleId != '' ">
-            and r.id = #{roleId,jdbcType=INTEGER}
+            and r.id = #{roleId}
         </if>
         order by rs.resource_order_num
     </select>
+
+    <select id="getResourceActions" parameterType="map" resultMap="BaseResultMap">
+        SELECT DISTINCT rs.* FROM sys_resource rs
+        LEFT JOIN sys_role_resource rr ON rs.id = rr.resource_id
+        LEFT JOIN sys_role r ON r.id = rr.role_id
+        LEFT JOIN sys_user_role ur ON r.id = ur.role_id
+        LEFT JOIN sys_user u ON u.id = ur.user_id
+        where
+        rs.resource_type = 'action'
+    </select>
+
 </mapper>

@@ -1,11 +1,13 @@
 package com.north.base.shiro;
 
+import com.north.sys.entity.SysRole;
 import com.north.sys.entity.SysUser;
 import com.north.sys.service.SysUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.web.subject.WebSubject;
@@ -53,7 +55,9 @@ public class ShiroRealm extends AuthorizingRealm {
         //受理权限
         //角色
         Set<String> roles = new HashSet<>();
-        roles.add("role");
+        for (SysRole sysRole : user.getRoleList()) {
+            roles.add(sysRole.getRoleName());
+        }
         authorizationInfo.setRoles(roles);
         //权限
         Set<String> permissions = new HashSet<String>();

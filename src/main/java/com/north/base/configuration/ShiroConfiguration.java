@@ -2,8 +2,6 @@ package com.north.base.configuration;
 
 import com.github.streamone.shiro.session.RedissonSessionDao;
 import com.github.streamone.shiro.session.RedissonWebSessionManager;
-import com.north.base.data.RedisProperties;
-import com.north.base.shiro.RedisSessionFactory;
 import com.north.base.shiro.ShiroPermissionsFilter;
 import com.north.base.shiro.ShiroRealm;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -13,18 +11,14 @@ import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.Cookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
-import org.redisson.config.Config;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,15 +36,11 @@ public class ShiroConfiguration {
     @Value("${north.shiro-filter.global-session-timeout}")
     private Long globalSessionTimeout;
 
-    private List<String> filterChainDefinitionMap;
+    private List<String> filterChainDefinition;
 
-    public List<String> getFilterChainDefinitionMap() {
-        return filterChainDefinitionMap;
-    }
-
-    @Value("${north.shiro-filter.filter-chain-definition-map}")
+    @Value("${north.shiro-filter.filter-chain-definition}")
     public void setFilterChainDefinitionMap(List<String> filterChainDefinitionMap) {
-        this.filterChainDefinitionMap = filterChainDefinitionMap;
+        this.filterChainDefinition = filterChainDefinitionMap;
     }
 
     /**
@@ -76,10 +66,11 @@ public class ShiroConfiguration {
     }
     @Bean
     public DefaultWebSessionManager configWebSessionManager(){
-        DefaultWebSessionManager manager = new DefaultWebSessionManager();
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         //允许cookie跨域访问
+        sessionManager.getSessionIdCookie().setSameSite(Cookie.SameSiteOptions.NONE);
 
-        return manager;
+        return sessionManager;
     }
 
     /**
@@ -94,7 +85,7 @@ public class ShiroConfiguration {
 
         RedissonWebSessionManager sessionManager = new RedissonWebSessionManager();
         sessionManager.setSessionDAO(sessionDao);
-        sessionManager.getSessionIdCookie().setSameSite(Cookie.SameSiteOptions.NONE);;
+        sessionManager.getSessionIdCookie().setSameSite(Cookie.SameSiteOptions.NONE);
         sessionManager.setGlobalSessionTimeout(1800000);
 
         DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
@@ -104,20 +95,6 @@ public class ShiroConfiguration {
 
         return securityManager;
     }
-
-//    @Bean
-//    @ConditionalOnBean(RedisSessionDao.class)
-//    public DefaultWebSessionManager configWebSessionManager(RedisSessionDao redisSessionDao){
-//        DefaultWebSessionManager manager = new DefaultWebSessionManager();
-//        manager.getSessionIdCookie().setSameSite(Cookie.SameSiteOptions.NONE);
-////        manager.setCacheManager(cacheManager);// 加入缓存管理器
-//        manager.setSessionDAO(redisSessionDao);// 设置SessionDao
-//        manager.setSessionFactory(new SimpleSessionFactory());
-//        manager.setDeleteInvalidSessions(true);// 删除过期的session
-//        manager.setGlobalSessionTimeout(redisSessionDao.getExpireTime());// 设置全局session超时时间
-//        manager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session
-//        return manager;
-//    }
 
 
     /**
@@ -135,7 +112,7 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setFilters(filters);
         //权限过滤
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        for(String filterStr : getFilterChainDefinitionMap()){
+        for(String filterStr : filterChainDefinition){
             if(!StringUtils.isEmpty(filterStr)){
                 String[] filter = filterStr.split(":");
                 filterChainDefinitionMap.put(filter[0].trim(),filter[1].trim());

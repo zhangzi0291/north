@@ -45,9 +45,9 @@ const loading = {
     );
     //响应前置
     axios.interceptors.response.use(response => {
-      if(response.data.code==500){
-        Vue.prototype.$Message.error(response.data.msg)
-        throw new Error(response.data.msg)
+      if(response.data.code==500||response.data.code==403){
+        Vue.prototype.$Message.error(response.config.url + " " +response.data.msg)
+        throw new Error(response.config.url + " " + response.data.msg)
       }
       return response;
     }, error => {
@@ -84,7 +84,6 @@ const loading = {
     });
     //请求后置
     // axios.interceptors.response.use(response => {
-
     //   return response;
     // }, error => {
     //   if (error.response.status === 401) {

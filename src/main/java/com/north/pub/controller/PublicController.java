@@ -1,10 +1,17 @@
 package com.north.pub.controller;
 
 import com.north.base.R;
+import com.north.base.service.ShiroService;
+import com.north.base.shiro.ShiroRealm;
 import com.north.sys.entity.SysLog;
 import com.north.sys.service.SysUserService;
 import com.north.utils.IpUtil;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
+import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
+import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,10 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("public")
@@ -31,9 +35,8 @@ public class PublicController {
     private SysUserService userService;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
-    @Autowired
-    @Qualifier("shiroFilter")
-    private ShiroFilterFactoryBean shiroFilter;
+    @Resource
+    private ShiroService shiroService;
 
     @RequestMapping(path = "/getIp", method = {RequestMethod.GET, RequestMethod.POST})
     public R getIp(HttpServletRequest request) {
@@ -53,13 +56,9 @@ public class PublicController {
     @RequestMapping(path = "/test2", method = {RequestMethod.GET, RequestMethod.POST})
     public R test2() {
         List<Object> json = new ArrayList<>();
-        shiroFilter.getFilterChainDefinitionMap().forEach((String key,String value) ->{
-            json.add(key+"======"+value);
-            System.out.println(key+"======"+value);
-        });
+        shiroService.updateFilterChains();
         return R.ok().putObject("test2",json);
     }
-
 
     public static void main(String[] args) {
 //        String jsonStr = "{timestamp : \"2020-04-28 17:49:31.724\", app : \"zuulserver\", thread : \"http-nio-8041-exec-2\", logger: \"com.cx.zuulserver.auth.JwtLoginFilter\", level: \"INFO\", msg: \"token有效期1000L * 60 * 60 * 24 * 365 * 501576800000000\"}";
