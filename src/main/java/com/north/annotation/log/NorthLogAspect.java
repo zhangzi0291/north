@@ -58,9 +58,11 @@ public class NorthLogAspect {
 
         sysLog.setModuleName(joinPoint.getSignature().getDeclaringTypeName());
         sysLog.setOperationName(joinPoint.getSignature().getName());
-        SysUser sysUser = (SysUser)SecurityUtils.getSubject().getPrincipal();
-        String username = StringUtils.isEmpty(sysUser.getName())?sysUser.getUsername():sysUser.getName();
-        sysLog.setUsername(username);
+        try {
+            SysUser sysUser = (SysUser)SecurityUtils.getSubject().getPrincipal();
+            String username = StringUtils.isEmpty(sysUser.getName())?sysUser.getUsername():sysUser.getName();
+            sysLog.setUsername(username);
+        } catch (Exception e) {}
 
         if(!StringUtils.isEmpty(northLog.remark())) {
             sysLog.setRemark(northLog.remark());
