@@ -9,6 +9,7 @@ import com.north.sys.entity.SysUserDto;
 import com.north.sys.service.SysUserRoleService;
 import com.north.sys.service.SysUserService;
 import com.north.utils.EncryptionUtil;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;

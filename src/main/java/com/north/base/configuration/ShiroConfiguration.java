@@ -1,16 +1,20 @@
 package com.north.base.configuration;
 
-import com.north.base.session.RedisSessionDao;
-import com.north.base.session.SimpleSessionFactory;
+import com.github.streamone.shiro.session.RedissonSessionDao;
+import com.github.streamone.shiro.session.RedissonWebSessionManager;
 import com.north.base.shiro.ShiroPermissionsFilter;
 import com.north.base.shiro.ShiroRealm;
-import com.north.utils.SessionUtil;
+import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.Cookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.redisson.api.RedissonClient;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
@@ -27,39 +31,25 @@ import java.util.Map;
  * @Date 2018/6/21 10:46
  */
 @Configuration
-@ConfigurationProperties(prefix="north.shiro-filter")
 public class ShiroConfiguration {
 
-    private List<String> filterChainDefinitionMap;
+    @Value("${north.shiro-filter.global-session-timeout}")
+    private Long globalSessionTimeout;
 
-    public List<String> getFilterChainDefinitionMap() {
-        return filterChainDefinitionMap;
-    }
+    private List<String> filterChainDefinition;
 
+    @Value("${north.shiro-filter.filter-chain-definition}")
     public void setFilterChainDefinitionMap(List<String> filterChainDefinitionMap) {
-        this.filterChainDefinitionMap = filterChainDefinitionMap;
+        this.filterChainDefinition = filterChainDefinitionMap;
     }
 
     /**
      * 自定义的Realm
      */
     @Bean(name = "myShiroRealm")
-    public ShiroRealm shiroRealm(){
+    public AuthorizingRealm shiroRealm(){
         ShiroRealm myShiroRealm = new ShiroRealm();
         return myShiroRealm;
-    }
-
-    @Bean
-    public DefaultWebSessionManager configWebSessionManager(RedisSessionDao redisSessionDao,SimpleSessionFactory simpleSessionFactory){
-        DefaultWebSessionManager manager = new DefaultWebSessionManager();
-//        manager.setCacheManager(cacheManager);// 加入缓存管理器
-        manager.setSessionDAO(redisSessionDao);// 设置SessionDao
-        manager.setSessionFactory(simpleSessionFactory);
-        manager.setDeleteInvalidSessions(true);// 删除过期的session
-        manager.setGlobalSessionTimeout(redisSessionDao.getExpireTime());// 设置全局session超时时间
-        manager.setSessionValidationSchedulerEnabled(true);// 是否定时检查session
-
-        return manager;
     }
 
     /**
@@ -67,15 +57,45 @@ public class ShiroConfiguration {
      * @return
      */
     @Bean
-    public DefaultWebSecurityManager securityManager(RedisSessionDao redisSessionDao,SimpleSessionFactory simpleSessionFactory){
+    public DefaultWebSecurityManager securityManager(){
         DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
         //设置realm
         securityManager.setRealm(shiroRealm());
+        securityManager.setSessionManager(configWebSessionManager());
+        return securityManager;
+    }
+    @Bean
+    public DefaultWebSessionManager configWebSessionManager(){
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        //允许cookie跨域访问
+        sessionManager.getSessionIdCookie().setSameSite(Cookie.SameSiteOptions.NONE);
 
-        securityManager.setSessionManager(configWebSessionManager(redisSessionDao,simpleSessionFactory));
+        return sessionManager;
+    }
+
+    /**
+     * 安全管理器DefaultWebSecurityManager是Shiro的核心模块
+     * @return
+     */
+    @Bean
+    @ConditionalOnBean(value = RedissonClient.class)
+    public DefaultWebSecurityManager securityManager(RedissonClient redisson){
+        RedissonSessionDao sessionDao = new RedissonSessionDao();
+        sessionDao.setRedisson(redisson);
+
+        RedissonWebSessionManager sessionManager = new RedissonWebSessionManager();
+        sessionManager.setSessionDAO(sessionDao);
+        sessionManager.getSessionIdCookie().setSameSite(Cookie.SameSiteOptions.NONE);
+        sessionManager.setGlobalSessionTimeout(1800000);
+
+        DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
+        //设置realm
+        securityManager.setRealm(shiroRealm());
+        securityManager.setSessionManager(sessionManager);
 
         return securityManager;
     }
+
 
     /**
      * ShiroFilterFactoryBean用来配置需要被拦截的请求
@@ -92,7 +112,7 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setFilters(filters);
         //权限过滤
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        for(String filterStr : getFilterChainDefinitionMap()){
+        for(String filterStr : filterChainDefinition){
             if(!StringUtils.isEmpty(filterStr)){
                 String[] filter = filterStr.split(":");
                 filterChainDefinitionMap.put(filter[0].trim(),filter[1].trim());
@@ -112,8 +132,18 @@ public class ShiroConfiguration {
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
-
         return chainDefinition;
+    }
+
+    /**
+     * 不加似乎影响spring本身的事务
+     * @return
+     */
+    @Bean
+    public static DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        defaultAdvisorAutoProxyCreator.setUsePrefix(true);
+        return defaultAdvisorAutoProxyCreator;
     }
 
 }

@@ -2,6 +2,9 @@ import table from "@/components/base/table";
 import mModal from "@/components/base/modal";
 import menu from "@/components/base/menu/menu";
 import header from "@/components/base/header/header";
+import detail from "@/components/base/data/detail";
+import iimport from "@/components/base/data/import";
+import eexport from "@/components/base/data/export";
 
 const loading = {
   install: function(Vue) {
@@ -11,6 +14,9 @@ const loading = {
     Vue.component("mMenu", menu);
     Vue.component("mHeader", header);
     Vue.component("mModal", mModal);
+    Vue.component("dDetail", detail);
+    Vue.component("iImport", iimport);
+    Vue.component("eExport", eexport);
 
     Date.prototype.Format = function(fmt) {
       //

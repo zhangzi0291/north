@@ -24,13 +24,14 @@ public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper,SysRes
 
     @Override
     public List<SysResource> getAllResource() {
-        return dao.selectList(new QueryWrapper<>());
+        return setChildNood(dao.selectList(new QueryWrapper<>()),null);
     }
 
     @Override
     public List<SysResource> getResourceMenus(String id) {
         Map<String, Object> param = new HashMap<>();
         param.put("userId", id);
+        param.put("resourceType", "url");
         List<SysResource> list = dao.getResourceMenus(param);
         return setChildNood(list,null);
     }

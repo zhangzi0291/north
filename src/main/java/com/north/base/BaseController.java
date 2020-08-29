@@ -7,37 +7,49 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
- * 类的描述
+ * 包含增删改查的基础Controller
  *
  * @Author zxn
  * @Date 2018-10-11 12:26
  */
-public abstract class BaseController<T extends IService<U>,U> {
+public abstract class BaseController<U,T extends IService<U>> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private T service;
 
-    @RequestMapping(path = "list", method = {RequestMethod.GET, RequestMethod.POST})
-    public R listJson(U bean, Page page){
-        QueryWrapper<U> wrapper = setListWrapper(bean);
-        try {
-            if(page == null){
-                List<U> list = service.list(wrapper);
-                return R.ok().putObject("rows",list).putObject("total", list.size());
-            }else{
-                IPage< U> list = service.page(page,wrapper);
-                return R.ok().putObject("rows",list.getRecords()).putObject("total", list.getTotal());
-            }
+    protected QueryWrapper<U> setListWrapper(U bean, Map<String,String> map){
+        return new QueryWrapper<U>();
+    }
 
+    @RequestMapping(path = "list", method = {RequestMethod.GET, RequestMethod.POST})
+    public R listJson(U bean, Page page, @RequestParam Map<String,String> map){
+        QueryWrapper<U> wrapper = setListWrapper(bean,map);
+        try {
+            IPage< U> list = service.page(page,wrapper);
+            return R.ok().putObject("rows",list.getRecords()).putObject("total", list.getTotal());
+        } catch (Exception e) {
+            logger.error("Exception ", e);
+        }
+        return R.error("无数据");
+    }
+
+    @RequestMapping(path = "all", method = {RequestMethod.GET, RequestMethod.POST})
+    public R listAllJson(U bean, @RequestParam Map<String,String> map){
+        QueryWrapper<U> wrapper = setListWrapper(bean,map);
+        try {
+            List<U> list = service.list(wrapper);
+            return R.ok().putObject("rows",list).putObject("total", list.size());
         } catch (Exception e) {
             logger.error("Exception ", e);
         }
@@ -97,7 +109,4 @@ public abstract class BaseController<T extends IService<U>,U> {
         return R.ok("data",flag);
     }
 
-    protected QueryWrapper<U> setListWrapper(U bean){
-        return new QueryWrapper<U>();
-    }
 }

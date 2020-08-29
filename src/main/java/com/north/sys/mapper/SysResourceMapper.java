@@ -9,6 +9,9 @@ import java.util.Map;
 public interface SysResourceMapper extends BaseMapper<SysResource> {
 
     List<SysResource> selectMenus(Map<String, Object> param);
+
     List<SysResource> getResourceMenus(Map<String, Object> param);
+
+    List<SysResource> getResourceActions();
 
 }

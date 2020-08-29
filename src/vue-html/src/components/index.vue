@@ -6,7 +6,8 @@
     >
       <m-menu :shrink="shrink" :menu-list="menuList">
         <div slot="top" class="logo-con">
-          <img src="/images/logo.jpg" key="max-logo" :style="shrink" />
+          <img>
+          <!-- <img src="/images/logo.jpg" key="max-logo" :style="shrink" /> -->
         </div>
       </m-menu>
     </div>
@@ -17,9 +18,9 @@
       <div class="single-page">
         <router-view />
       </div>
-      <div class="main-footer-con">
+      <!-- <div class="main-footer-con">
         <Footer class="footer">@copyright</Footer>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

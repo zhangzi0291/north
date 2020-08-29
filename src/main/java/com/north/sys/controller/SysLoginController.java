@@ -1,6 +1,7 @@
 package com.north.sys.controller;
 
 
+import com.north.annotation.log.NorthLog;
 import com.north.base.R;
 import com.north.base.service.RedisService;
 import com.north.sys.entity.SysResource;
@@ -8,8 +9,7 @@ import com.north.sys.entity.SysUser;
 import com.north.sys.service.SysResourceService;
 import com.north.utils.EncryptionUtil;
 import com.north.utils.SessionUtil;
-import io.swagger.  annotations.*;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import io.swagger.annotations.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.session.Session;
@@ -17,6 +17,7 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -49,7 +51,7 @@ public class SysLoginController {
     @Resource
     private SessionUtil sessionUtil;
 
-    @ApiOperation("根据用户id查询菜单")
+    @ApiOperation(value = "根据用户id查询菜单")
     @RequestMapping(path = "/getMenu", method = {RequestMethod.GET, RequestMethod.POST})
     public R getMenu(@ApiParam(name = "id",value = "用户ID",required = true)String id) {
         return R.ok("menu",resourceService.getMenus(id));
@@ -105,6 +107,7 @@ public class SysLoginController {
         return R.error("登陆失败");
     }
 
+    @NorthLog()
     @ApiOperation("登陆")
     @ApiImplicitParams({
         @ApiImplicitParam(name="username",value="用户名",dataType="string", paramType = "query"),
@@ -122,22 +125,21 @@ public class SysLoginController {
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), EncryptionUtil.getPasswordEncoder(user.getUsername(),user.getPassword()));
         //获取当前的Subject
         Subject currentUser = SecurityUtils.getSubject();
-        System.out.println(currentUser.hashCode());
         Session session = SecurityUtils.getSubject().getSession();
         //登陆检查
         R r = loginCheck(username, token, currentUser);
-        if(r!=null){
+        if(r != null){
             return r;
         }
         //验证是否登录成功
         if(currentUser.isAuthenticated()){
             logger.debug("用户[{}]登录认证通过",username);
-            session = SecurityUtils.getSubject().getSession(true);
+//            session = SecurityUtils.getSubject().getSession();
             SysUser nowUser = (SysUser) currentUser.getPrincipal();
             session.setAttribute("user",nowUser);
             nowUser.setPassword(null);
             //保存Token
-            String tokenStr = session.getId().toString();;
+            String tokenStr = session.getId().toString();
             return R.ok("登陆成功").putObject("user",SecurityUtils.getSubject().getPrincipal()).putObject(tokenKey,tokenStr);
         }else{
             token.clear();

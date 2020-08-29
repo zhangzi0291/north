@@ -58,7 +58,6 @@ public class SysResourceController {
     @RequestMapping(path = "getAllMenu", method = {RequestMethod.GET, RequestMethod.POST})
     public R getAllMenu(SysResource sysResource) {
         //设置查询条件 。。。
-
         try {
             List<SysResource> list = sysResourceService.getResourceMenus(null);
             List<SysResourceDto> options = setChildNood(list);
@@ -68,6 +67,20 @@ public class SysResourceController {
         }
         return R.error("无数据");
     }
+
+    @RequestMapping(path = "getAllResource", method = {RequestMethod.GET, RequestMethod.POST})
+    public R getAllResource(SysResource sysResource) {
+        //设置查询条件 。。。
+        try {
+            List<SysResource> list = sysResourceService.getAllResource();
+            List<SysResourceDto> options = setChildNood(list);
+            return R.ok().putObject("data", options);
+        } catch (Exception e) {
+            logger.error("Exception ", e);
+        }
+        return R.error("无数据");
+    }
+
 
     private List<SysResourceDto> setChildNood(List<SysResource> list) {
         List<SysResourceDto> options = new ArrayList<>();

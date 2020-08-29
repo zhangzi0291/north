@@ -1,4 +1,7 @@
 <style scoped lang="less">
+/deep/ .tree-render .ivu-tree-title {
+  width: 100%;
+}
 </style>
 <template>
   <div>
@@ -10,58 +13,26 @@
     </div>
     <div class="page-content">
       <div>
-        <Form 
-          inline 
-          :model="searchData">
-          <FormItem label-for='search'>
-            <Input 
-              v-model="searchData.resourceName" 
-              class="input-search" 
-              placeholder="资源名称" 
-              clearable></Input>
-          </FormItem>
-          <FormItem label-for='search2'>
-            <Input 
-              v-model="searchData.resourceType" 
-              class="input-search" 
-              placeholder="资源类型" 
-              clearable></Input>
-          </FormItem>
-          <FormItem label-for='search4'>
-            <Input 
-              v-model="searchData.resourceUrl" 
-              class="input-search" 
-              placeholder="URL" 
-              clearable></Input>
-          </FormItem>
+        <Form inline :model="searchData">
+          
           <FormItem>
-            <Button 
-              type="primary" shape="circle"
-              @click='search'>查询</Button>
-            <Dropdown 
-              trigger="click" 
-              @on-click='dropdownFunction'>
-              <Button  shape="circle">
+            <!-- <Button type="primary" shape="circle" @click="search">查询</Button> -->
+            <Dropdown trigger="click" @on-click="dropdownFunction">
+              <Button shape="circle">
                 其他功能
-                <Icon type="md-arrow-dropdown"/>
+                <Icon type="md-arrow-dropdown" />
               </Button>
               <DropdownMenu slot="list">
-                <DropdownItem name='add'>
-                  <Icon 
-                    type="md-add-circle" 
-                    size='18' />
+                <DropdownItem name="add">
+                  <Icon type="md-add-circle" size="18" />
                   <span class="layout-text">新增</span>
                 </DropdownItem>
                 <DropdownItem divided>
-                  <Icon 
-                    type="md-cloud-upload" 
-                    size='18' />
+                  <Icon type="md-cloud-upload" size="18" />
                   <span class="layout-text">导入</span>
                 </DropdownItem>
                 <DropdownItem>
-                  <Icon 
-                    type="md-cloud-download" 
-                    size='18' />
+                  <Icon type="md-cloud-download" size="18" />
                   <span class="layout-text">导出</span>
                 </DropdownItem>
               </DropdownMenu>
@@ -71,28 +42,37 @@
       </div>
     </div>
     <div class="page-content">
-      <t-table 
+      <!-- <t-table 
         ref='table' 
         :url='url.list' 
         :param='data.param' 
-        :columns='data.columns'/>
+      :columns='data.columns'/>-->
+      <Tree
+        :data="menuData"
+        children-key="children"
+        :render="render"
+        show-checkbox
+        class="tree-render"
+      ></Tree>
     </div>
-    <m-modal 
-      ref='editModal' 
-      :title="'编辑'" 
-      :show='editshow' 
-      :data='detail.data' 
-      :columns='detail.columns' 
-      :ok='editok' 
-      :rule='detail.rule'/>
-    <m-modal 
-      ref='addModal' 
-      :title="'新增'" 
-      :show='addshow' 
-      :data='add.data' 
-      :columns='add.columns' 
-      :ok='addok' 
-      :rule='add.rule'/>
+    <m-modal
+      ref="editModal"
+      :title="'编辑'"
+      :show="editshow"
+      :data="detail.data"
+      :columns="detail.columns"
+      :ok="editok"
+      :rule="detail.rule"
+    />
+    <m-modal
+      ref="addModal"
+      :title="'新增'"
+      :show="addshow"
+      :data="add.data"
+      :columns="add.columns"
+      :ok="addok"
+      :rule="add.rule"
+    />
   </div>
 </template>
 <script>
@@ -102,11 +82,13 @@ export default {
     return {
       url: {
         list: "/sys/menu/list",
+        getAllMenu: "/sys/menu/getAllResource",
         add: "/sys/menu/add",
         get: "/sys/menu/get",
         edit: "/sys/menu/edit",
         del: "/sys/menu/del"
       },
+      menuData: [],
       detail: {
         data: {},
         columns: [
@@ -115,6 +97,7 @@ export default {
           { key: "resourceUrl", value: "URL" },
           { key: "parentId", value: "父元素id" },
           { key: "resourceType", value: "类型" },
+          { key: "permission", value: "所需权限" },
           { key: "resourceIcon", value: "图标" },
           { key: "resourceOrderNum", value: "排序号" }
         ],
@@ -140,6 +123,7 @@ export default {
           { key: "resourceUrl", value: "URL" },
           { key: "parentId", value: "父元素id" },
           { key: "resourceType", value: "类型" },
+          { key: "permission", value: "所需权限" },
           { key: "resourceIcon", value: "图标" },
           { key: "resourceOrderNum", value: "排序号" }
         ],
@@ -204,17 +188,22 @@ export default {
                 on: {
                   click: () => {
                     let $this = this;
-                    let array = [];
-                    array.push(params.row.id);
-                    this.$ajax({
-                      method: "post",
-                      url: $this.url.del,
-                      data: {
-                        ids: array
+                    this.$Modal.confirm({
+                      title: "确定删除吗",
+                      onOk: () => {
+                        let array = [];
+                        array.push(params.row.id);
+                        this.$ajax({
+                          method: "post",
+                          url: $this.url.del,
+                          data: {
+                            ids: array
+                          }
+                        }).then(function(res) {
+                          $this.$refs.table.searchData();
+                          $this.successModal("删除成功");
+                        });
                       }
-                    }).then(function(res) {
-                      $this.$refs.table.searchData();
-                      $this.successModal("删除成功");
                     });
                   }
                 }
@@ -247,6 +236,101 @@ export default {
             key: "status"
           }
         ]
+      },
+      render: (h, params) => {
+        const add = h("Button", {
+          props: {
+            type: "success",
+            shape: "circle",
+            icon: "md-add",
+            size: "small"
+          },
+          on: {
+            click: () => {
+              let $this = this;
+              $this.addshow = false;
+                setTimeout(function() {
+                  $this.addshow = true;
+                  $this.add.data = {
+                    parentId:params.data.id
+                  }
+                }, 1);
+              }
+          }
+        });
+
+        const edit = h("Button", {
+          props: {
+            type: "info",
+            shape: "circle",
+            icon: "md-hammer",
+            size: "small"
+          },
+          on: {
+            click: () => {
+              let $this = this;
+              this.$ajax({
+                method: "post",
+                url: $this.url.get,
+                data: {
+                  id: params.data.id
+                }
+              }).then(function(res) {
+                $this.editshow = true;
+                $this.detail.data = res.data.data;
+              });
+              $this.editshow = false;
+            }
+          }
+        });
+        const remove = h("Button", {
+          props: {
+            type: "error",
+            shape: "circle",
+            icon: "md-trash",
+            size: "small"
+          },
+          on: {
+            click: () => {
+              let $this = this;
+              this.$Modal.confirm({
+                title: "确定删除吗",
+                onOk: () => {
+                  let array = [];
+                  array.push(params.data.id);
+                  this.$ajax({
+                    method: "post",
+                    url: $this.url.del,
+                    data: {
+                      ids: array
+                    }
+                  }).then(function(res) {
+                    $this.$refs.table.searchData();
+                    $this.successModal("删除成功");
+                  });
+                }
+              });
+            }
+          }
+        });
+        const blank = h("span", { class: "blank ivu-icon" });
+        let button;
+        if(params.data.parentId == -1){
+          button = [params.data.title, h("div", [add, blank, edit, blank, remove])]
+        }else{
+          button = [params.data.title, h("div", [edit, blank, remove])]
+        }
+        return h(
+          "div",
+          {
+            style: {
+              display: "flex",
+              "justify-content": "space-between",
+              width: "calc(100% - 40px)"
+            }
+          },
+          button
+        );
       }
     };
   },
@@ -269,7 +353,7 @@ export default {
         url: this.url.edit,
         data: this.$refs.editModal.getParams()
       }).then(function(res) {
-        $this.$refs.table.searchData();
+        $this.getAllMenu()
         $this.successModal("编辑成功");
       });
     },
@@ -277,6 +361,9 @@ export default {
       if (name == "add") {
         let $this = this;
         $this.addshow = false;
+        $this.add.data = {
+          parentId:-1
+        }
         setTimeout(function() {
           $this.addshow = true;
         }, 1);
@@ -296,15 +383,28 @@ export default {
         url: this.url.add,
         data: this.$refs.addModal.getParams()
       }).then(function(res) {
-        $this.$refs.table.searchData();
+        $this.getAllMenu()
         $this.detail.data = {};
         $this.successModal("新增成功");
         this.addshow = false;
       });
-    }
+    },
+    getAllMenu: function() {
+      let $this = this;
+      this.$ajax({
+        method: "post",
+        url: this.url.getAllMenu
+      }).then(function(res) {
+        console.log(res.data.data);
+        $this.menuData = res.data.data;
+        $this.detail.data = {};
+      });
+    },
+
   },
   mounted() {
     this.data.param = this.searchData;
+    this.getAllMenu();
   }
 };
 </script>

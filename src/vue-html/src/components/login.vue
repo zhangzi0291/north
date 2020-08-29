@@ -1,7 +1,11 @@
 <template>
   <div class='maxheigh'>
     <Layout class='maxheigh'>
-      <Header>Header</Header>
+      <Header>
+        <div class="header">
+          <span>后台管理系统</span>
+        </div>
+      </Header>
       <Content class='layout-content'>
 
         <Card class='login-card' @keyup="login">
@@ -24,17 +28,21 @@
                   </Input>
                 </FormItem>
                 <FormItem prop="user">
-                  <Checkbox v-model="remember">记住密码</Checkbox><br>
+                  <!-- <Checkbox v-model="remember">记住密码</Checkbox><br> -->
                 </FormItem>
                 <FormItem prop="user" style="text-align:center">
                   <Button class='login-button' type="primary" @click="login">登录</Button>
                 </FormItem>
               </Form>
+              <div class="tips">
+                建议使用Chrome、Firefox、360(极速模式)等浏览器访问本站，获得更好的用户体验。 
+              </div>
             </div>
           </div>
         </Card>
 
       </Content>
+
     </Layout>
   </div>
 </template>
@@ -94,10 +102,12 @@ export default {
           password: $this.user.password
         }
       }).then(function(res) {
+        console.log(res.data.accessToken)
+        // document.cookie = "JSESSIONID="+res.data.accessToken
         if (res.data.code == "200") {
           if ($this.remember) {
             localStorage.username = $this.user.username;
-            localStorage.password = $this.user.password;
+            // localStorage.password = $this.user.password;
           } else {
             localStorage.username = "";
             localStorage.password = "";
@@ -106,7 +116,7 @@ export default {
             user: res.data.user
           }
           $this.$store.commit("LOGIN", loginparam);
-          $this.$router.push("/home");
+          $this.$router.push("/home/index");
         } else {
           $this.$Message.error(res.data.msg);
         }
@@ -139,5 +149,14 @@ export default {
 .login-content>* {
   width: 266px;
   /* margin-bottom: 100px; */
+}
+.tips{
+  color: darkgrey;
+  font-size: 12px;
+}
+.header{
+  text-align: center;
+  color:  white;
+  font-size: 34px;
 }
 </style>

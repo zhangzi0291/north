@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service("SysRoleResourceService")
 public class SysRoleResourceServiceImpl extends ServiceImpl<SysRoleResourceMapper,SysRoleResource> implements SysRoleResourceService {
@@ -32,23 +34,26 @@ public class SysRoleResourceServiceImpl extends ServiceImpl<SysRoleResourceMappe
 
     @Override
     public void insertRoleResource(String roleId, List<String> resourceIds) {
+        Set<SysRoleResource> rrList = new HashSet<>();
+
         resourceIds.forEach(resourceId ->{
             SysRoleResource rr = new SysRoleResource();
             rr.setRoleId(roleId);
             rr.setResourceId(resourceId);
-            dao.insert(rr);
+            rrList.add(rr);
 
             QueryWrapper< SysResource> wrapper = new QueryWrapper<>();
             wrapper.eq("parent_id",resourceId);
-
             List<SysResource> resourceList = resourceDao.selectList(wrapper);
             resourceList.forEach(resource->{
                 SysRoleResource rr2 = new SysRoleResource();
                 rr2.setRoleId(roleId);
                 rr2.setResourceId(resource.getId());
-                dao.insert(rr2);
+                rrList.add(rr2);
             });
+
         });
+        this.saveBatch(rrList);
     }
 
     @Override
@@ -65,8 +70,6 @@ public class SysRoleResourceServiceImpl extends ServiceImpl<SysRoleResourceMappe
         List<String> roleIds = new ArrayList<>();
         roleIds.add(roleId);
         deleteRoleResource(roleIds);
-
         insertRoleResource(roleId,resourceIds);
-
     }
 }

@@ -1,14 +1,17 @@
 package com.north.sys.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.north.base.R;
-import com.north.sys.entity.*;
+import com.north.sys.entity.SysResource;
+import com.north.sys.entity.SysResourceDto;
+import com.north.sys.entity.SysRole;
+import com.north.sys.entity.SysRoleResource;
 import com.north.sys.service.SysResourceService;
 import com.north.sys.service.SysRoleResourceService;
 import com.north.sys.service.SysRoleService;
+import com.north.utils.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -79,7 +82,7 @@ public class SysRoleController {
     	Boolean flag = false;
         try {
             flag = sysRoleService.save(sysRole);
-            List<String> resourceIdList = getResourceIdList(JSONArray.parseArray(resources,SysResource.class));
+            List<String> resourceIdList = getResourceIdList(JSONUtil.parseJSONArrayToList(resources,SysResource.class));
             sysRoleResourceService.insertRoleResource(sysRole.getId(), resourceIdList);
             if(!flag){
                 return R.error("保存失败,无数据");
@@ -96,6 +99,7 @@ public class SysRoleController {
         try {
             List<SysRoleResource> rrlist =  sysRoleResourceService.getResourceByRoleId(id);
             List<SysResource> list = sysResourceService.getResourceMenus(null);
+
             List<SysResourceDto> options = setChildNood(list,rrlist);
             return R.ok("data",sysRoleService.getById(id)).putObject("options",options);
         } catch (Exception e) {
@@ -137,7 +141,7 @@ public class SysRoleController {
    		Boolean flag = false;
         try {
             flag = sysRoleService.updateById(sysRole);
-            List<String> resourceIdList = getResourceIdList(JSONArray.parseArray(resources,SysResource.class));
+            List<String> resourceIdList = getResourceIdList(JSONUtil.parseJSONArrayToList(resources,SysResource.class));
             sysRoleResourceService.updateRoleResource(sysRole.getId(), resourceIdList);
             if(!flag){
                 return R.error("保存失败,无数据");

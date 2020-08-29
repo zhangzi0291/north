@@ -1,11 +1,9 @@
 package com.north.sys.entity;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import java.util.Objects;
 
 public class SysRoleResource {
-    @TableId(type=IdType.ID_WORKER_STR)
     private String id;
     private String roleId;
     private String resourceId;
@@ -44,5 +42,21 @@ public class SysRoleResource {
         sb.append("resourceId=" + resourceId + ", ");
     	sb.append("]");
         return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRoleId(),getResourceId());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof SysRoleResource){
+            SysRoleResource srr = (SysRoleResource) o;
+            if(srr.getRoleId().equals(getRoleId()) && srr.getResourceId().equals(getResourceId())){
+                return true;
+            }
+        }
+        return false;
     }
 }

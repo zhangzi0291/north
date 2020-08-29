@@ -1,7 +1,6 @@
 package com.north.base.redis;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.north.utils.JSONUtil;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
@@ -29,7 +28,7 @@ public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
         if (t == null) {
             return new byte[0];
         }
-        return JSON.toJSONString(t, SerializerFeature.WriteClassName).getBytes(DEFAULT_CHARSET);
+        return JSONUtil.parseObjectToJSONString(t).getBytes(DEFAULT_CHARSET);
     }
 
     @Override
@@ -39,7 +38,7 @@ public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
         }
         String str = new String(bytes, DEFAULT_CHARSET);
 
-        return (T) JSON.parseObject(str, clazz);
+        return (T) JSONUtil.parseJSONToObject(str, clazz);
     }
 
 }

@@ -1,16 +1,12 @@
 package com.north.sys.entity;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SysResource {
-    @TableId(type=IdType.ID_WORKER_STR)
     private String id;
     private String resourceName;
     private String resourceType;
