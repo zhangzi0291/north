@@ -9,12 +9,7 @@ const HelloWorld = resolve =>
     "HelloWorld"
   );
 
-const D3test = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/D3test.vue")),
-    "D3test"
-  );
+
 const login = resolve =>
   require.ensure([], () => resolve(require("@/components/login.vue")), "login");
 const index = resolve =>
@@ -38,58 +33,21 @@ const sysuser = resolve =>
     "sysuser"
   );
 
-const chatframe = resolve =>
+const gisstatistic = resolve =>
   require.ensure(
     [],
-    () => resolve(require("@/components/chat/chatframe.vue")),
-    "chatframe"
-  );
-const chatbox = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/chat/chat.vue")),
-    "chat"
-  );
-const chatindex = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/chat/index.vue")),
-    "chatindex"
-  );
-const chatlogin = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/chat/login.vue")),
-    "chatlogin"
+    () => resolve(require("@/components/rework/gisstatistic.vue")),
+    "gisstatistic"
   );
 
-const blogindex = resolve =>
+const reworklist = resolve =>
   require.ensure(
     [],
-    () => resolve(require("@/components/blog/index.vue")),
-    "blogindex"
+    () => resolve(require("@/components/rework/reworklist.vue")),
+    "reworklist"
   );
-  
-  const bloghome = resolve =>
-  require.ensure(
-    [],
-    () => resolve(require("@/components/blog/home.vue")),
-    "bloghome"
-    );
 
-  const genealogyFamily = resolve =>
-    require.ensure(
-      [],
-      () => resolve(require("@/components/genealogy/family/family.vue")),
-      "genealogyFamily"
-    );
-  const genealogyTopology = resolve =>
-    require.ensure(
-      [],
-      () => resolve(require("@/components/genealogy/topology.vue")),
-      "genealogyTopology"
-    );
-    
+
 Vue.use(Router);
 
 const router = new Router({
@@ -103,9 +61,9 @@ const router = new Router({
     {
       path: "/",
       name: "first",
-      component: D3test,
+      component: login,
       meta: {
-        title: "在线聊天",
+        // title: "在线聊天",
         viewport:
           "width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0"
       }
@@ -145,56 +103,34 @@ const router = new Router({
       ]
     },
     {
-      path: "/genealogy",
-      name: "genealogy",
+      path: "/rework",
+      name: "index",
       component: index,
       children: [
         {
-          path: "family",
-          name: "genealogyFamily",
-          component: genealogyFamily
+          path: "gisstatistic",
+          name: "gisstatistic",
+          component: gisstatistic
         },
         {
-          path: ":id/topology",
-          name: "topology",
-          component: genealogyTopology
-        },
-      ]
-    },
-    {
-      path: "/chat",
-      name: "chat",
-      component: chatframe,
-      children: [
-        {
-          path: "box",
-          name: "chatbox",
-          component: chatbox,
-        },
-        {
-          path: "index",
-          name: "chatindex",
-          component: chatindex,
-        },
-        {
-          path: "login",
-          name: "chatlogin",
-          component: chatlogin,
+          path: "reworklist",
+          name: "reworklist",
+          component: reworklist
         },
       ]
     },
     {
-      path: "/blog",
-      name: "blog",
-      component: blogindex,
-      children: [
-        {
-          path: "home",
-          name: "home",
-          component: bloghome
-        }
-      ]
-    }
+      path: "/gisstatistic",
+      name: "gisstatistic",
+      component: gisstatistic
+    },
+    {
+      path: "/reworklist",
+      name: "reworklist",
+      component: reworklist
+    },
+    
+
   ]
 });
 
@@ -207,7 +143,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = to.meta.title
   }
-  
+
   next();
 });
 
