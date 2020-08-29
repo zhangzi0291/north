@@ -14,4 +14,8 @@ public class SysLogExcelService extends ExcelServiceAbstract<SysLog,ISysLogServi
 
     }
 
+    @Override
+    protected Map<String, Map<String, String>> setValueFormatMap() {
+        return null;
+    }
 }

@@ -1,9 +1,8 @@
 package com.north.base.excel.service;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.north.base.converter.LocalDateTimeConverter;
-import com.north.sys.entity.SysLog;
-import com.north.utils.CamelToUnderlineUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -23,15 +23,15 @@ import java.util.*;
 
 public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
 
+    protected Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private S service;
 
-    private Logger logger = LoggerFactory.getLogger(ExcelServiceAbstract.class);
-
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private DateTimeFormatter exportDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private DateTimeFormatter exportDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    protected Map<String,Map<String,String>> valueFormatMap = new HashMap<>();
     /**
      * 默认实现的导入
      * @param inputStream
@@ -268,7 +268,7 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
     public <T> T getJavaBean(Map<String, Object> map, Class<T> clazz, T bean, Map<String, String> errorMap) throws Exception {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String key = entry.getKey();
-            String CamelStr = CamelToUnderlineUtil.underlineToCamel(key);
+            String CamelStr = StringUtils.underlineToCamel(key);
 
             Field field = null;
             try {
@@ -286,9 +286,10 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
             Class fieldType = field.getType();
             if (CamelStr.equalsIgnoreCase(field.getName())) {
                 try {
-                    String setter = "set" + CamelToUnderlineUtil.captureName(CamelStr);
+                    String setter = "set" + StringUtils.upperFirst(CamelStr);
                     Method method = clazz.getMethod(setter, fieldType);
                     value = formatBeanValue(fieldType,value);
+                    valueFormatValueToKey(key, value.toString());
                     method.invoke(bean, value);
                 } catch (Exception e) {
                     errorMap.put("rowName", key);
@@ -324,7 +325,7 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
             String targetCellName = targetCellNames.get(i);
             Map<String, String> cname = null;
             try {
-                cname = cellName.stream().filter(stringStringMap -> stringStringMap.get("cellName").equals(targetCellName)).findFirst().get();
+                cname = cellName.stream().filter(stringStringMap -> stringStringMap.get("cellName").equals(targetCellName)).findFirst().orElse(null);
 
             } catch (Exception e) {
                 logger.error("export error:",e);
@@ -341,7 +342,7 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
                 String targetCellName = targetCellNames.get(j);
                 Map<String, String> cellNameMap = cellName.stream().filter(stringStringMap -> stringStringMap.get("cellName").equals(targetCellName)).findFirst().get();
 
-                String CamelStr = CamelToUnderlineUtil.underlineToCamel(cellNameMap.get("cellName"));
+                String CamelStr = StringUtils.underlineToCamel(cellNameMap.get("cellName"));
                 Field field = null;
                 try {
                     field = bean.getClass().getDeclaredField(CamelStr);
@@ -351,7 +352,7 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
                 }
 
                 try {
-                    String getter = "get" + CamelToUnderlineUtil.captureName(CamelStr);
+                    String getter = "get" + StringUtils.upperFirst(CamelStr);
                     Method method = bean.getClass().getMethod(getter);
                     Object value = method.invoke(bean);
 
@@ -362,6 +363,9 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
                         continue;
                     }
                     value = exportformatBeanValue(fieldType,value);
+                    if(this.valueFormatMap.keySet().contains(StringUtils.underlineToCamel(targetCellName))){
+                        value = valueFormatKeyToValue(StringUtils.underlineToCamel(targetCellName),value.toString());
+                    }
                     cell.setCellValue(value.toString());
                 } catch (Exception e) {
                     logger.error("export error:",e);
@@ -369,6 +373,31 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
             }
         }
         return workbook;
+    }
+
+    private String valueFormatKeyToValue(String targetCellName,String value){
+        Map<String,String> kv = this.valueFormatMap.get(targetCellName);
+        if(kv != null){
+            if(StringUtils.isNotBlank(kv.get(value))){
+                value = kv.get(value);
+            }
+        }
+        return value;
+    }
+    private String valueFormatValueToKey(String targetCellName,String value){
+        Map<String,String> kv = this.valueFormatMap.get(targetCellName);
+        if(kv != null){
+            String finalValue = value;
+            String result = kv.entrySet()
+                    .stream()
+                    .filter(kvEntry -> Objects.equals(kvEntry.getValue(), finalValue))
+                    .map(Map.Entry::getKey).findFirst().orElse(null);
+
+            if(StringUtils.isNotBlank(result)){
+                value = result;
+            }
+        }
+        return value;
     }
 
     /**
@@ -397,6 +426,8 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
         }
         return titleList;
     }
+
+
 
     /**
      * 子类实现获取的javaBean内容检查
@@ -428,10 +459,10 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
         Object result = value.toString();
         if (fieldType.isAssignableFrom(Integer.class)) {
             result = Integer.valueOf(value.toString());
-            if (value.equals("是")) {
+            if ("是".equals(value)) {
                 result = 1;
             }
-            if (value.equals("否")) {
+            if ("否".equals(value)) {
                 result = 0;
             }
         } else if (fieldType.isAssignableFrom(LocalDateTime.class)) {
@@ -448,10 +479,10 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
         } else if (fieldType.isAssignableFrom(Long.class)) {
             result = Long.valueOf(value.toString());
         } else if (fieldType.isAssignableFrom(Boolean.class)) {
-            if (value.equals("是")||value.equals("1")) {
+            if ("是".equals(value)|| "1".equals(value)) {
                 result = true;
             }
-            if (value.equals("否")||value.equals("0")) {
+            if ("否".equals(value)|| "0".equals(value)) {
                 result = false;
             }
         }
@@ -533,6 +564,11 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
             this.cellNameCns = cellNameCnsList;
         }
 
+        public static CellNames getCellNameMapList(String[] cellNames, String[] cellNameCns){
+            ExcelServiceAbstract.CellNames cellNameBean = new ExcelServiceAbstract.CellNames(cellNames,cellNameCns);
+            return cellNameBean;
+        }
+
         List<String> cellNames = new ArrayList<>();
         List<String> cellNameCns = new ArrayList<>();
 
@@ -564,4 +600,24 @@ public abstract class ExcelServiceAbstract< T,S extends IService<T>> {
             return list;
         }
     }
+
+    @PostConstruct
+    protected void initValueFormatMap(){
+        init();
+        Map<String,Map<String,String>> vfMap = setValueFormatMap();
+        if(vfMap != null ){
+            this.valueFormatMap = vfMap;
+        }
+    };
+
+    protected void init(){
+
+    }
+
+    protected abstract Map<String,Map<String,String>> setValueFormatMap();
+
+    public void  changeValueFormatMap(Map<String,Map<String,String>> map){
+        this.valueFormatMap = map;
+    }
+
 }

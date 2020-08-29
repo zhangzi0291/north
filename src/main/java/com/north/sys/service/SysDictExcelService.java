@@ -14,4 +14,8 @@ public class SysDictExcelService extends ExcelServiceAbstract<SysDict, ISysDictS
 
     }
 
+    @Override
+    protected Map<String, Map<String, String>> setValueFormatMap() {
+        return null;
+    }
 }
