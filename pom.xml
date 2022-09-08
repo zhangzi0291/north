@@ -25,7 +25,7 @@
         <swagger.version>2.9.2</swagger.version>
         <mybatis.plus.version>3.3.1</mybatis.plus.version>
         <fastjson.version>1.2.66</fastjson.version>
-        <postgresql.version>42.2.2</postgresql.version>
+        <postgresql.version>42.4.1</postgresql.version>
         <spring.shiro.version>1.5.1</spring.shiro.version>
         <poi.version>4.1.2</poi.version>
     </properties>
